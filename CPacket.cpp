@@ -21,26 +21,18 @@
 //ASCII 'F' (0x46): "Set parameter" reply.
 
 
-CPacket::CPacket(CHeader * header, CAbstractMessage * message)
+CPacket::CPacket(const CHeader & header, const CAbstractMessage & message)
 : m_header(header), m_message(message)
 {
-m_checkCode = ( m_header->getCheckCode() ^ m_message->getCheckCode() );
+m_checkCode = ( m_header.getCheckCode() ^ m_message.getCheckCode() );
 }
 
-CPacket::~CPacket()
-{
-    delete m_header;
-    delete m_message;
-}
-//    CHeader m_header;
-//    CMessage * m_message;
-//    unsigned char m_checkCode;
-//    static const unsigned char m_delimiter = 0x0D;
+CPacket::~CPacket() {}
 
 std::basic_string<unsigned char> CPacket::getBuffer() {
     std::basic_string<unsigned char> uString;
-    uString.append(m_header->getBuffer());
-    uString.append(m_message->getBuffer());
+    uString.append(m_header.getBuffer());
+    uString.append(m_message.getBuffer());
     uString.push_back(m_checkCode);
     uString.push_back(m_delimiter);
     return uString;

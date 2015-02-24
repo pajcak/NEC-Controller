@@ -36,7 +36,7 @@ unsigned char CHeader::getCheckCode() const
 {
     return (m_RESERVED ^ m_destination ^ m_source ^ m_msgType ^ m_msgLen[0] ^ m_msgLen[1]);
 }
-std::basic_string<unsigned char> CHeader::getBuffer() {
+std::basic_string<unsigned char> CHeader::getBuffer() const {
     std::basic_string<unsigned char> ustr;
     ustr.push_back(m_SOH);
     ustr.push_back(m_RESERVED);

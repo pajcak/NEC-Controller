@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?><diagram program="umlet" version="11.3">
+  <zoom_level>5</zoom_level>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>275</x>
+      <y>390</y>
+      <w>130</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>/CAbstractMessage/
+{Abstract}
+--
+STX : byte = 0x02;
+ETX : byte = 0x03;
+--
+getCheckCode() : byte
+getLength(hi : byte, lo : byte) : int
+getLength() : byte[2]
+getBuffer() : byte[0..*]</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>360</x>
+      <y>550</y>
+      <w>105</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>CMsgGetCurrParam
+--
+opCodePage : byte[2]
+opCode : byte[2]
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>135</x>
+      <y>550</y>
+      <w>195</w>
+      <h>65</h>
+    </coordinates>
+    <panel_attributes>CMsgGetCurrParamReply
+--
+result : byte[2] /*0x30,0x30(OK)/0x30,0x31(ERROR)*/
+opCodePage : byte[2]; 
+opCode : byte[2];
+type : byte[2]; /*0x30,0x30/0x30,0x31*/
+maxValue : byte[4];
+currValue : byte[4];
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>135</x>
+      <y>620</y>
+      <w>195</w>
+      <h>65</h>
+    </coordinates>
+    <panel_attributes>CMsgSetParamReply
+--
+result : byte[2] /*0x30,0x30(OK)/0x30,0x31(ERROR)*/
+opCodePage : byte[2]; 
+opCode : byte[2];
+type : byte[2]; /*0x30,0x30/0x30,0x31*/
+maxValue : byte[4];
+reqSettingVal : byte[4];
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>360</x>
+      <y>585</y>
+      <w>105</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>CMsgSetParam
+--
+opCodePage : byte[2]
+opCode : byte[2]
+setValue : byte[4]
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>360</x>
+      <y>630</y>
+      <w>170</w>
+      <h>25</h>
+    </coordinates>
+    <panel_attributes>CMsgCommSaveCurrSettings
+--
+commandCode : byte[2] /*'O','C'(0x30, 0x43)*/
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>360</x>
+      <y>660</y>
+      <w>170</w>
+      <h>25</h>
+    </coordinates>
+    <panel_attributes>CMsgCommGetTiming
+--
+commandCode : byte[2] /*'O','7'(0x30, 0x37)*/
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>135</x>
+      <y>690</y>
+      <w>200</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>CMsgCommGetTimingReply
+--
+commandCode : byte[2]; /*'4','E'(0x34, 0x45)*/
+SS : byte[2]; /*Timing status byte*/
+Hfreq : byte[4]; /*Horizontal Frequency in unit 0.01kHz*/
+Vfreq : byte[4]; /*Vertical Frequency in unit 0.01Hz*/
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>135</x>
+      <y>745</y>
+      <w>185</w>
+      <h>25</h>
+    </coordinates>
+    <panel_attributes>CMsgCommNull
+--
+commandCode : byte[2]; /*'B','E'(0x42, 0x45)*/
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Package</type>
+    <coordinates>
+      <x>355</x>
+      <y>535</y>
+      <w>180</w>
+      <h>155</h>
+    </coordinates>
+    <panel_attributes>MsgOutgoing</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Package</type>
+    <coordinates>
+      <x>130</x>
+      <y>535</y>
+      <w>210</w>
+      <h>250</h>
+    </coordinates>
+    <panel_attributes>MsgIncoming</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>245</x>
+      <y>445</y>
+      <w>94</w>
+      <h>109</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>85;15;15;100</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>335</x>
+      <y>445</y>
+      <w>129</w>
+      <h>109</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>15;15;120;100</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>0</x>
+      <y>390</y>
+      <w>225</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>CHeader
+--
+SOH            : byte /*0x01*/
+RESERVED  : byte /*0x30*/
+destination : byte 
+source        : byte
+msgType    : byte
+msgLen      : byte[2]
+--
+CHeader(destination : byte, msgType : byte, msgLen byte[2])
+CHeader(buffer : byte [0..*])
+CHeader(header : CHeader)
+getCheckCode() : byte
+getBuffer() : byte[0..*]</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>215</x>
+      <y>215</y>
+      <w>200</w>
+      <h>65</h>
+    </coordinates>
+    <panel_attributes>CPacket
+--
+checkCode : byte
+delimiter : byte = 0x0D;
+--
+CPacket(header : CHeader, message: CAbstractMessage)
+getBuffer() : byte[0..*]
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>320</x>
+      <y>265</y>
+      <w>24</w>
+      <h>134</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>15;15;15;125</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>95</x>
+      <y>265</y>
+      <w>169</w>
+      <h>134</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>160;15;15;125</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>515</x>
+      <y>135</y>
+      <w>150</w>
+      <h>85</h>
+    </coordinates>
+    <panel_attributes>/CConnection/
+--
+socket : int
+serverAddr : string;
+port : int
+--
+CConnection(srvAddr : string, port : int)
+connect() : bool
+disconnect() : void
+isConnected() : bool
+sendPakcet(msg : CPacket) : void</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>295</x>
+      <y>55</y>
+      <w>130</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>/CController/
+{public API}
+--
+getBrightness() : int
+setBrightness(value : int) : bool
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>

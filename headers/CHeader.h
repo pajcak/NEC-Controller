@@ -11,7 +11,7 @@ public:
     CHeader(const char * _buffer);
     CHeader(const CHeader & header);
     unsigned char getCheckCode() const;
-    std::basic_string<unsigned char> getBuffer();
+    std::basic_string<unsigned char> getBuffer() const;
 private:
     unsigned char m_SOH; /*0x01*/
     unsigned char m_RESERVED; /*0x30*/

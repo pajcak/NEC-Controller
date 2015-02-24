@@ -25,12 +25,12 @@
 
 class CPacket {
 public:
-    CPacket(CHeader * header, CAbstractMessage * message);
+    CPacket(const CHeader & header, const CAbstractMessage & message);
     ~CPacket();
     std::basic_string<unsigned char> getBuffer();
 private:
-    CHeader * m_header;
-    CAbstractMessage * m_message;
+    const CHeader & m_header;
+    const CAbstractMessage & m_message;
     unsigned char m_checkCode;
     static const unsigned char m_delimiter = 0x0D;
 };

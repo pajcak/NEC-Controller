@@ -1,6 +1,6 @@
 #include "headers/MsgIncoming.h"
 
-CMsgGetCurrParamReply::CMsgGetCurrParamReply(const char * _buffer) {
+CMsgGetCurrParamReply::CMsgGetCurrParamReply(const unsigned char * _buffer) {
     //unsigned char result [2]; /*Result code - 0x30,0x30(no error) / 0x30,0x31(Unsupported operation) */
     //unsigned char opCodePage [2]; /*Operation code page*/
     //unsigned char opCode [2]; /*Operation code*/
@@ -9,25 +9,30 @@ CMsgGetCurrParamReply::CMsgGetCurrParamReply(const char * _buffer) {
     //unsigned char currValue[4];
 }
 
+CMsgGetCurrParamReply::CMsgGetCurrParamReply(const CMsgGetCurrParamReply& rhs) 
+: CAbstractMessage(rhs)
+{
+    //TODO
+}
 CMsgGetCurrParamReply::~CMsgGetCurrParamReply() {
 }
 
 unsigned char CMsgGetCurrParamReply::getCheckCode() const {
 }
 
-int CMsgGetCurrParamReply::getLength(unsigned char & hi, unsigned char & lo) {
+int CMsgGetCurrParamReply::getLength(unsigned char & hi, unsigned char & lo) const {
     hi = '1';
     lo = '2';
     return 18;
 }
-std::basic_string<unsigned char> CMsgGetCurrParamReply::getLength() {
+std::basic_string<unsigned char> CMsgGetCurrParamReply::getLength() const {
     std::basic_string<unsigned char> ustr;
     ustr.push_back('1');
     ustr.push_back('2');
     return ustr;
 }
 
-std::basic_string<unsigned char> CMsgGetCurrParamReply::getBuffer() { // MAYBE NOT NEEDED
+std::basic_string<unsigned char> CMsgGetCurrParamReply::getBuffer() const { // MAYBE NOT NEEDED
     std::basic_string<unsigned char> ustr;
     ustr.push_back(s_STX);
     ustr.push_back(m_result[0]);
@@ -51,7 +56,7 @@ std::basic_string<unsigned char> CMsgGetCurrParamReply::getBuffer() { // MAYBE N
 }
 //******************************************************************************
 
-CMsgSetParamReply::CMsgSetParamReply(const char * _buffer) {
+CMsgSetParamReply::CMsgSetParamReply(const unsigned char * _buffer) {
     //unsigned char result [2]; /*Result code - 0x30,0x30(no error) / 0x30,0x31(Unsupported operation) */
     //unsigned char opCodePage [2]; /*Operation code page*/
     //unsigned char opCode [2]; /*Operation code*/
@@ -60,25 +65,30 @@ CMsgSetParamReply::CMsgSetParamReply(const char * _buffer) {
     //unsigned char reqSettingVal[4]; /*Echoes back the parameter for confirmation.*/
 }
 
+CMsgSetParamReply::CMsgSetParamReply(const CMsgSetParamReply & rhs) 
+: CAbstractMessage(rhs)
+{
+    //TODO
+}
 CMsgSetParamReply::~CMsgSetParamReply() {
 }
 
 unsigned char CMsgSetParamReply::getCheckCode() const {
 }
 
-int CMsgSetParamReply::getLength(unsigned char & hi, unsigned char & lo) {
+int CMsgSetParamReply::getLength(unsigned char & hi, unsigned char & lo) const {
     hi = '1';
     lo = '2';
     return 18;
 }
-std::basic_string<unsigned char> CMsgSetParamReply::getLength() {
+std::basic_string<unsigned char> CMsgSetParamReply::getLength() const {
     std::basic_string<unsigned char> ustr;
     ustr.push_back('1');
     ustr.push_back('2');
     return ustr;
 }
 
-std::basic_string<unsigned char> CMsgSetParamReply::getBuffer() {// MAYBE NOT NEEDED
+std::basic_string<unsigned char> CMsgSetParamReply::getBuffer() const {// MAYBE NOT NEEDED
     std::basic_string<unsigned char> ustr;
     ustr.push_back(s_STX);
     ustr.push_back(m_result[0]);
@@ -102,7 +112,7 @@ std::basic_string<unsigned char> CMsgSetParamReply::getBuffer() {// MAYBE NOT NE
 }
 //******************************************************************************
 
-CMsgCommGetTimingReply::CMsgCommGetTimingReply(const char * _buffer) {
+CMsgCommGetTimingReply::CMsgCommGetTimingReply(const unsigned char * _buffer) {
     //**unsigned char commandCode [2]; /* '4','E' (0x34, 0x45)*/
     //**unsigned char SS [2]; /*Timing status byte*/
     //    Bit 7 = 1: Sync Frequency is out of range.
@@ -119,25 +129,30 @@ CMsgCommGetTimingReply::CMsgCommGetTimingReply(const char * _buffer) {
     //    When H Freq is '1''2''A''9' (31h, 32h, 41h, 39h), it means 47.77kHz.
 }
 
+CMsgCommGetTimingReply::CMsgCommGetTimingReply(const CMsgCommGetTimingReply& rhs)
+: CAbstractMessage(rhs)
+{
+    //TODO
+}
 CMsgCommGetTimingReply::~CMsgCommGetTimingReply() {
 }
 
 unsigned char CMsgCommGetTimingReply::getCheckCode() const {
 }
 
-int CMsgCommGetTimingReply::getLength(unsigned char & hi, unsigned char & lo) {
+int CMsgCommGetTimingReply::getLength(unsigned char & hi, unsigned char & lo) const {
     hi = '0';
     lo = 'E';
     return 14;
 }
-std::basic_string<unsigned char> CMsgCommGetTimingReply::getLength() {
+std::basic_string<unsigned char> CMsgCommGetTimingReply::getLength() const {
     std::basic_string<unsigned char> ustr;
     ustr.push_back('0');
     ustr.push_back('E');
     return ustr;
 }
 
-std::basic_string<unsigned char> CMsgCommGetTimingReply::getBuffer() { // MAYBE NOT NEEDED
+std::basic_string<unsigned char> CMsgCommGetTimingReply::getBuffer() const { // MAYBE NOT NEEDED
     std::basic_string<unsigned char> ustr;
     ustr.push_back(s_STX);
     ustr.push_back(m_commandCode[0]);
@@ -160,6 +175,11 @@ std::basic_string<unsigned char> CMsgCommGetTimingReply::getBuffer() { // MAYBE 
 CMsgCommNull::CMsgCommNull() {
     //unsigned char commandCode [2]; /* 'B','E' (0x42, 0x45)*/
 }
+CMsgCommNull::CMsgCommNull(const CMsgCommNull& rhs)
+: CAbstractMessage(rhs)
+{
+    //TODO
+}
 
 CMsgCommNull::~CMsgCommNull() {
 }
@@ -167,12 +187,12 @@ CMsgCommNull::~CMsgCommNull() {
 unsigned char CMsgCommNull::getCheckCode() const {
 }
 
-int CMsgCommNull::getLength(unsigned char & hi, unsigned char & lo) {
+int CMsgCommNull::getLength(unsigned char & hi, unsigned char & lo) const {
     hi = '0';
     lo = '4';
     return 4;
 }
-std::basic_string<unsigned char> CMsgCommNull::getLength() {
+std::basic_string<unsigned char> CMsgCommNull::getLength() const {
     std::basic_string<unsigned char> ustr;
     ustr.push_back('0');
     ustr.push_back('4');
@@ -194,7 +214,7 @@ std::basic_string<unsigned char> CMsgCommNull::getLength() {
 //    SOH-'0'-'0'-'A'-'B'-'0'-'4'-STX-'B'-'E'-ETX-CHK- CR
 //******************************************************************************
 
-std::basic_string<unsigned char> CMsgCommNull::getBuffer() { // MAYBE NOT NEEDED
+std::basic_string<unsigned char> CMsgCommNull::getBuffer() const { // MAYBE NOT NEEDED
     std::basic_string<unsigned char> ustr;
     ustr.push_back(s_STX);
     ustr.push_back(m_commandCode[0]);

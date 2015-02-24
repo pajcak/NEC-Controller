@@ -31,6 +31,14 @@ CMsgGetCurrParam::CMsgGetCurrParam(unsigned char _opCodePage[2], unsigned char _
     //    unsigned char opCode [2]; /*Operation code*/
 }
 
+CMsgGetCurrParam::CMsgGetCurrParam(const CMsgGetCurrParam& rhs)
+: CAbstractMessage(rhs) {
+    m_opCodePage[0] = rhs.m_opCodePage[0];
+    m_opCodePage[1] = rhs.m_opCodePage[1];
+    m_opCode[0] = rhs.m_opCode[0];
+    m_opCode[1] = rhs.m_opCode[1];
+}
+
 CMsgGetCurrParam::~CMsgGetCurrParam() {
 }
 
@@ -38,20 +46,21 @@ unsigned char CMsgGetCurrParam::getCheckCode() const {
     return (s_STX ^ m_opCodePage[0] ^ m_opCodePage[1] ^ m_opCode[0] ^ m_opCode[1] ^ s_ETX);
 }
 
-int CMsgGetCurrParam::getLength(unsigned char & hi, unsigned char & lo) {
-//    (int)((((hi>='A')?(hi-'A'+10):(hi-'0'))<<4)+((lo>='A')?(lo-'A'+10):(lo-'0')))
+int CMsgGetCurrParam::getLength(unsigned char & hi, unsigned char & lo) const {
+    //    (int)((((hi>='A')?(hi-'A'+10):(hi-'0'))<<4)+((lo>='A')?(lo-'A'+10):(lo-'0')))
     hi = '0';
     lo = '6';
     return 6;
 }
-std::basic_string<unsigned char> CMsgGetCurrParam::getLength() {
+
+std::basic_string<unsigned char> CMsgGetCurrParam::getLength() const {
     std::basic_string<unsigned char> ustr;
     ustr.push_back('0');
     ustr.push_back('6');
     return ustr;
 }
 
-std::basic_string<unsigned char> CMsgGetCurrParam::getBuffer() {
+std::basic_string<unsigned char> CMsgGetCurrParam::getBuffer() const {
     std::basic_string<unsigned char> ustr;
     ustr.push_back(s_STX);
     ustr.push_back(m_opCodePage[0]);
@@ -78,6 +87,17 @@ CMsgSetParam::CMsgSetParam(unsigned char _opCodePage[2], unsigned char _opCode[2
     //unsigned char setValue[4];
 }
 
+CMsgSetParam::CMsgSetParam(const CMsgSetParam& rhs) {
+    m_opCodePage[0] = rhs.m_opCodePage[0];
+    m_opCodePage[1] = rhs.m_opCodePage[1];
+    m_opCode[0] = rhs.m_opCode[0];
+    m_opCode[1] = rhs.m_opCode[1];
+    m_setValue[0] = rhs.m_setValue[0];
+    m_setValue[1] = rhs.m_setValue[1];
+    m_setValue[2] = rhs.m_setValue[2];
+    m_setValue[3] = rhs.m_setValue[3];
+}
+
 CMsgSetParam::~CMsgSetParam() {
 }
 
@@ -86,12 +106,13 @@ unsigned char CMsgSetParam::getCheckCode() const {
             ^ m_setValue[0] ^ m_setValue[1] ^ m_setValue[2] ^ m_setValue[3] ^ s_ETX);
 }
 
-int CMsgSetParam::getLength(unsigned char & hi, unsigned char & lo) {
+int CMsgSetParam::getLength(unsigned char & hi, unsigned char & lo) const {
     hi = '0';
     lo = 'A';
     return 10;
 }
-std::basic_string<unsigned char> CMsgSetParam::getLength() {
+
+std::basic_string<unsigned char> CMsgSetParam::getLength() const {
     std::basic_string<unsigned char> ustr;
     ustr.push_back('0');
     ustr.push_back('A');
@@ -100,7 +121,7 @@ std::basic_string<unsigned char> CMsgSetParam::getLength() {
 
 // saves all bytes to _outBuffer and returns the number of bytes saved
 
-std::basic_string<unsigned char> CMsgSetParam::getBuffer() {
+std::basic_string<unsigned char> CMsgSetParam::getBuffer() const {
     std::basic_string<unsigned char> ustr;
     ustr.push_back(s_STX);
     ustr.push_back(m_opCodePage[0]);
@@ -122,6 +143,10 @@ CMsgCommSaveCurrSettings::CMsgCommSaveCurrSettings() { // no params, bcs command
     m_commandCode[1] = 0x43;
     //unsigned char commandCode [2]; /* 'O','C' (0x30, 0x43)*/
 }
+CMsgCommSaveCurrSettings::CMsgCommSaveCurrSettings(const CMsgCommSaveCurrSettings& rhs) { 
+    m_commandCode[0] = 0x30;
+    m_commandCode[1] = 0x43;
+}
 
 CMsgCommSaveCurrSettings::~CMsgCommSaveCurrSettings() {
 }
@@ -130,12 +155,13 @@ unsigned char CMsgCommSaveCurrSettings::getCheckCode() const {
     return (s_STX ^ m_commandCode[0] ^ m_commandCode[1] ^ s_ETX);
 }
 
-int CMsgCommSaveCurrSettings::getLength(unsigned char & hi, unsigned char & lo) {
+int CMsgCommSaveCurrSettings::getLength(unsigned char & hi, unsigned char & lo) const {
     hi = '0';
     lo = '4';
     return 4;
 }
-std::basic_string<unsigned char> CMsgCommSaveCurrSettings::getLength() {
+
+std::basic_string<unsigned char> CMsgCommSaveCurrSettings::getLength() const {
     std::basic_string<unsigned char> ustr;
     ustr.push_back('0');
     ustr.push_back('4');
@@ -143,7 +169,7 @@ std::basic_string<unsigned char> CMsgCommSaveCurrSettings::getLength() {
 }
 // saves all bytes to _outBuffer and returns the number of bytes saved
 
-std::basic_string<unsigned char> CMsgCommSaveCurrSettings::getBuffer() {
+std::basic_string<unsigned char> CMsgCommSaveCurrSettings::getBuffer() const {
     std::basic_string<unsigned char> ustr;
     ustr.push_back(s_STX);
     ustr.push_back(m_commandCode[0]);
@@ -164,6 +190,10 @@ CMsgCommGetTiming::CMsgCommGetTiming() {// no params, bcs commandCode is already
     m_commandCode[1] = 0x37;
     //unsigned char commandCode [2]; /* 'O','7' (0x30, 0x37)*/
 }
+CMsgCommGetTiming::CMsgCommGetTiming(const CMsgCommGetTiming& rhs) {
+    m_commandCode[0] = 0x30;
+    m_commandCode[1] = 0x37;
+}
 
 CMsgCommGetTiming::~CMsgCommGetTiming() {
 }
@@ -172,12 +202,13 @@ unsigned char CMsgCommGetTiming::getCheckCode() const {
     return (s_STX ^ m_commandCode[0] ^ m_commandCode[1] ^ s_ETX);
 }
 
-int CMsgCommGetTiming::getLength(unsigned char & hi, unsigned char & lo) {
+int CMsgCommGetTiming::getLength(unsigned char & hi, unsigned char & lo) const {
     hi = '0';
     lo = '4';
     return 4;
 }
-std::basic_string<unsigned char> CMsgCommGetTiming::getLength() {
+
+std::basic_string<unsigned char> CMsgCommGetTiming::getLength() const {
     std::basic_string<unsigned char> ustr;
     ustr.push_back('0');
     ustr.push_back('4');
@@ -186,7 +217,7 @@ std::basic_string<unsigned char> CMsgCommGetTiming::getLength() {
 
 // saves all bytes to _outBuffer and returns the number of bytes saved
 
-std::basic_string<unsigned char> CMsgCommGetTiming::getBuffer() {
+std::basic_string<unsigned char> CMsgCommGetTiming::getBuffer() const {
     std::basic_string<unsigned char> ustr;
     ustr.push_back(s_STX);
     ustr.push_back(m_commandCode[0]);

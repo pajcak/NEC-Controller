@@ -5,13 +5,14 @@
 
 class CMsgGetCurrParamReply : public CAbstractMessage {
 public:
-                                     CMsgGetCurrParamReply(const char * _buffer);
+                                     CMsgGetCurrParamReply(const unsigned char * _buffer);
+                                     CMsgGetCurrParamReply(const CMsgGetCurrParamReply &);
                                      ~CMsgGetCurrParamReply();
     unsigned char                    getCheckCode() const;
-    int                              getLength(unsigned char & hi, unsigned char & lo);
-    std::basic_string<unsigned char> getLength();
+    int                              getLength(unsigned char & hi, unsigned char & lo) const;
+    std::basic_string<unsigned char> getLength() const;
 
-    std::basic_string<unsigned char> getBuffer(); // MAYBE NOT NEEDED
+    std::basic_string<unsigned char> getBuffer() const; // MAYBE NOT NEEDED
 private:
     unsigned char m_result [2]; /*Result code - 0x30,0x30(no error) / 0x30,0x31(Unsupported operation) */
     unsigned char m_opCodePage [2]; /*Operation code page*/
@@ -23,12 +24,13 @@ private:
 //******************************************************************************
 class CMsgSetParamReply : public CAbstractMessage {
 public:
-                                     CMsgSetParamReply(const char * _buffer);
+                                     CMsgSetParamReply(const unsigned char * _buffer);
+                                     CMsgSetParamReply(const CMsgSetParamReply&);
                                      ~CMsgSetParamReply();
     unsigned char                    getCheckCode() const;
-    int                              getLength(unsigned char & hi, unsigned char & lo);
-    std::basic_string<unsigned char> getLength();
-    std::basic_string<unsigned char> getBuffer(); // MAYBE NOT NEEDED
+    int                              getLength(unsigned char & hi, unsigned char & lo) const;
+    std::basic_string<unsigned char> getLength() const;
+    std::basic_string<unsigned char> getBuffer() const; // MAYBE NOT NEEDED
 private:
     unsigned char m_result [2]; /*Result code - 0x30,0x30(no error) / 0x30,0x31(Unsupported operation) */
     unsigned char m_opCodePage [2]; /*Operation code page*/
@@ -42,12 +44,13 @@ private:
 //*******************************************************************************
 class CMsgCommGetTimingReply : public CAbstractMessage {
 public:
-                                     CMsgCommGetTimingReply(const char * _buffer);
+                                     CMsgCommGetTimingReply(const unsigned char *);
+                                     CMsgCommGetTimingReply(const CMsgCommGetTimingReply&);
                                      ~CMsgCommGetTimingReply();
     unsigned char                    getCheckCode() const;
-    int                              getLength(unsigned char & hi, unsigned char & lo);
-    std::basic_string<unsigned char> getLength();
-    std::basic_string<unsigned char> getBuffer(); // MAYBE NOT NEEDED
+    int                              getLength(unsigned char & hi, unsigned char & lo) const;
+    std::basic_string<unsigned char> getLength() const;
+    std::basic_string<unsigned char> getBuffer() const; // MAYBE NOT NEEDED
 private:
     unsigned char m_commandCode [2]; /* '4','E' (0x34, 0x45)*/
     unsigned char m_SS [2]; /*Timing status byte*/
@@ -68,11 +71,12 @@ private:
 class CMsgCommNull : public CAbstractMessage {
 public:
                                      CMsgCommNull();
+                                     CMsgCommNull(const CMsgCommNull&);
                                      ~CMsgCommNull();
     unsigned char                    getCheckCode() const;
-    int                              getLength(unsigned char & hi, unsigned char & lo);
-    std::basic_string<unsigned char> getLength();
-    std::basic_string<unsigned char> getBuffer(); // MAYBE NOT NEEDED
+    int                              getLength(unsigned char & hi, unsigned char & lo) const;
+    std::basic_string<unsigned char> getLength() const;
+    std::basic_string<unsigned char> getBuffer() const; // MAYBE NOT NEEDED
 private:
     unsigned char m_commandCode [2]; /* 'B','E' (0x42, 0x45)*/
 //The NULL message returned from the monitor is used in the following cases;

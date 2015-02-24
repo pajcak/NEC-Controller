@@ -6,6 +6,7 @@
                    projectFiles="true">
       <logicalFolder name="headers" displayName="headers" projectFiles="true">
         <itemPath>headers/CAbstractMessage.h</itemPath>
+        <itemPath>headers/CConnection.h</itemPath>
         <itemPath>headers/CController.h</itemPath>
         <itemPath>headers/CHeader.h</itemPath>
         <itemPath>headers/CPacket.h</itemPath>
@@ -66,6 +67,8 @@
       </item>
       <item path="headers/CAbstractMessage.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="headers/CConnection.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="headers/CController.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="headers/CHeader.h" ex="false" tool="3" flavor2="0">
@@ -110,6 +113,8 @@
       <item path="MsgOutgoing.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="headers/CAbstractMessage.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="headers/CConnection.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="headers/CController.h" ex="false" tool="3" flavor2="0">
       </item>

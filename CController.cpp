@@ -15,7 +15,7 @@ int  CController::getBrightness() {
     CAbstractMessage * msg = new CMsgGetCurrParam(opCodePage, opCode); 
     // '*' menas destination address of all monitors connected by "daisy chain"
     // 'C' means Get parameter message type
-    CPacket packet(new CHeader('*', 'C', msg->getLength().c_str()), msg);
+//    CPacket packet(new CHeader('*', 'C', msg->getLength().c_str()), msg);
     
     //    buffer = a.getbuffer;
 //    write(buffer);

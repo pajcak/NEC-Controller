@@ -62,13 +62,15 @@ int main(int argc, char * argv []) {
     // posilame zadana data, zadany pocet krat
     for (int i = 0; i < cnt; i++) {
         char buffer[200];
-//        CPacket p; 
-//        snprintf(buffer, sizeof(buffer), "%s", p.getBuffStr().c_str());
+
+
+        //        snprintf(buffer, sizeof(buffer), "%s", p.getBuffStr().c_str());
 
         //        int length = snprintf(buffer, sizeof ( buffer), "%d: %s\n", i, argv[3]);
 //        if (length >= sizeof (buffer) || length < 0) {
 //            /* error handling (buffer under/over-flow) */
 //        }
+
         write(fd, buffer, strlen(buffer));
 
 //        int l = read(fd, buffer, sizeof ( buffer));
