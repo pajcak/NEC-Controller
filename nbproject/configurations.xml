@@ -4,12 +4,14 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <itemPath>CAbstractMessage.h</itemPath>
-      <itemPath>CController.h</itemPath>
-      <itemPath>CHeader.h</itemPath>
-      <itemPath>CPacket.h</itemPath>
-      <itemPath>MsgIncoming.h</itemPath>
-      <itemPath>MsgOutgoing.h</itemPath>
+      <logicalFolder name="headers" displayName="headers" projectFiles="true">
+        <itemPath>headers/CAbstractMessage.h</itemPath>
+        <itemPath>headers/CController.h</itemPath>
+        <itemPath>headers/CHeader.h</itemPath>
+        <itemPath>headers/CPacket.h</itemPath>
+        <itemPath>headers/MsgIncoming.h</itemPath>
+        <itemPath>headers/MsgOutgoing.h</itemPath>
+      </logicalFolder>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -23,7 +25,7 @@
       <itemPath>CPacket.cpp</itemPath>
       <itemPath>MsgIncoming.cpp</itemPath>
       <itemPath>MsgOutgoing.cpp</itemPath>
-      <itemPath>client.cpp</itemPath>
+      <itemPath>main.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -35,8 +37,13 @@
                    projectFiles="false"
                    kind="IMPORTANT_FILES_FOLDER">
       <itemPath>Makefile</itemPath>
+      <itemPath>Makefile_Faistpat</itemPath>
+      <itemPath>doxy_config_Faistpat</itemPath>
     </logicalFolder>
   </logicalFolder>
+  <sourceRootList>
+    <Elem>headers</Elem>
+  </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
     <conf name="Debug" type="1">
@@ -47,29 +54,29 @@
       </toolsSet>
       <compileType>
       </compileType>
-      <item path="CAbstractMessage.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="CController.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="CController.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="CHeader.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="CHeader.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="CPacket.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="CPacket.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="MsgIncoming.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="MsgIncoming.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="MsgOutgoing.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="MsgOutgoing.h" ex="false" tool="3" flavor2="0">
+      <item path="headers/CAbstractMessage.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="client.cpp" ex="false" tool="1" flavor2="0">
+      <item path="headers/CController.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="headers/CHeader.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="headers/CPacket.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="headers/MsgIncoming.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="headers/MsgOutgoing.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="1">
@@ -92,29 +99,29 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
-      <item path="CAbstractMessage.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="CController.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="CController.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="CHeader.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="CHeader.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="CPacket.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="CPacket.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="MsgIncoming.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="MsgIncoming.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="MsgOutgoing.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="MsgOutgoing.h" ex="false" tool="3" flavor2="0">
+      <item path="headers/CAbstractMessage.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="client.cpp" ex="false" tool="1" flavor2="0">
+      <item path="headers/CController.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="headers/CHeader.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="headers/CPacket.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="headers/MsgIncoming.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="headers/MsgOutgoing.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
   </confs>

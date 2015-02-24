@@ -1,6 +1,6 @@
-#include "CController.h"
-#include "CPacket.h"
-#include "MsgOutgoing.h"
+#include "headers/CController.h"
+#include "headers/CPacket.h"
+#include "headers/MsgOutgoing.h"
 
 CController::CController() {
 }

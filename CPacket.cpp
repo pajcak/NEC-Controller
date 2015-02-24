@@ -1,6 +1,6 @@
 #include <string>
 
-#include "CPacket.h"
+#include "headers/CPacket.h"
 /*
 *               PACKET STRUCTURE
 *    ___________________________________________

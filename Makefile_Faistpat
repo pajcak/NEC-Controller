@@ -1,0 +1,28 @@
+CC=g++
+CFLAGS=-c -Wall -pedantic -Wno-long-long
+LDFLAGS=-lpthread
+
+SOURCES=CController.cpp CHeader.cpp CPacket.cpp MsgIncoming.cpp MsgOutgoing.cpp main.cpp
+
+OBJS=$(SOURCES:.cpp=.o)
+EXEC=faistpat
+
+all: compile doc
+
+compile: $(EXEC)
+
+$(EXEC): $(OBJS)
+	$(CC) $(OBJS) -L. -o $@ $(LDFLAGS)
+
+run:
+	./$(EXEC)
+
+doc:
+	doxygen ./doxy_config
+
+%.o: %.cpp 
+	$(CC) $(CFLAGS) -c $< -o $@
+
+
+clean:
+	rm -rf $(OBJS) $(EXEC) ./doc

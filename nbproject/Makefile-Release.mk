@@ -40,7 +40,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/CPacket.o \
 	${OBJECTDIR}/MsgIncoming.o \
 	${OBJECTDIR}/MsgOutgoing.o \
-	${OBJECTDIR}/client.o
+	${OBJECTDIR}/main.o
 
 
 # C Compiler Flags
@@ -92,10 +92,10 @@ ${OBJECTDIR}/MsgOutgoing.o: MsgOutgoing.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/MsgOutgoing.o MsgOutgoing.cpp
 
-${OBJECTDIR}/client.o: client.cpp 
+${OBJECTDIR}/main.o: main.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/client.o client.cpp
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
 
 # Subprojects
 .build-subprojects:
