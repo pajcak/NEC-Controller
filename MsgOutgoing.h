@@ -6,10 +6,11 @@
 //******************************************************************************
 class CMsgGetCurrParam : public CAbstractMessage {
 public:
-                    CMsgGetCurrParam(unsigned char _opCodePage[2], unsigned char _opCode[2]);
-                    ~CMsgGetCurrParam();
-    unsigned char   getCheckCode() const;
-    int            getLength(unsigned char & hi, unsigned char & lo);
+                                     CMsgGetCurrParam(unsigned char _opCodePage[2], unsigned char _opCode[2]);
+                                     ~CMsgGetCurrParam();
+    unsigned char                    getCheckCode() const;
+    int                              getLength(unsigned char & hi, unsigned char & lo);
+    std::basic_string<unsigned char> getLength();
     // saves all bytes to _outBuffer and returns the number of bytes saved
     std::basic_string<unsigned char> getBuffer();
 private:
@@ -20,11 +21,12 @@ private:
 class CMsgSetParam : public CAbstractMessage {
 public:
     
-                    CMsgSetParam(unsigned char _opCodePage[2], unsigned char _opCode[2],
-                                unsigned char _setValue[4]);
-                    ~CMsgSetParam();
-    unsigned char   getCheckCode() const;
-    int            getLength(unsigned char & hi, unsigned char & lo);
+                                     CMsgSetParam(unsigned char _opCodePage[2], unsigned char _opCode[2],
+                                                 unsigned char _setValue[4]);
+                                     ~CMsgSetParam();
+    unsigned char                    getCheckCode() const;
+    int                              getLength(unsigned char & hi, unsigned char & lo);
+    std::basic_string<unsigned char> getLength();
     // saves all bytes to _outBuffer and returns the number of bytes saved
     std::basic_string<unsigned char> getBuffer();
 private:
@@ -37,10 +39,11 @@ private:
 //*******************************************************************************
 class CMsgCommSaveCurrSettings : public CAbstractMessage {
 public:
-                    CMsgCommSaveCurrSettings(); // no params, bcs commandCode is already defined
-                    ~CMsgCommSaveCurrSettings();
-    unsigned char   getCheckCode() const;
-    int            getLength(unsigned char & hi, unsigned char & lo);
+                                     CMsgCommSaveCurrSettings(); // no params, bcs commandCode is already defined
+                                     ~CMsgCommSaveCurrSettings();
+    unsigned char                    getCheckCode() const;
+    int                              getLength(unsigned char & hi, unsigned char & lo);
+    std::basic_string<unsigned char> getLength();
     // saves all bytes to _outBuffer and returns the number of bytes saved
     std::basic_string<unsigned char> getBuffer();
 private:
@@ -57,10 +60,11 @@ class CMsgCommGetTiming : public CAbstractMessage {
 //    The controller requests the monitor to report the displayed image timing.
 public:
     
-                    CMsgCommGetTiming();// no params, bcs commandCode is already defined
-                    ~CMsgCommGetTiming();
-    unsigned char   getCheckCode() const;
-    int            getLength(unsigned char & hi, unsigned char & lo);
+                                     CMsgCommGetTiming();// no params, bcs commandCode is already defined
+                                     ~CMsgCommGetTiming();
+    unsigned char                    getCheckCode() const;
+    int                              getLength(unsigned char & hi, unsigned char & lo);
+    std::basic_string<unsigned char> getLength();
     // saves all bytes to _outBuffer and returns the number of bytes saved
     std::basic_string<unsigned char> getBuffer();
 private:

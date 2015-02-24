@@ -11,21 +11,6 @@
 #include "CPacket.h"
 
 using namespace std;
-/*BRIGHTNESS GET PARAM PACKET*/
-    //    delim(0x0D) 
-//        h.SOH = 0x01; /*0x01*/
-//        h.RESERVED = 0x30; /*0x30*/
-//        h.destination = 0x41; /*Controller(me) choses the monitor / Replier(LCD) sets it with '0'(0x30)*/
-//        h.source = 0x30; /*Controller(me) 0x30 / Replier(LCD) sets it with its ID*/
-//        h.msgType = 0x43;
-//        h.msgLen[0] = '0';
-//        h.msgLen[1] = '6';
-//        msg.STX = 0x02; /*Start of Message 0x02*/
-//        msg.opCodePage[0] = '0'; /*Operation code page*/
-//        msg.opCodePage[1] = '0'; /*Operation code page*/
-//        msg.opCode [0] = '1'; /*Operation code*/
-//        msg.opCode [1] = '0'; /*Operation code*/
-//        msg.ETX = 0x03; /*End of Message 0x03*/
 
 int openCliSocket(const char * name, int port) {
     struct addrinfo * ai;

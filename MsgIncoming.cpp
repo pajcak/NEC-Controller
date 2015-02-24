@@ -20,6 +20,12 @@ int CMsgGetCurrParamReply::getLength(unsigned char & hi, unsigned char & lo) {
     lo = '2';
     return 18;
 }
+std::basic_string<unsigned char> CMsgGetCurrParamReply::getLength() {
+    std::basic_string<unsigned char> ustr;
+    ustr.push_back('1');
+    ustr.push_back('2');
+    return ustr;
+}
 
 std::basic_string<unsigned char> CMsgGetCurrParamReply::getBuffer() { // MAYBE NOT NEEDED
     std::basic_string<unsigned char> ustr;
@@ -64,6 +70,12 @@ int CMsgSetParamReply::getLength(unsigned char & hi, unsigned char & lo) {
     hi = '1';
     lo = '2';
     return 18;
+}
+std::basic_string<unsigned char> CMsgSetParamReply::getLength() {
+    std::basic_string<unsigned char> ustr;
+    ustr.push_back('1');
+    ustr.push_back('2');
+    return ustr;
 }
 
 std::basic_string<unsigned char> CMsgSetParamReply::getBuffer() {// MAYBE NOT NEEDED
@@ -118,6 +130,12 @@ int CMsgCommGetTimingReply::getLength(unsigned char & hi, unsigned char & lo) {
     lo = 'E';
     return 14;
 }
+std::basic_string<unsigned char> CMsgCommGetTimingReply::getLength() {
+    std::basic_string<unsigned char> ustr;
+    ustr.push_back('0');
+    ustr.push_back('E');
+    return ustr;
+}
 
 std::basic_string<unsigned char> CMsgCommGetTimingReply::getBuffer() { // MAYBE NOT NEEDED
     std::basic_string<unsigned char> ustr;
@@ -153,6 +171,12 @@ int CMsgCommNull::getLength(unsigned char & hi, unsigned char & lo) {
     hi = '0';
     lo = '4';
     return 4;
+}
+std::basic_string<unsigned char> CMsgCommNull::getLength() {
+    std::basic_string<unsigned char> ustr;
+    ustr.push_back('0');
+    ustr.push_back('4');
+    return ustr;
 }
 //The NULL message returned from the monitor is used in the following cases;
 //-> A timeout error has occurred. (The default timeout is 10sec.)

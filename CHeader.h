@@ -6,9 +6,8 @@
 class CHeader {
 public:
     CHeader(unsigned char _destination,
-            unsigned char _source,
             unsigned char _msgType,
-            unsigned char _msgLen [2]);
+            const unsigned char _msgLen [2]);
     CHeader(const char * _buffer);
     CHeader(const CHeader & header);
     unsigned char getCheckCode() const;

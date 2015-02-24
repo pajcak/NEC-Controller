@@ -1,7 +1,7 @@
 #ifndef __CPACKET_H__
 #define	__CPACKET_H__
-#include "MsgOutgoing.h"
 #include "CHeader.h"
+#include "CAbstractMessage.h"
 #include <string>
 
 /*

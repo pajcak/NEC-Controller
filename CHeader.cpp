@@ -1,15 +1,15 @@
 #include "CHeader.h"
 #include <cstring>
 
-CHeader::CHeader(unsigned char _destination, unsigned char _source,
-                unsigned char _msgType, unsigned char _msgLen [2])
-: m_SOH(0x01), m_RESERVED(0x30), m_destination(_destination), m_source(_source), m_msgType(_msgType)
+CHeader::CHeader(unsigned char _destination,
+                unsigned char _msgType, const unsigned char _msgLen [2])
+: m_SOH(0x01), m_RESERVED(0x30), m_destination(_destination), m_source(0x30), m_msgType(_msgType)
 {
     m_msgLen[0] = _msgLen[0];
     m_msgLen[1] = _msgLen[1];
 //    unsigned char SOH; /*0x01*/
 //    unsigned char RESERVED; /*0x30*/
-//    unsigned char destination; /*Controller(me) chooses the monitor / Replier(LCD) sets it with '0'(0x30)*/
+//    unsigned char destination; /*Controller(me) chooses the monitorID / Replier(LCD) sets it with '0'(0x30)*/
 //    unsigned char source; /*Controller(me) 0x30 / Replier(LCD) sets it with its ID*/
 //    unsigned char msgType;
 //    unsigned char msgLen [2]; /*from STX to ETX inclusive !Use CMessage.getLength()!*/

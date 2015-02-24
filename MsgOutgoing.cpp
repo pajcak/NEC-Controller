@@ -44,7 +44,12 @@ int CMsgGetCurrParam::getLength(unsigned char & hi, unsigned char & lo) {
     lo = '6';
     return 6;
 }
-// saves all bytes to _outBuffer and returns the number of bytes saved
+std::basic_string<unsigned char> CMsgGetCurrParam::getLength() {
+    std::basic_string<unsigned char> ustr;
+    ustr.push_back('0');
+    ustr.push_back('6');
+    return ustr;
+}
 
 std::basic_string<unsigned char> CMsgGetCurrParam::getBuffer() {
     std::basic_string<unsigned char> ustr;
@@ -86,6 +91,12 @@ int CMsgSetParam::getLength(unsigned char & hi, unsigned char & lo) {
     lo = 'A';
     return 10;
 }
+std::basic_string<unsigned char> CMsgSetParam::getLength() {
+    std::basic_string<unsigned char> ustr;
+    ustr.push_back('0');
+    ustr.push_back('A');
+    return ustr;
+}
 
 // saves all bytes to _outBuffer and returns the number of bytes saved
 
@@ -124,6 +135,12 @@ int CMsgCommSaveCurrSettings::getLength(unsigned char & hi, unsigned char & lo) 
     lo = '4';
     return 4;
 }
+std::basic_string<unsigned char> CMsgCommSaveCurrSettings::getLength() {
+    std::basic_string<unsigned char> ustr;
+    ustr.push_back('0');
+    ustr.push_back('4');
+    return ustr;
+}
 // saves all bytes to _outBuffer and returns the number of bytes saved
 
 std::basic_string<unsigned char> CMsgCommSaveCurrSettings::getBuffer() {
@@ -159,6 +176,12 @@ int CMsgCommGetTiming::getLength(unsigned char & hi, unsigned char & lo) {
     hi = '0';
     lo = '4';
     return 4;
+}
+std::basic_string<unsigned char> CMsgCommGetTiming::getLength() {
+    std::basic_string<unsigned char> ustr;
+    ustr.push_back('0');
+    ustr.push_back('4');
+    return ustr;
 }
 
 // saves all bytes to _outBuffer and returns the number of bytes saved

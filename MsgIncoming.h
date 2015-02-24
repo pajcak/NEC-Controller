@@ -5,11 +5,12 @@
 
 class CMsgGetCurrParamReply : public CAbstractMessage {
 public:
-                    CMsgGetCurrParamReply(const char * _buffer);
-                    ~CMsgGetCurrParamReply();
-    unsigned char   getCheckCode() const;
-    int            getLength(unsigned char & hi, unsigned char & lo);
-    // saves all bytes to _outBuffer and returns the number of bytes saved
+                                     CMsgGetCurrParamReply(const char * _buffer);
+                                     ~CMsgGetCurrParamReply();
+    unsigned char                    getCheckCode() const;
+    int                              getLength(unsigned char & hi, unsigned char & lo);
+    std::basic_string<unsigned char> getLength();
+
     std::basic_string<unsigned char> getBuffer(); // MAYBE NOT NEEDED
 private:
     unsigned char m_result [2]; /*Result code - 0x30,0x30(no error) / 0x30,0x31(Unsupported operation) */
@@ -22,11 +23,11 @@ private:
 //******************************************************************************
 class CMsgSetParamReply : public CAbstractMessage {
 public:
-                    CMsgSetParamReply(const char * _buffer);
-                    ~CMsgSetParamReply();
-    unsigned char   getCheckCode() const;
-    int            getLength(unsigned char & hi, unsigned char & lo);
-    // saves all bytes to _outBuffer and returns the number of bytes saved
+                                     CMsgSetParamReply(const char * _buffer);
+                                     ~CMsgSetParamReply();
+    unsigned char                    getCheckCode() const;
+    int                              getLength(unsigned char & hi, unsigned char & lo);
+    std::basic_string<unsigned char> getLength();
     std::basic_string<unsigned char> getBuffer(); // MAYBE NOT NEEDED
 private:
     unsigned char m_result [2]; /*Result code - 0x30,0x30(no error) / 0x30,0x31(Unsupported operation) */
@@ -41,11 +42,11 @@ private:
 //*******************************************************************************
 class CMsgCommGetTimingReply : public CAbstractMessage {
 public:
-                    CMsgCommGetTimingReply(const char * _buffer);
-                    ~CMsgCommGetTimingReply();
-    unsigned char   getCheckCode() const;
-    int            getLength(unsigned char & hi, unsigned char & lo);
-    // saves all bytes to _outBuffer and returns the number of bytes saved
+                                     CMsgCommGetTimingReply(const char * _buffer);
+                                     ~CMsgCommGetTimingReply();
+    unsigned char                    getCheckCode() const;
+    int                              getLength(unsigned char & hi, unsigned char & lo);
+    std::basic_string<unsigned char> getLength();
     std::basic_string<unsigned char> getBuffer(); // MAYBE NOT NEEDED
 private:
     unsigned char m_commandCode [2]; /* '4','E' (0x34, 0x45)*/
@@ -66,11 +67,11 @@ private:
 //******************************************************************************
 class CMsgCommNull : public CAbstractMessage {
 public:
-                    CMsgCommNull();
-                    ~CMsgCommNull();
-    unsigned char   getCheckCode() const;
-    int            getLength(unsigned char & hi, unsigned char & lo);
-    // saves all bytes to _outBuffer and returns the number of bytes saved
+                                     CMsgCommNull();
+                                     ~CMsgCommNull();
+    unsigned char                    getCheckCode() const;
+    int                              getLength(unsigned char & hi, unsigned char & lo);
+    std::basic_string<unsigned char> getLength();
     std::basic_string<unsigned char> getBuffer(); // MAYBE NOT NEEDED
 private:
     unsigned char m_commandCode [2]; /* 'B','E' (0x42, 0x45)*/
@@ -92,4 +93,3 @@ private:
 
 
 #endif	/* __MSGINCOMING_H__ */
-
