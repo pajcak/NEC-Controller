@@ -9,6 +9,7 @@
 
 #include "headers/MsgOutgoing.h"
 #include "headers/CPacket.h"
+#include "headers/CController.h"
 
 using namespace std;
 
@@ -49,6 +50,10 @@ int openCliSocket(const char * name, int port) {
 
 int main(int argc, char * argv []) {
     int cnt, delay;
+    
+    CController c;
+    c.getBrightness();
+    return 0;
     
     if (argc != 4
             || sscanf(argv[1], "%d", &cnt) != 1

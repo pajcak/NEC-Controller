@@ -8,10 +8,10 @@ public:
                                      CMsgGetCurrParamReply(const unsigned char * _buffer);
                                      CMsgGetCurrParamReply(const CMsgGetCurrParamReply &);
                                      ~CMsgGetCurrParamReply();
+     CAbstractMessage*               clone() const;
     unsigned char                    getCheckCode() const;
     int                              getLength(unsigned char & hi, unsigned char & lo) const;
     std::basic_string<unsigned char> getLength() const;
-
     std::basic_string<unsigned char> getBuffer() const; // MAYBE NOT NEEDED
 private:
     unsigned char m_result [2]; /*Result code - 0x30,0x30(no error) / 0x30,0x31(Unsupported operation) */
@@ -27,6 +27,7 @@ public:
                                      CMsgSetParamReply(const unsigned char * _buffer);
                                      CMsgSetParamReply(const CMsgSetParamReply&);
                                      ~CMsgSetParamReply();
+     CAbstractMessage*               clone() const;
     unsigned char                    getCheckCode() const;
     int                              getLength(unsigned char & hi, unsigned char & lo) const;
     std::basic_string<unsigned char> getLength() const;
@@ -47,6 +48,7 @@ public:
                                      CMsgCommGetTimingReply(const unsigned char *);
                                      CMsgCommGetTimingReply(const CMsgCommGetTimingReply&);
                                      ~CMsgCommGetTimingReply();
+     CAbstractMessage*               clone() const;
     unsigned char                    getCheckCode() const;
     int                              getLength(unsigned char & hi, unsigned char & lo) const;
     std::basic_string<unsigned char> getLength() const;
@@ -73,6 +75,7 @@ public:
                                      CMsgCommNull();
                                      CMsgCommNull(const CMsgCommNull&);
                                      ~CMsgCommNull();
+     CAbstractMessage*               clone() const;
     unsigned char                    getCheckCode() const;
     int                              getLength(unsigned char & hi, unsigned char & lo) const;
     std::basic_string<unsigned char> getLength() const;

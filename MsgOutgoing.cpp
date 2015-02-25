@@ -1,6 +1,5 @@
 #include "headers/MsgOutgoing.h"
-#include <cstring>
-#include <stdlib.h>
+#include <cstring> //std::basic_string()
 /*
  *               PACKET STRUCTURE
  *    ___________________________________________
@@ -21,7 +20,6 @@
 //ASCII 'F' (0x46): "Set parameter" reply.
 
 //******************************************************************************
-
 CMsgGetCurrParam::CMsgGetCurrParam(unsigned char _opCodePage[2], unsigned char _opCode[2]) {
     m_opCodePage[0] = _opCodePage[0];
     m_opCodePage[1] = _opCodePage[1];
@@ -40,6 +38,10 @@ CMsgGetCurrParam::CMsgGetCurrParam(const CMsgGetCurrParam& rhs)
 }
 
 CMsgGetCurrParam::~CMsgGetCurrParam() {
+}
+
+CAbstractMessage* CMsgGetCurrParam::clone() const {
+    return new CMsgGetCurrParam(*this);    
 }
 
 unsigned char CMsgGetCurrParam::getCheckCode() const {
@@ -101,6 +103,10 @@ CMsgSetParam::CMsgSetParam(const CMsgSetParam& rhs) {
 CMsgSetParam::~CMsgSetParam() {
 }
 
+CAbstractMessage* CMsgSetParam::clone() const {
+    return new CMsgSetParam(*this);    
+}
+
 unsigned char CMsgSetParam::getCheckCode() const {
     return (s_STX ^ m_opCodePage[0] ^ m_opCodePage[1] ^ m_opCode[0] ^ m_opCode[1]
             ^ m_setValue[0] ^ m_setValue[1] ^ m_setValue[2] ^ m_setValue[3] ^ s_ETX);
@@ -151,6 +157,10 @@ CMsgCommSaveCurrSettings::CMsgCommSaveCurrSettings(const CMsgCommSaveCurrSetting
 CMsgCommSaveCurrSettings::~CMsgCommSaveCurrSettings() {
 }
 
+CAbstractMessage* CMsgCommSaveCurrSettings::clone() const {
+    return new CMsgCommSaveCurrSettings(*this);    
+}
+
 unsigned char CMsgCommSaveCurrSettings::getCheckCode() const {
     return (s_STX ^ m_commandCode[0] ^ m_commandCode[1] ^ s_ETX);
 }
@@ -196,6 +206,10 @@ CMsgCommGetTiming::CMsgCommGetTiming(const CMsgCommGetTiming& rhs) {
 }
 
 CMsgCommGetTiming::~CMsgCommGetTiming() {
+}
+
+CAbstractMessage* CMsgCommGetTiming::clone() const {
+    return new CMsgCommGetTiming(*this);    
 }
 
 unsigned char CMsgCommGetTiming::getCheckCode() const {

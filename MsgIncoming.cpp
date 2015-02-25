@@ -14,7 +14,12 @@ CMsgGetCurrParamReply::CMsgGetCurrParamReply(const CMsgGetCurrParamReply& rhs)
 {
     //TODO
 }
+
 CMsgGetCurrParamReply::~CMsgGetCurrParamReply() {
+}
+
+CAbstractMessage* CMsgGetCurrParamReply::clone() const {
+    return new CMsgGetCurrParamReply(*this);
 }
 
 unsigned char CMsgGetCurrParamReply::getCheckCode() const {
@@ -71,6 +76,10 @@ CMsgSetParamReply::CMsgSetParamReply(const CMsgSetParamReply & rhs)
     //TODO
 }
 CMsgSetParamReply::~CMsgSetParamReply() {
+}
+
+CAbstractMessage* CMsgSetParamReply::clone() const {
+    return new CMsgSetParamReply(*this);    
 }
 
 unsigned char CMsgSetParamReply::getCheckCode() const {
@@ -137,6 +146,10 @@ CMsgCommGetTimingReply::CMsgCommGetTimingReply(const CMsgCommGetTimingReply& rhs
 CMsgCommGetTimingReply::~CMsgCommGetTimingReply() {
 }
 
+CAbstractMessage* CMsgCommGetTimingReply::clone() const {
+    return new CMsgCommGetTimingReply(*this);    
+}
+
 unsigned char CMsgCommGetTimingReply::getCheckCode() const {
 }
 
@@ -184,6 +197,10 @@ CMsgCommNull::CMsgCommNull(const CMsgCommNull& rhs)
 CMsgCommNull::~CMsgCommNull() {
 }
 
+CAbstractMessage* CMsgCommNull::clone() const {
+    return new CMsgCommNull(*this);    
+}
+
 unsigned char CMsgCommNull::getCheckCode() const {
 }
 
@@ -212,7 +229,6 @@ std::basic_string<unsigned char> CMsgCommNull::getLength() const {
 //Complete "NULL Message" command packet as follows;
 //    01h-30h-30h-41h-42h-30h-34h-02h-42h-45h-03h-CHK-0Dh
 //    SOH-'0'-'0'-'A'-'B'-'0'-'4'-STX-'B'-'E'-ETX-CHK- CR
-//******************************************************************************
 
 std::basic_string<unsigned char> CMsgCommNull::getBuffer() const { // MAYBE NOT NEEDED
     std::basic_string<unsigned char> ustr;
@@ -222,3 +238,5 @@ std::basic_string<unsigned char> CMsgCommNull::getBuffer() const { // MAYBE NOT 
     ustr.push_back(s_ETX);
     return ustr;
 }
+
+//******************************************************************************

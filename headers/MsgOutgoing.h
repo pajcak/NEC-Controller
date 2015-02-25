@@ -9,10 +9,10 @@ public:
                                      CMsgGetCurrParam(unsigned char _opCodePage[2], unsigned char _opCode[2]);
                                      CMsgGetCurrParam(const CMsgGetCurrParam&);
                                      ~CMsgGetCurrParam();
+     CAbstractMessage*               clone() const;
     unsigned char                    getCheckCode() const;
     int                              getLength(unsigned char & hi, unsigned char & lo) const;
     std::basic_string<unsigned char> getLength() const;
-    // saves all bytes to _outBuffer and returns the number of bytes saved
     std::basic_string<unsigned char> getBuffer() const;
 private:
     unsigned char m_opCodePage [2]; /*Operation code page*/
@@ -26,10 +26,10 @@ public:
                                                  unsigned char _setValue[4]);
                                      CMsgSetParam(const CMsgSetParam&);
                                      ~CMsgSetParam();
+     CAbstractMessage*               clone() const;
     unsigned char                    getCheckCode() const;
     int                              getLength(unsigned char & hi, unsigned char & lo) const;
     std::basic_string<unsigned char> getLength() const;
-    // saves all bytes to _outBuffer and returns the number of bytes saved
     std::basic_string<unsigned char> getBuffer() const;
 private:
     unsigned char m_opCodePage [2]; /*Operation code page*/
@@ -44,10 +44,10 @@ public:
                                      CMsgCommSaveCurrSettings(); // no params, bcs commandCode is already defined
                                      CMsgCommSaveCurrSettings(const CMsgCommSaveCurrSettings&);
                                      ~CMsgCommSaveCurrSettings();
+     CAbstractMessage*               clone() const;
     unsigned char                    getCheckCode() const;
     int                              getLength(unsigned char & hi, unsigned char & lo) const;
     std::basic_string<unsigned char> getLength() const;
-    // saves all bytes to _outBuffer and returns the number of bytes saved
     std::basic_string<unsigned char> getBuffer() const;
 private:
     unsigned char m_commandCode [2]; /* 'O','C' (0x30, 0x43)*/
@@ -66,10 +66,10 @@ public:
                                      CMsgCommGetTiming();// no params, bcs commandCode is already defined
                                      CMsgCommGetTiming(const CMsgCommGetTiming&);
                                      ~CMsgCommGetTiming();
+     CAbstractMessage*               clone() const;
     unsigned char                    getCheckCode() const;
     int                              getLength(unsigned char & hi, unsigned char & lo) const;
     std::basic_string<unsigned char> getLength() const;
-    // saves all bytes to _outBuffer and returns the number of bytes saved
     std::basic_string<unsigned char> getBuffer() const;
 private:
     unsigned char m_commandCode [2]; /* 'O','7' (0x30, 0x37)*/

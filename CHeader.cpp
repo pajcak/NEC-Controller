@@ -16,6 +16,7 @@ CHeader::CHeader(unsigned char _destination,
 }
 CHeader::CHeader(const char * _buffer) 
 {
+    //TODO MANAGE EXCEPTION
     if (strlen(_buffer) != 7) throw "CHeader::CHeader(): incorrect buffer size\n";
     m_SOH = _buffer[0];
     m_RESERVED = _buffer[1];

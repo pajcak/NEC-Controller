@@ -20,19 +20,21 @@
 //ASCII 'E' (0x45): Set parameter.
 //ASCII 'F' (0x46): "Set parameter" reply.
 
-
 CPacket::CPacket(const CHeader & header, const CAbstractMessage & message)
-: m_header(header), m_message(message)
 {
-m_checkCode = ( m_header.getCheckCode() ^ m_message.getCheckCode() );
+    m_header = new CHeader(header);
+    m_message = message.clone();
+    
+    m_checkCode = ( m_header->getCheckCode() ^ m_message->getCheckCode() );
 }
-
-CPacket::~CPacket() {}
-
-std::basic_string<unsigned char> CPacket::getBuffer() {
+CPacket::~CPacket() {
+    delete m_header;
+    delete m_message;
+}
+std::basic_string<unsigned char> CPacket::getBuffer() const {
     std::basic_string<unsigned char> uString;
-    uString.append(m_header.getBuffer());
-    uString.append(m_message.getBuffer());
+    uString.append(m_header->getBuffer());
+    uString.append(m_message->getBuffer());
     uString.push_back(m_checkCode);
     uString.push_back(m_delimiter);
     return uString;

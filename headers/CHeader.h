@@ -28,6 +28,5 @@ private:
 //ASCII 'E' (0x45): Set parameter.
 //ASCII 'F' (0x46): "Set parameter" reply.
 
-
 #endif	/* __CHEADER_H__ */
 
