@@ -49,45 +49,14 @@ int openCliSocket(const char * name, int port) {
 }
 
 int main(int argc, char * argv []) {
-    int cnt, delay;
-    
-    CController c;
-    c.getBrightness();
-    return 0;
-    
-    if (argc != 4
-            || sscanf(argv[1], "%d", &cnt) != 1
-            || sscanf(argv[2], "%d", &delay) != 1) {
-        printf("<cnt> <delay> <str>\n");
-        return 1;
-    }
-    //   Adresa a port, kde server nasloucha
-    int fd = openCliSocket("localhost", 12345);
+//    CController c;
+//    c.getBrightness();
+//    return 0;
+//    snprintf(buffer, sizeof ( buffer), "%d: %s\n", i, "blablabla typu const char*");
 
-    // posilame zadana data, zadany pocet krat
-    for (int i = 0; i < cnt; i++) {
-        char buffer[200];
-
-
-        //        snprintf(buffer, sizeof(buffer), "%s", p.getBuffStr().c_str());
-
-        //        int length = snprintf(buffer, sizeof ( buffer), "%d: %s\n", i, argv[3]);
-//        if (length >= sizeof (buffer) || length < 0) {
-//            /* error handling (buffer under/over-flow) */
-//        }
-
-        write(fd, buffer, strlen(buffer));
-
-//        int l = read(fd, buffer, sizeof ( buffer));
-//        write(STDOUT_FILENO, buffer, l);
-        // prodleva mezi zaslanymi daty
         
 /*The controller(here) should wait for a packet interval before next command is sent.
 The packet interval needs to be longer than 600msec for the LCD monitor.*/
-        usleep(delay * 1000);
-    }
-    // uzavreni spojeni klientem. Server zjisti uzavreni spojeni a
-    // uvolni prostredky na sve strane.
-    close(fd);
+//        usleep(delay * 1000);
     return 0;
 }

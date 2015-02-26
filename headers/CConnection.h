@@ -1,18 +1,22 @@
 #ifndef __CCONNECTION_H__
 #define	__CCONNECTION_H__
 
+#include "CPacket.h"
+
 class CConnection {
 public:
     CConnection(const char * srvAddr, const int & port);
-    bool connect();
+    ~CConnection();
+    bool establishConnection();
     void disconnect();
     bool isConnected();
-    void sendPacket(const CPacket & packet);
-    CPacket receivePaket();
+    int sendPacket(const CPacket & packet);
+    bool receivePacket(const CPacket & expected);
 private:
-    const char * serverAddr;
-    const int port;
-    int socket;
+    const char * m_serverAddr;
+    const int m_port;
+    int m_socketFD;
+    struct addrinfo * m_addrInfo;
 };
 
 

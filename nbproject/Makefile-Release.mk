@@ -35,6 +35,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/CConnection.o \
 	${OBJECTDIR}/CController.o \
 	${OBJECTDIR}/CHeader.o \
 	${OBJECTDIR}/CPacket.o \
@@ -66,6 +67,11 @@ LDLIBSOPTIONS=
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/sagecontroller: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/sagecontroller ${OBJECTFILES} ${LDLIBSOPTIONS}
+
+${OBJECTDIR}/CConnection.o: CConnection.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/CConnection.o CConnection.cpp
 
 ${OBJECTDIR}/CController.o: CController.cpp 
 	${MKDIR} -p ${OBJECTDIR}
