@@ -2,7 +2,7 @@ CC=g++
 CFLAGS=-c -Wall -pedantic -Wno-long-long
 LDFLAGS=-lpthread
 
-SOURCES=CController.cpp CHeader.cpp CPacket.cpp MsgIncoming.cpp MsgOutgoing.cpp main.cpp
+SOURCES=CController.cpp CConnection.cpp CHeader.cpp CPacket.cpp MsgIncoming.cpp MsgOutgoing.cpp main.cpp
 
 OBJS=$(SOURCES:.cpp=.o)
 EXEC=faistpat

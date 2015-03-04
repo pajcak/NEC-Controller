@@ -1,12 +1,19 @@
 #include "headers/CController.h"
 #include "headers/CPacket.h"
 #include "headers/MsgOutgoing.h"
+#include "headers/CConnection.h"
+#include "headers/MsgIncoming.h"
 
 #include <cstdio>
 CController::CController() {
+    //temporary
+    m_connection = new CConnection("localhost", 12345);
+    m_connection->establishConnection();
 }
 
 CController::~CController() {
+    m_connection->disconnect();
+    delete m_connection;
 }
 
 int  CController::getBrightness() {
@@ -24,12 +31,14 @@ int  CController::getBrightness() {
 //    for (int i = 0; i < tmp.length(); i++) {
 //        printf("(0x%02x | %c)\n", tmp[i], tmp[i]);
 //    }
-
     //    buffer = a.getbuffer;
 //    write(buffer);
 //    read(buffer)
 //    pares(buffer);
 //    return val
+    m_connection->sendPacket(packet);
+    printf("***SENT****\n");
+    m_connection->receivePacket(packet);
 }
 bool CController::setBrightness(const int & val) {
     

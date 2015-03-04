@@ -78,9 +78,12 @@ bool CConnection::receivePacket(const CPacket & expected) {
      * a naparsovat ho hezky (asi tim, ze celej buffer predam do urcite message (podle typu v headeru))
      **/
     // !!!check if length is at least equal to requested packet length
-
-    //DEBUGOVACI PRINTF
-    write(STDOUT_FILENO, buffer, length);
+    for (int i = 0; i < length; i++) {
+        printf("rec: 0x%02x | %c\n", buffer[i], buffer[i]);
+    }
+    printf("\n");
+    //DEBUG print
+//    write(STDOUT_FILENO, buffer, length);
     return true;
 }
 
