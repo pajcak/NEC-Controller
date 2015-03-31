@@ -1,4 +1,4 @@
-#include "headers/CConnection.h"   
+#include "headers/CMonitor.h"   
 //#include <cstdlib>
 #include <cstdio>
 #include <cstring>
@@ -7,17 +7,17 @@
 #include <netdb.h>
 #include <unistd.h>
 
-CConnection::CConnection(const char * _srvAddr, const int & _port)
+CMonitor::CMonitor(const char * _srvAddr, const int & _port)
 : m_serverAddr(_srvAddr), m_port(_port) {
 
 }
 
-CConnection::~CConnection() {
+CMonitor::~CMonitor() {
     freeaddrinfo(m_addrInfo);
     close(m_socketFD);
 }
 
-bool CConnection::establishConnection() {
+bool CMonitor::establishConnection() {
     struct addrinfo * ai;
     char portStr[10];
 
@@ -43,26 +43,29 @@ bool CConnection::establishConnection() {
     return true;
 }
 
-void CConnection::disconnect() {
+void CMonitor::disconnect() {
     close(m_socketFD);
 }
 
-bool CConnection::isConnected() {
+bool CMonitor::isConnected() {
     if (getpeername(m_socketFD, m_addrInfo->ai_addr,
             &m_addrInfo->ai_addrlen) == -1) return false;
     return true;
 }
 
-int CConnection::sendPacket(const CPacket & packet) {
+/**
+ * \brief Method sends byte buffer from packet to socket file descriptor.
+ * \param packet CPacket to be sent.
+ * \return -1 fail\n
+ * 0 nothing was written\n
+ * >0 number of bytes written
+ */
+int CMonitor::sendPacket(const CPacket & packet) {
     const unsigned char * buffer = packet.getBuffer().c_str();
-    /* -1 fail
-     *  0 nothing was written
-     * >0 number of bytes written
-     **/
     return write(m_socketFD, buffer, strlen((const char *) buffer));
 }
 
-bool CConnection::receivePacket(const CPacket & expected) {
+bool CMonitor::receivePacket(CPacket & expected) {
     unsigned char buffer [256];
 
     /* returns -1 if error occured
@@ -77,12 +80,16 @@ bool CConnection::receivePacket(const CPacket & expected) {
      *delku message, a pak az kontrolovat, jestli je prijatej buffer spravne dlouhej
      * a naparsovat ho hezky (asi tim, ze celej buffer predam do urcite message (podle typu v headeru))
      **/
+    /*PICU (to nahore) , radeji tady nechat prijeti packetu, nacpat data do expected
+     a expected.msg a tam si to samo rozparsuje a zjisti, zdali cajk, nebo ne*/
+    
     // !!!check if length is at least equal to requested packet length
     for (int i = 0; i < length; i++) {
         printf("rec: 0x%02x | %c\n", buffer[i], buffer[i]);
     }
     printf("\n");
-    //DEBUG print
+
+//DEBUG print
 //    write(STDOUT_FILENO, buffer, length);
     return true;
 }

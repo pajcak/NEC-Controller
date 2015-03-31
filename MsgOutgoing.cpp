@@ -84,9 +84,6 @@ CMsgSetParam::CMsgSetParam(unsigned char _opCodePage[2], unsigned char _opCode[2
     m_setValue[1] = _setValue[1];
     m_setValue[2] = _setValue[2];
     m_setValue[3] = _setValue[3];
-    //unsigned char opCodePage [2]; /*Operation code page*/
-    //unsigned char opCode [2]; /*Operation code*/
-    //unsigned char setValue[4];
 }
 
 CMsgSetParam::CMsgSetParam(const CMsgSetParam& rhs) {
@@ -125,8 +122,10 @@ std::basic_string<unsigned char> CMsgSetParam::getLength() const {
     return ustr;
 }
 
-// saves all bytes to _outBuffer and returns the number of bytes saved
 
+/** \brief Concatenation of all parts of the message.
+ *  \return All the message in bytes.
+ */
 std::basic_string<unsigned char> CMsgSetParam::getBuffer() const {
     std::basic_string<unsigned char> ustr;
     ustr.push_back(s_STX);

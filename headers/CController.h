@@ -1,7 +1,7 @@
 #ifndef __CCONTROLLER_H__
 #define	__CCONTROLLER_H__
 
-#include "CConnection.h"
+#include "CMonitor.h"
 
 class CController {
 public:
@@ -12,7 +12,7 @@ public:
     bool setBrightness(const int & val);
     
 private:
-    CConnection * m_connection;
+    CMonitor * m_monitor;
 };
 
 #endif	/* __CCONTROLLER_H__ */

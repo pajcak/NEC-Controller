@@ -6,9 +6,9 @@
                    projectFiles="true">
       <logicalFolder name="headers" displayName="headers" projectFiles="true">
         <itemPath>headers/CAbstractMessage.h</itemPath>
-        <itemPath>headers/CConnection.h</itemPath>
         <itemPath>headers/CController.h</itemPath>
         <itemPath>headers/CHeader.h</itemPath>
+        <itemPath>headers/CMonitor.h</itemPath>
         <itemPath>headers/CPacket.h</itemPath>
         <itemPath>headers/MsgIncoming.h</itemPath>
         <itemPath>headers/MsgOutgoing.h</itemPath>
@@ -21,9 +21,9 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>CConnection.cpp</itemPath>
       <itemPath>CController.cpp</itemPath>
       <itemPath>CHeader.cpp</itemPath>
+      <itemPath>CMonitor.cpp</itemPath>
       <itemPath>CPacket.cpp</itemPath>
       <itemPath>MsgIncoming.cpp</itemPath>
       <itemPath>MsgOutgoing.cpp</itemPath>
@@ -56,11 +56,11 @@
       </toolsSet>
       <compileType>
       </compileType>
-      <item path="CConnection.cpp" ex="false" tool="1" flavor2="0">
-      </item>
       <item path="CController.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="CHeader.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="CMonitor.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="CPacket.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -70,11 +70,11 @@
       </item>
       <item path="headers/CAbstractMessage.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="headers/CConnection.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="headers/CController.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="headers/CHeader.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="headers/CMonitor.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="headers/CPacket.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -105,11 +105,11 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
-      <item path="CConnection.cpp" ex="false" tool="1" flavor2="0">
-      </item>
       <item path="CController.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="CHeader.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="CMonitor.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="CPacket.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -119,11 +119,11 @@
       </item>
       <item path="headers/CAbstractMessage.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="headers/CConnection.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="headers/CController.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="headers/CHeader.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="headers/CMonitor.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="headers/CPacket.h" ex="false" tool="3" flavor2="0">
       </item>

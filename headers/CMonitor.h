@@ -3,15 +3,15 @@
 
 #include "CPacket.h"
 
-class CConnection {
+class CMonitor {
 public:
-    CConnection(const char * srvAddr, const int & port);
-    ~CConnection();
+    CMonitor(const char * srvAddr, const int & port);
+    ~CMonitor();
     bool establishConnection();
     void disconnect();
     bool isConnected();
     int sendPacket(const CPacket & packet);
-    bool receivePacket(const CPacket & expected);
+    bool receivePacket(CPacket & expected);
 private:
     const char * m_serverAddr;
     const int m_port;

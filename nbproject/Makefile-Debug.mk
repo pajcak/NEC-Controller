@@ -35,9 +35,9 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/CConnection.o \
 	${OBJECTDIR}/CController.o \
 	${OBJECTDIR}/CHeader.o \
+	${OBJECTDIR}/CMonitor.o \
 	${OBJECTDIR}/CPacket.o \
 	${OBJECTDIR}/MsgIncoming.o \
 	${OBJECTDIR}/MsgOutgoing.o \
@@ -68,11 +68,6 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/sagecontroller: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/sagecontroller ${OBJECTFILES} ${LDLIBSOPTIONS}
 
-${OBJECTDIR}/CConnection.o: CConnection.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/CConnection.o CConnection.cpp
-
 ${OBJECTDIR}/CController.o: CController.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
@@ -82,6 +77,11 @@ ${OBJECTDIR}/CHeader.o: CHeader.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/CHeader.o CHeader.cpp
+
+${OBJECTDIR}/CMonitor.o: CMonitor.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/CMonitor.o CMonitor.cpp
 
 ${OBJECTDIR}/CPacket.o: CPacket.cpp 
 	${MKDIR} -p ${OBJECTDIR}
