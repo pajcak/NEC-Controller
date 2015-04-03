@@ -7,12 +7,14 @@ class CMsgGetCurrParamReply : public CAbstractMessage {
 public:
                                      CMsgGetCurrParamReply(const unsigned char * _buffer);
                                      CMsgGetCurrParamReply(const CMsgGetCurrParamReply &);
+                                     CMsgGetCurrParamReply(unsigned char [2], unsigned char [2]);
                                      ~CMsgGetCurrParamReply();
      CAbstractMessage*               clone() const;
     unsigned char                    getCheckCode() const;
     int                              getLength(unsigned char & hi, unsigned char & lo) const;
     std::basic_string<unsigned char> getLength() const;
     std::basic_string<unsigned char> getBuffer() const; // MAYBE NOT NEEDED
+    bool initWithRawData(unsigned char * data);
 private:
     unsigned char m_result [2]; /*Result code - 0x30,0x30(no error) / 0x30,0x31(Unsupported operation) */
     unsigned char m_opCodePage [2]; /*Operation code page*/
@@ -32,6 +34,7 @@ public:
     int                              getLength(unsigned char & hi, unsigned char & lo) const;
     std::basic_string<unsigned char> getLength() const;
     std::basic_string<unsigned char> getBuffer() const; // MAYBE NOT NEEDED
+    bool initWithRawData(unsigned char * data);
 private:
     unsigned char m_result [2]; /*Result code - 0x30,0x30(no error) / 0x30,0x31(Unsupported operation) */
     unsigned char m_opCodePage [2]; /*Operation code page*/
@@ -43,31 +46,17 @@ private:
 //*******************************************************************************
 /*-------------------COMMAND-MESSAGES-----------------------------------------*/
 //*******************************************************************************
-class CMsgCommGetTimingReply : public CAbstractMessage {
+class CMsgCommSaveCurrSettingsReply : public CAbstractMessage {
 public:
-                                     CMsgCommGetTimingReply(const unsigned char *);
-                                     CMsgCommGetTimingReply(const CMsgCommGetTimingReply&);
-                                     ~CMsgCommGetTimingReply();
+                                     CMsgCommSaveCurrSettingsReply(const unsigned char *);
      CAbstractMessage*               clone() const;
     unsigned char                    getCheckCode() const;
     int                              getLength(unsigned char & hi, unsigned char & lo) const;
     std::basic_string<unsigned char> getLength() const;
     std::basic_string<unsigned char> getBuffer() const; // MAYBE NOT NEEDED
+    bool initWithRawData(unsigned char * data);
 private:
-    unsigned char m_commandCode [2]; /* '4','E' (0x34, 0x45)*/
-    unsigned char m_SS [2]; /*Timing status byte*/
-//    Bit 7 = 1: Sync Frequency is out of range.
-//    Bit 6 = 1: Unstable count
-//    Bit 5-2 Reserved (Don't care)
-//    Bit 1
-//            1:Positive Horizontal sync polarity.
-//            0:Negative Horizontal sync polarity.
-//    Bit 0
-//            1:Positive Vertical sync polarity.
-//            0:Negative Vertical sync polarity.
-    unsigned char m_Hfreq[4]; /*Horizontal Frequency in unit 0.01kHz*/
-    unsigned char m_Vfreq[4]; /*Vertical Frequency in unit 0.01Hz*/
-//    When H Freq is '1''2''A''9' (31h, 32h, 41h, 39h), it means 47.77kHz.
+    unsigned char m_commandCode [4]; /* '0','0', '0', 'C' (0x30, 0x30, 0x30, 0x43)*/
 };
 //******************************************************************************
 class CMsgCommNull : public CAbstractMessage {
@@ -80,6 +69,7 @@ public:
     int                              getLength(unsigned char & hi, unsigned char & lo) const;
     std::basic_string<unsigned char> getLength() const;
     std::basic_string<unsigned char> getBuffer() const; // MAYBE NOT NEEDED
+    bool initWithRawData(unsigned char * data);
 private:
     unsigned char m_commandCode [2]; /* 'B','E' (0x42, 0x45)*/
 //The NULL message returned from the monitor is used in the following cases;

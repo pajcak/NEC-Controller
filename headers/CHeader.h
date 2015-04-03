@@ -12,6 +12,35 @@ public:
     CHeader(const CHeader & header);
     unsigned char getCheckCode() const;
     std::basic_string<unsigned char> getBuffer() const;
+
+    unsigned char getRESERVED() const {
+        return m_RESERVED;
+    }
+
+    unsigned char getSOH() const {
+        return m_SOH;
+    }
+
+    unsigned char getDestination() const {
+        return m_destination;
+    }
+
+    std::basic_string<unsigned char> getMsgLen() const {
+//        return (int)((((m_msgLen[0]>='A')?(m_msgLen[0]-'A'+10)
+//                :(m_msgLen[0]-'0'))<<4)+((m_msgLen[1]>='A')?(m_msgLen[1]-'A'+10):(m_msgLen[1]-'0')));
+        return m_msgLen;
+    }
+    int getLen() const {
+        return 7;
+    }
+
+    unsigned char getMsgType() const {
+        return m_msgType;
+    }
+
+    unsigned char getSource() const {
+        return m_source;
+    }
 private:
     unsigned char m_SOH; /*0x01*/
     unsigned char m_RESERVED; /*0x30*/

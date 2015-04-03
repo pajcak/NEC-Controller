@@ -178,28 +178,10 @@
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>576</x>
-      <y>636</y>
-      <w>240</w>
-      <h>78</h>
-    </coordinates>
-    <panel_attributes>CPacket
---
-- checkCode : byte
-- delimiter : byte = 0x0D;
---
-+ CPacket(header : CHeader, message : CAbstractMessage)
-+ getBuffer() : byte[0..*]
-</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.Class</type>
-    <coordinates>
       <x>762</x>
       <y>432</y>
-      <w>180</w>
-      <h>138</h>
+      <w>306</w>
+      <h>156</h>
     </coordinates>
     <panel_attributes>CMonitor
 --
@@ -211,8 +193,12 @@
 + connect() : bool
 + disconnect() : void
 + isConnected() : bool
-+ sendPacket(msg : CPacket) : void
-+ receivePacket(packet : CPacket)</panel_attributes>
+//+ sendPacket(msg : CPacket) : void
+//+ receivePacket(packet : CPacket)
+/*if NullMsg was received, simply return NULL, if error, throw exception*/
+getParameter(param : CMsgGetCurrParam) : CMsgGetCurrParamReply
+setParameter(param : CMsgSetParam) : CMsgSetParamReply
+/*now methods for each command*/</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -263,34 +249,6 @@ m1=1
 m2=0..n
 </panel_attributes>
     <additional_attributes>18;18;144;18</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>798</x>
-      <y>660</y>
-      <w>120</w>
-      <h>30</h>
-    </coordinates>
-    <panel_attributes>lt=-
-m1=1
-m2=1
-</panel_attributes>
-    <additional_attributes>18;18;108;18</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>678</x>
-      <y>696</y>
-      <w>30</w>
-      <h>108</h>
-    </coordinates>
-    <panel_attributes>lt=-
-m1= 1
-m2= 1
-</panel_attributes>
-    <additional_attributes>18;18;18;96</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Class</type>

@@ -14,6 +14,8 @@ public:
     int                              getLength(unsigned char & hi, unsigned char & lo) const;
     std::basic_string<unsigned char> getLength() const;
     std::basic_string<unsigned char> getBuffer() const;
+    //DOES NOT NEED TO BE IMPLEMENTED
+    bool initWithRawData(unsigned char * data) {return false;}
 private:
     unsigned char m_opCodePage [2]; /*Operation code page*/
     unsigned char m_opCode [2]; /*Operation code*/
@@ -31,6 +33,8 @@ public:
     int                              getLength(unsigned char & hi, unsigned char & lo) const;
     std::basic_string<unsigned char> getLength() const;
     std::basic_string<unsigned char> getBuffer() const;
+    //DOES NOT NEED TO BE IMPLEMENTED
+    bool initWithRawData(unsigned char * data) {return false;}
 private:
     unsigned char m_opCodePage [2]; /*Operation code page*/
     unsigned char m_opCode [2]; /*Operation code*/
@@ -42,13 +46,13 @@ private:
 class CMsgCommSaveCurrSettings : public CAbstractMessage {
 public:
                                      CMsgCommSaveCurrSettings(); // no params, bcs commandCode is already defined
-                                     CMsgCommSaveCurrSettings(const CMsgCommSaveCurrSettings&);
-                                     ~CMsgCommSaveCurrSettings();
      CAbstractMessage*               clone() const;
     unsigned char                    getCheckCode() const;
     int                              getLength(unsigned char & hi, unsigned char & lo) const;
     std::basic_string<unsigned char> getLength() const;
     std::basic_string<unsigned char> getBuffer() const;
+    //DOES NOT NEED TO BE IMPLEMENTED
+    bool initWithRawData(unsigned char * data) {return false;}
 private:
     unsigned char m_commandCode [2]; /* 'O','C' (0x30, 0x43)*/
 
@@ -57,22 +61,6 @@ private:
 // SOH-'0'-'A'-'0'-'A'-'0'-'4'-STX-'0'-'C'-ETX-CHK- CR 
 // The monitor replies the packet for confirmation as follows;
 // SOH-'0'-'0'-'A'-'B'-'0'-'6'-STX-'0'-'0'-'0'-'C'-ETX-CHK- CR
-};
-//******************************************************************************
-class CMsgCommGetTiming : public CAbstractMessage {
-//    The controller requests the monitor to report the displayed image timing.
-public:
-    
-                                     CMsgCommGetTiming();// no params, bcs commandCode is already defined
-                                     CMsgCommGetTiming(const CMsgCommGetTiming&);
-                                     ~CMsgCommGetTiming();
-     CAbstractMessage*               clone() const;
-    unsigned char                    getCheckCode() const;
-    int                              getLength(unsigned char & hi, unsigned char & lo) const;
-    std::basic_string<unsigned char> getLength() const;
-    std::basic_string<unsigned char> getBuffer() const;
-private:
-    unsigned char m_commandCode [2]; /* 'O','7' (0x30, 0x37)*/
 };
 //******************************************************************************
 

@@ -122,10 +122,6 @@ std::basic_string<unsigned char> CMsgSetParam::getLength() const {
     return ustr;
 }
 
-
-/** \brief Concatenation of all parts of the message.
- *  \return All the message in bytes.
- */
 std::basic_string<unsigned char> CMsgSetParam::getBuffer() const {
     std::basic_string<unsigned char> ustr;
     ustr.push_back(s_STX);
@@ -148,16 +144,9 @@ CMsgCommSaveCurrSettings::CMsgCommSaveCurrSettings() { // no params, bcs command
     m_commandCode[1] = 0x43;
     //unsigned char commandCode [2]; /* 'O','C' (0x30, 0x43)*/
 }
-CMsgCommSaveCurrSettings::CMsgCommSaveCurrSettings(const CMsgCommSaveCurrSettings& rhs) { 
-    m_commandCode[0] = 0x30;
-    m_commandCode[1] = 0x43;
-}
-
-CMsgCommSaveCurrSettings::~CMsgCommSaveCurrSettings() {
-}
 
 CAbstractMessage* CMsgCommSaveCurrSettings::clone() const {
-    return new CMsgCommSaveCurrSettings(*this);    
+    return new CMsgCommSaveCurrSettings();    
 }
 
 unsigned char CMsgCommSaveCurrSettings::getCheckCode() const {
@@ -176,8 +165,6 @@ std::basic_string<unsigned char> CMsgCommSaveCurrSettings::getLength() const {
     ustr.push_back('4');
     return ustr;
 }
-// saves all bytes to _outBuffer and returns the number of bytes saved
-
 std::basic_string<unsigned char> CMsgCommSaveCurrSettings::getBuffer() const {
     std::basic_string<unsigned char> ustr;
     ustr.push_back(s_STX);
@@ -192,50 +179,4 @@ std::basic_string<unsigned char> CMsgCommSaveCurrSettings::getBuffer() const {
 // The monitor replies the packet for confirmation as follows;
 // SOH-'0'-'0'-'A'-'B'-'0'-'6'-STX-'0'-'0'-'0'-'C'-ETX-CHK- CR
 
-//******************************************************************************
-
-CMsgCommGetTiming::CMsgCommGetTiming() {// no params, bcs commandCode is already defined
-    m_commandCode[0] = 0x30;
-    m_commandCode[1] = 0x37;
-    //unsigned char commandCode [2]; /* 'O','7' (0x30, 0x37)*/
-}
-CMsgCommGetTiming::CMsgCommGetTiming(const CMsgCommGetTiming& rhs) {
-    m_commandCode[0] = 0x30;
-    m_commandCode[1] = 0x37;
-}
-
-CMsgCommGetTiming::~CMsgCommGetTiming() {
-}
-
-CAbstractMessage* CMsgCommGetTiming::clone() const {
-    return new CMsgCommGetTiming(*this);    
-}
-
-unsigned char CMsgCommGetTiming::getCheckCode() const {
-    return (s_STX ^ m_commandCode[0] ^ m_commandCode[1] ^ s_ETX);
-}
-
-int CMsgCommGetTiming::getLength(unsigned char & hi, unsigned char & lo) const {
-    hi = '0';
-    lo = '4';
-    return 4;
-}
-
-std::basic_string<unsigned char> CMsgCommGetTiming::getLength() const {
-    std::basic_string<unsigned char> ustr;
-    ustr.push_back('0');
-    ustr.push_back('4');
-    return ustr;
-}
-
-// saves all bytes to _outBuffer and returns the number of bytes saved
-
-std::basic_string<unsigned char> CMsgCommGetTiming::getBuffer() const {
-    std::basic_string<unsigned char> ustr;
-    ustr.push_back(s_STX);
-    ustr.push_back(m_commandCode[0]);
-    ustr.push_back(m_commandCode[1]);
-    ustr.push_back(s_ETX);
-    return ustr;
-}
 //******************************************************************************

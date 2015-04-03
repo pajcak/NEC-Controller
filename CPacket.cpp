@@ -39,3 +39,19 @@ std::basic_string<unsigned char> CPacket::getBuffer() const {
     uString.push_back(m_delimiter);
     return uString;
 }
+unsigned char CPacket::getCheckCode() const {
+    return ( m_header->getCheckCode() ^ m_message->getCheckCode() );
+}
+const CHeader * CPacket::getHeader() const {
+    return m_header;
+}
+int CPacket::getLength() const {
+    unsigned char dummy;
+    return m_header->getLen() + m_message->getLength(dummy, dummy) + 2;
+}
+CAbstractMessage *       CPacket::getMessage() {
+    return m_message;
+}
+const CAbstractMessage * CPacket::getMessage() const {
+    return (const CAbstractMessage*)m_message;
+}

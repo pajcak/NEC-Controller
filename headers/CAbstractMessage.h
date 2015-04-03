@@ -9,12 +9,16 @@ public:
                                               CAbstractMessage() {}
                                               CAbstractMessage(const CAbstractMessage&) {}
     virtual                                   ~CAbstractMessage() {}
+    virtual bool initWithRawData(unsigned char * data) = 0;
     
     virtual CAbstractMessage*                 clone() const = 0;
     virtual unsigned char                     getCheckCode() const = 0;
     // saves length of certain message into two bytes hi and lo and returns the length in integer
     virtual int                               getLength(unsigned char & hi, unsigned char & lo) const = 0;
     virtual std::basic_string<unsigned char>  getLength() const = 0;
+/** \brief Concatenation of all parts of the message.
+ *  \return All the message in bytes.
+ */
     virtual std::basic_string<unsigned char>  getBuffer() const = 0;
 protected:
     static const unsigned char s_STX = 0x02;

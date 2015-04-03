@@ -1,4 +1,5 @@
-#include "headers/CMonitor.h"   
+#include "headers/CMonitor.h"
+#include "headers/MsgIncoming.h"   
 //#include <cstdlib>
 #include <cstdio>
 #include <cstring>
@@ -65,7 +66,7 @@ int CMonitor::sendPacket(const CPacket & packet) {
     return write(m_socketFD, buffer, strlen((const char *) buffer));
 }
 
-bool CMonitor::receivePacket(CPacket & expected) {
+CPacket * CMonitor::receivePacket(CPacket & expected) {
     unsigned char buffer [256];
 
     /* returns -1 if error occured
@@ -73,24 +74,34 @@ bool CMonitor::receivePacket(CPacket & expected) {
      **/
     int length = read(m_socketFD, buffer, sizeof (buffer));
     if (length < 0) {
-        throw "Read() failed...\n";
-        return false;
+        throw "receivePacket: Read() failed...\n";
     }
-    /*vyzobnout nejdriv prvnich par bytu z bufferu (tedy header) a z nej zjistit
-     *delku message, a pak az kontrolovat, jestli je prijatej buffer spravne dlouhej
-     * a naparsovat ho hezky (asi tim, ze celej buffer predam do urcite message (podle typu v headeru))
-     **/
-    /*PICU (to nahore) , radeji tady nechat prijeti packetu, nacpat data do expected
-     a expected.msg a tam si to samo rozparsuje a zjisti, zdali cajk, nebo ne*/
-    
-    // !!!check if length is at least equal to requested packet length
+    /* 1) check if length odpovida msgLen+headerLen+1(checkCode)+1(delimiter) 
+     * or check if length odpovida msgLen+headerLen+1(checkCode)+1(delimiter), kde msgLen je delka NULLMsg
+     */
+    if (length < expected.getLength()) {
+        CMsgCommNull nullMsg;
+        //blbe, protoze nullmsg ma jinej header(alespon msgLen v nem a type taky)
+//        CPacket nullMsgPacket(*expected.getHeader(), nullMsg);
+        if (length == nullMsgPacket.getLength())
+            return new CPacket(*expected.getHeader(), nullMsg);
+        else throw "receivePacket: invalid length read\n";
+    }
+    /*
+     * 2) construct header with first n bytes of buffer
+     * 3) packet.getMessage.initWithRawData(buffer from end of header size of msgLen) try{}catch(){}
+     * 4) nevim, mozna nejaky check
+     * 5) return that packet ;)
+     */
+
+
     for (int i = 0; i < length; i++) {
         printf("rec: 0x%02x | %c\n", buffer[i], buffer[i]);
     }
     printf("\n");
 
-//DEBUG print
-//    write(STDOUT_FILENO, buffer, length);
-    return true;
+    //DEBUG print
+    //    write(STDOUT_FILENO, buffer, length);
+    return NULL;
 }
 

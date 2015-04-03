@@ -11,7 +11,7 @@ public:
     void disconnect();
     bool isConnected();
     int sendPacket(const CPacket & packet);
-    bool receivePacket(CPacket & expected);
+    CPacket * receivePacket(CPacket & expected);
 private:
     const char * m_serverAddr;
     const int m_port;

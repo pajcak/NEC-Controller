@@ -26,19 +26,12 @@ int  CController::getBrightness() {
     CMsgGetCurrParam msg(opCodePage, opCode);
     
     CPacket packet(CHeader('*', 'C', msg.getLength().c_str()), msg);
-//    std::basic_string<unsigned char> tmp;
-//    tmp = packet.getBuffer(); 
-//    for (int i = 0; i < tmp.length(); i++) {
-//        printf("(0x%02x | %c)\n", tmp[i], tmp[i]);
-//    }
-    //    buffer = a.getbuffer;
-//    write(buffer);
-//    read(buffer)
-//    pares(buffer);
-//    return val
     m_monitor->sendPacket(packet);
     printf("***SENT****\n");
-    m_monitor->receivePacket(packet);
+    
+    CMsgGetCurrParamReply expectedMsg(opCodePage, opCode);
+    CPacket expected(CHeader(), expectedMsg);
+    m_monitor->receivePacket(expected);
 }
 bool CController::setBrightness(const int & val) {
     

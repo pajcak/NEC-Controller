@@ -28,9 +28,14 @@ public:
     CPacket(const CHeader & header, const CAbstractMessage & message);
     ~CPacket();
     std::basic_string<unsigned char> getBuffer() const;
+    unsigned char getCheckCode() const;
+    const CHeader * getHeader() const;
+    int getLength() const;
+    CAbstractMessage * getMessage();
+    const CAbstractMessage * getMessage() const;
 private:
     const CHeader * m_header;
-    const CAbstractMessage * m_message;
+    CAbstractMessage * m_message;
     unsigned char m_checkCode;
     static const unsigned char m_delimiter = 0x0D;
 };
