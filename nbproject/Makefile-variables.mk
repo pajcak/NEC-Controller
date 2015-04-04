@@ -9,19 +9,19 @@ CND_DISTDIR=dist
 # Debug configuration
 CND_PLATFORM_Debug=GNU-Linux-x86
 CND_ARTIFACT_DIR_Debug=dist/Debug/GNU-Linux-x86
-CND_ARTIFACT_NAME_Debug=sagecontroller
-CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-Linux-x86/sagecontroller
+CND_ARTIFACT_NAME_Debug=nec-controller
+CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-Linux-x86/nec-controller
 CND_PACKAGE_DIR_Debug=dist/Debug/GNU-Linux-x86/package
-CND_PACKAGE_NAME_Debug=sagecontroller.tar
-CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux-x86/package/sagecontroller.tar
+CND_PACKAGE_NAME_Debug=nec-controller.tar
+CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux-x86/package/nec-controller.tar
 # Release configuration
 CND_PLATFORM_Release=GNU-Linux-x86
 CND_ARTIFACT_DIR_Release=dist/Release/GNU-Linux-x86
-CND_ARTIFACT_NAME_Release=sagecontroller
-CND_ARTIFACT_PATH_Release=dist/Release/GNU-Linux-x86/sagecontroller
+CND_ARTIFACT_NAME_Release=nec-controller
+CND_ARTIFACT_PATH_Release=dist/Release/GNU-Linux-x86/nec-controller
 CND_PACKAGE_DIR_Release=dist/Release/GNU-Linux-x86/package
-CND_PACKAGE_NAME_Release=sagecontroller.tar
-CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux-x86/package/sagecontroller.tar
+CND_PACKAGE_NAME_Release=nec-controller.tar
+CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux-x86/package/nec-controller.tar
 #
 # include compiler specific variables
 #

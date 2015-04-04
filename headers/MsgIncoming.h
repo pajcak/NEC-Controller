@@ -11,10 +11,11 @@ public:
                                      ~CMsgGetCurrParamReply();
      CAbstractMessage*               clone() const;
     unsigned char                    getCheckCode() const;
-    int                              getLength(unsigned char & hi, unsigned char & lo) const;
+    int                              getLengthInt() const;
     std::basic_string<unsigned char> getLength() const;
     std::basic_string<unsigned char> getBuffer() const; // MAYBE NOT NEEDED
-    bool initWithRawData(unsigned char * data);
+    int getMaxValue() const;
+    int getCurrValue() const;
 private:
     unsigned char m_result [2]; /*Result code - 0x30,0x30(no error) / 0x30,0x31(Unsupported operation) */
     unsigned char m_opCodePage [2]; /*Operation code page*/
@@ -31,10 +32,9 @@ public:
                                      ~CMsgSetParamReply();
      CAbstractMessage*               clone() const;
     unsigned char                    getCheckCode() const;
-    int                              getLength(unsigned char & hi, unsigned char & lo) const;
+    int                              getLengthInt() const;
     std::basic_string<unsigned char> getLength() const;
     std::basic_string<unsigned char> getBuffer() const; // MAYBE NOT NEEDED
-    bool initWithRawData(unsigned char * data);
 private:
     unsigned char m_result [2]; /*Result code - 0x30,0x30(no error) / 0x30,0x31(Unsupported operation) */
     unsigned char m_opCodePage [2]; /*Operation code page*/
@@ -48,13 +48,12 @@ private:
 //*******************************************************************************
 class CMsgCommSaveCurrSettingsReply : public CAbstractMessage {
 public:
-                                     CMsgCommSaveCurrSettingsReply(const unsigned char *);
+                                     CMsgCommSaveCurrSettingsReply(const unsigned char * _buffer);
      CAbstractMessage*               clone() const;
     unsigned char                    getCheckCode() const;
-    int                              getLength(unsigned char & hi, unsigned char & lo) const;
+    int                              getLengthInt() const;
     std::basic_string<unsigned char> getLength() const;
     std::basic_string<unsigned char> getBuffer() const; // MAYBE NOT NEEDED
-    bool initWithRawData(unsigned char * data);
 private:
     unsigned char m_commandCode [4]; /* '0','0', '0', 'C' (0x30, 0x30, 0x30, 0x43)*/
 };
@@ -62,14 +61,14 @@ private:
 class CMsgCommNull : public CAbstractMessage {
 public:
                                      CMsgCommNull();
+                                     CMsgCommNull(const unsigned char * _buffer);
                                      CMsgCommNull(const CMsgCommNull&);
                                      ~CMsgCommNull();
      CAbstractMessage*               clone() const;
     unsigned char                    getCheckCode() const;
-    int                              getLength(unsigned char & hi, unsigned char & lo) const;
+    int                              getLengthInt() const;
     std::basic_string<unsigned char> getLength() const;
     std::basic_string<unsigned char> getBuffer() const; // MAYBE NOT NEEDED
-    bool initWithRawData(unsigned char * data);
 private:
     unsigned char m_commandCode [2]; /* 'B','E' (0x42, 0x45)*/
 //The NULL message returned from the monitor is used in the following cases;

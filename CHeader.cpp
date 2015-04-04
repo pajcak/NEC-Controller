@@ -14,12 +14,15 @@ CHeader::CHeader(unsigned char _destination,
 //    unsigned char msgType;
 //    unsigned char msgLen [2]; /*from STX to ETX inclusive !Use CMessage.getLength()!*/
 }
-CHeader::CHeader(const char * _buffer) 
+CHeader::CHeader(const unsigned char * _buffer) 
 {
     //TODO MANAGE EXCEPTION
-    if (strlen(_buffer) != 7) throw "CHeader::CHeader(): incorrect buffer size\n";
+//    if (strlen(()_buffer) != 7) throw "CHeader::CHeader(): incorrect buffer size\n";
+    if (_buffer[0] != 0x01) throw "CHeader::CHeader(): invalid SOH from buffer\n";
     m_SOH = _buffer[0];
+    if (_buffer[1] != 0x30) throw "CHeader::CHeader(): invalid RESERVED from buffer\n";
     m_RESERVED = _buffer[1];
+    if (_buffer[2] != 0x30) throw "CHeader::CHeader(): invalid destination from buffer\n";
     m_destination = _buffer[2];
     m_source = _buffer[3];
     m_msgType = _buffer[4];

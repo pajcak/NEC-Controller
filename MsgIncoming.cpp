@@ -1,12 +1,44 @@
 #include "headers/MsgIncoming.h"
 
+/** \brief Fills fields from bytes in parameter.
+ * Also checks if the bytes content corresponds to this exact message
+ * 
+ * @param data
+ */
 CMsgGetCurrParamReply::CMsgGetCurrParamReply(const unsigned char * _buffer) {
+    //s_STX = 0x02;
     //unsigned char result [2]; /*Result code - 0x30,0x30(no error) / 0x30,0x31(Unsupported operation) */
     //unsigned char opCodePage [2]; /*Operation code page*/
     //unsigned char opCode [2]; /*Operation code*/
     //unsigned char type [2]; /*Operation type code - 0x30,0x30(set parameter) / 0x30,0x31(momentary)*/
     //unsigned char maxValue[4]; /*Maximum value which monitor can accept.*/
     //unsigned char currValue[4];
+    //s_ETX = 0x03;
+    if (_buffer[0] != 0x02) throw "CMsgGetCurrParamReply(const unsigned char*): STX exception\n";
+    if (_buffer[1] == 0x30) m_result[0] = _buffer[1];
+    else throw "CMsgGetCurrParamReply(const unsigned char*): result exception\n";
+    if (_buffer[2] == 0x30 || _buffer[2] == 0x31) m_result[1] = _buffer[2];
+    else throw "CMsgGetCurrParamReply(const unsigned char*): result exception\n";
+    if (m_result[1] == 0x31) 
+        throw "CMsgGetCurrParamReply(const unsigned char*): m_result: unsupported operation\n";
+    
+    m_opCodePage[0] = _buffer[3];
+    m_opCodePage[1] = _buffer[4];
+    m_opCode[0]     = _buffer[5]; 
+    m_opCode[1]     = _buffer[6];
+
+    if (_buffer[7] == 0x30) m_type[0] = _buffer[7];
+    else throw "CMsgGetCurrParamReply(const unsigned char*): operation type code exception\n";
+    if (_buffer[8] == 0x30 || _buffer[8] == 0x31) m_type[1] = _buffer[8];
+    else throw "CMsgGetCurrParamReply(const unsigned char*): operation type code exception\n";
+    m_maxValue[0] = _buffer[9];
+    m_maxValue[1] = _buffer[10];
+    m_maxValue[2] = _buffer[11];
+    m_maxValue[3] = _buffer[12];
+    m_currValue[0] = _buffer[13];
+    m_currValue[1] = _buffer[14];
+    m_currValue[2] = _buffer[15];
+    m_currValue[3] = _buffer[16];
 }
 
 CMsgGetCurrParamReply::CMsgGetCurrParamReply(unsigned char _opCodePage[2], unsigned char _opCode[2]) {
@@ -29,11 +61,11 @@ CAbstractMessage* CMsgGetCurrParamReply::clone() const {
 }
 
 unsigned char CMsgGetCurrParamReply::getCheckCode() const {
+    //TODO
+    return 'X';
 }
 
-int CMsgGetCurrParamReply::getLength(unsigned char & hi, unsigned char & lo) const {
-    hi = '1';
-    lo = '2';
+int CMsgGetCurrParamReply::getLengthInt() const {
     return 18;
 }
 
@@ -66,45 +98,13 @@ std::basic_string<unsigned char> CMsgGetCurrParamReply::getBuffer() const { // M
     ustr.push_back(s_ETX);
     return ustr;
 }
-
-/** \brief Fills fields from bytes in parameter.
- * Also checks if the bytes content corresponds to this exact message
- * 
- * @param data
- * @return Flag indicating if init was successful.
- */
-bool CMsgGetCurrParamReply::initWithRawData(unsigned char * data) {
-    //unsigned char result [2]; /*Result code - 0x30,0x30(no error) / 0x30,0x31(Unsupported operation) */
-    //unsigned char opCodePage [2]; /*Operation code page*/
-    //unsigned char opCode [2]; /*Operation code*/
-    //unsigned char type [2]; /*Operation type code - 0x30,0x30(set parameter) / 0x30,0x31(momentary)*/
-    //unsigned char maxValue[4]; /*Maximum value which monitor can accept.*/
-    //unsigned char currValue[4];
-    if (data[1] == 0x30) m_result[0] = data[1];
-    else throw "InitWithRawData(): result exception\n";
-    if (data[2] == 0x30 || data[2] == 0x31) m_result[1] = data[2];
-    else throw "InitWithRawData(): result exception\n";
-    
-    if ( !(data[3] == m_opCodePage[0]) ) throw "InitWithRawData(): opCodePage exception\n";
-    if ( !(data[4] == m_opCodePage[1]) ) throw "InitWithRawData(): opCodePage exception\n";
-    
-    if ( !(data[5] == m_opCode[0]) ) throw "InitWithRawData(): opCode exception\n";
-    if ( !(data[6] == m_opCode[1]) ) throw "InitWithRawData(): opCode exception\n";
-
-    if (data[7] == 0x30) m_type[0] = data[7];
-    else throw "InitWithRawData(): type exception\n";
-    if (data[8] == 0x30 || data[8] == 0x31) m_type[1] = data[8];
-    else throw "InitWithRawData(): type exception\n";
-    m_maxValue[0] = data[9];
-    m_maxValue[1] = data[10];
-    m_maxValue[2] = data[11];
-    m_maxValue[3] = data[12];
-    m_currValue[0] = data[13];
-    m_currValue[1] = data[14];
-    m_currValue[2] = data[15];
-    m_currValue[3] = data[16];
-    return true;
+int CMsgGetCurrParamReply::getMaxValue() const {
+    return fourBytesToInt(m_maxValue[0], m_maxValue[1], m_maxValue[2], m_maxValue[3]);
 }
+int CMsgGetCurrParamReply::getCurrValue() const {
+    return fourBytesToInt(m_currValue[0], m_currValue[1], m_currValue[2], m_currValue[3]);
+}
+
 //******************************************************************************
 
 CMsgSetParamReply::CMsgSetParamReply(const unsigned char * _buffer) {
@@ -129,11 +129,11 @@ CAbstractMessage* CMsgSetParamReply::clone() const {
 }
 
 unsigned char CMsgSetParamReply::getCheckCode() const {
+    //TODO
+    return 'X';
 }
 
-int CMsgSetParamReply::getLength(unsigned char & hi, unsigned char & lo) const {
-    hi = '1';
-    lo = '2';
+int CMsgSetParamReply::getLengthInt() const {
     return 18;
 }
 
@@ -145,12 +145,8 @@ std::basic_string<unsigned char> CMsgSetParamReply::getLength() const {
 }
 
 std::basic_string<unsigned char> CMsgSetParamReply::getBuffer() const {
-
-}
-
-bool CMsgSetParamReply::initWithRawData(unsigned char * data) {
-
-    return false;
+    //TODO
+    return std::basic_string<unsigned char>();
 }
 //******************************************************************************
 
@@ -160,15 +156,15 @@ CMsgCommSaveCurrSettingsReply::CMsgCommSaveCurrSettingsReply(const unsigned char
 }
 
 CAbstractMessage* CMsgCommSaveCurrSettingsReply::clone() const {
-
+    return NULL;
 }
 
 unsigned char CMsgCommSaveCurrSettingsReply::getCheckCode() const {
+    //TODO
+    return 'X';
 }
 
-int CMsgCommSaveCurrSettingsReply::getLength(unsigned char & hi, unsigned char & lo) const {
-    hi = '0';
-    lo = '6';
+int CMsgCommSaveCurrSettingsReply::getLengthInt() const {
     return 6;
 }
 
@@ -180,19 +176,19 @@ std::basic_string<unsigned char> CMsgCommSaveCurrSettingsReply::getLength() cons
 }
 
 std::basic_string<unsigned char> CMsgCommSaveCurrSettingsReply::getBuffer() const {
-
+    //TODO
+    return std::basic_string<unsigned char>();
 }
 
-bool CMsgCommSaveCurrSettingsReply::initWithRawData(unsigned char * data) {
-
-    return false;
-}
 //******************************************************************************
 
 CMsgCommNull::CMsgCommNull() {
     //unsigned char commandCode [2]; /* 'B','E' (0x42, 0x45)*/
     m_commandCode[0] = 0x42;
     m_commandCode[1] = 0x45;
+}
+CMsgCommNull::CMsgCommNull(const unsigned char * _buffer) {
+
 }
 
 CMsgCommNull::CMsgCommNull(const CMsgCommNull& rhs)
@@ -208,11 +204,11 @@ CAbstractMessage* CMsgCommNull::clone() const {
 }
 
 unsigned char CMsgCommNull::getCheckCode() const {
+    //TODO
+    return 'X';
 }
 
-int CMsgCommNull::getLength(unsigned char & hi, unsigned char & lo) const {
-    hi = '0';
-    lo = '4';
+int CMsgCommNull::getLengthInt() const {
     return 4;
 }
 
@@ -245,10 +241,4 @@ std::basic_string<unsigned char> CMsgCommNull::getBuffer() const { // MAYBE NOT 
     ustr.push_back(s_ETX);
     return ustr;
 }
-
-bool CMsgCommNull::initWithRawData(unsigned char * data) {
-
-    return false;
-}
-
 //******************************************************************************

@@ -8,7 +8,7 @@ public:
     CHeader(unsigned char _destination,
             unsigned char _msgType,
             const unsigned char _msgLen [2]);
-    CHeader(const char * _buffer);
+    CHeader(const unsigned char * _buffer);
     CHeader(const CHeader & header);
     unsigned char getCheckCode() const;
     std::basic_string<unsigned char> getBuffer() const;
@@ -26,9 +26,11 @@ public:
     }
 
     std::basic_string<unsigned char> getMsgLen() const {
-//        return (int)((((m_msgLen[0]>='A')?(m_msgLen[0]-'A'+10)
-//                :(m_msgLen[0]-'0'))<<4)+((m_msgLen[1]>='A')?(m_msgLen[1]-'A'+10):(m_msgLen[1]-'0')));
         return m_msgLen;
+    }
+    int getMsgLenInt() const {
+        return (int)((((m_msgLen[0]>='A')?(m_msgLen[0]-'A'+10)
+                :(m_msgLen[0]-'0'))<<4)+((m_msgLen[1]>='A')?(m_msgLen[1]-'A'+10):(m_msgLen[1]-'0')));  
     }
     int getLen() const {
         return 7;

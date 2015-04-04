@@ -46,8 +46,9 @@ const CHeader * CPacket::getHeader() const {
     return m_header;
 }
 int CPacket::getLength() const {
-    unsigned char dummy;
-    return m_header->getLen() + m_message->getLength(dummy, dummy) + 2;
+//    unsigned char dummy;
+//    return m_header->getLen() + m_message->getLength(dummy, dummy) + 2;
+    return 0;
 }
 CAbstractMessage *       CPacket::getMessage() {
     return m_message;

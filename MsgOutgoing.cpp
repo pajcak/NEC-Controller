@@ -48,10 +48,8 @@ unsigned char CMsgGetCurrParam::getCheckCode() const {
     return (s_STX ^ m_opCodePage[0] ^ m_opCodePage[1] ^ m_opCode[0] ^ m_opCode[1] ^ s_ETX);
 }
 
-int CMsgGetCurrParam::getLength(unsigned char & hi, unsigned char & lo) const {
+int CMsgGetCurrParam::getLengthInt() const {
     //    (int)((((hi>='A')?(hi-'A'+10):(hi-'0'))<<4)+((lo>='A')?(lo-'A'+10):(lo-'0')))
-    hi = '0';
-    lo = '6';
     return 6;
 }
 
@@ -109,9 +107,7 @@ unsigned char CMsgSetParam::getCheckCode() const {
             ^ m_setValue[0] ^ m_setValue[1] ^ m_setValue[2] ^ m_setValue[3] ^ s_ETX);
 }
 
-int CMsgSetParam::getLength(unsigned char & hi, unsigned char & lo) const {
-    hi = '0';
-    lo = 'A';
+int CMsgSetParam::getLengthInt() const {
     return 10;
 }
 
@@ -153,9 +149,7 @@ unsigned char CMsgCommSaveCurrSettings::getCheckCode() const {
     return (s_STX ^ m_commandCode[0] ^ m_commandCode[1] ^ s_ETX);
 }
 
-int CMsgCommSaveCurrSettings::getLength(unsigned char & hi, unsigned char & lo) const {
-    hi = '0';
-    lo = '4';
+int CMsgCommSaveCurrSettings::getLengthInt() const {
     return 4;
 }
 

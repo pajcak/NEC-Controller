@@ -19,20 +19,28 @@ CController::~CController() {
 int  CController::getBrightness() {
     unsigned char opCodePage[2] = {'0', '0'};/*operation code page for Brightness*/
     unsigned char opCode[2]     = {'1', '0'};/*operation code for Brightness*/
-    /*Does not need to be deleted (deleted inside packet destructor)*/
-//    CAbstractMessage * msg = new CMsgGetCurrParam(opCodePage, opCode); 
-    // '*' means destination address of all monitors connected by "daisy chain"
-    // 'C' means Get parameter message type
-    CMsgGetCurrParam msg(opCodePage, opCode);
+    CAbstractMessage * msg = new CMsgGetCurrParam(opCodePage, opCode);
+    CAbstractMessage * gprMsg;
+    try {
+        gprMsg = m_monitor->getParameter(msg);
+    } catch (const char * s) {
+        printf("CAUGHT: %s", s);
+        //here i have to throw exception higher
+        throw s;
+    }
+    if (!gprMsg) throw "CController::getBrightness(): NullObject received.";
     
-    CPacket packet(CHeader('*', 'C', msg.getLength().c_str()), msg);
-    m_monitor->sendPacket(packet);
-    printf("***SENT****\n");
+    CMsgGetCurrParamReply * getParamReply = dynamic_cast<CMsgGetCurrParamReply*>(gprMsg);
+    if (getParamReply == 0) throw "CController::getBrightness(): dynamic_cast.";
     
-    CMsgGetCurrParamReply expectedMsg(opCodePage, opCode);
-    CPacket expected(CHeader(), expectedMsg);
-    m_monitor->receivePacket(expected);
+    int brightness = getParamReply->getCurrValue();
+    printf ("MaxVal=  [%d]\n", getParamReply->getMaxValue());
+    printf ("CurrVal= [%d]\n", brightness);
+    if (gprMsg) delete gprMsg;
+    delete msg;
+    return brightness;
 }
 bool CController::setBrightness(const int & val) {
-    
+    //TODO
+    return false;
 }

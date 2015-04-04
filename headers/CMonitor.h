@@ -2,6 +2,7 @@
 #define	__CCONNECTION_H__
 
 #include "CPacket.h"
+#include "MsgIncoming.h"
 
 class CMonitor {
 public:
@@ -10,8 +11,25 @@ public:
     bool establishConnection();
     void disconnect();
     bool isConnected();
-    int sendPacket(const CPacket & packet);
-    CPacket * receivePacket(CPacket & expected);
+
+/** \Brief Blocking, sends CMsgGetCurrParam and returns received data in CMsgGetCurrParamReply.
+ * If NullMsg was received, simply return sNULL, if error, throw exception
+ * \return CMsgGetCurrParamReply if correct data were received.
+ * If incorrect data arrived, exception is thrown.
+ * If nullMsg was received, it returns false.
+ */
+CAbstractMessage * getParameter(const CAbstractMessage * msg);
+
+/** \Brief Blocking, sends CMsgSetParam and returns received data in CMsgSetParamReply.
+ * If NullMsg was received, simply return sNULL, if error, throw exception
+ * \return CMsgSetParamReply if correct data were received.
+ * If incorrect data arrived, exception is thrown.
+ * If nullMsg was received, it returns false.
+ */
+CAbstractMessage *     setParameter(const CAbstractMessage * param);
+/*now methods for each command*/
+
+
 private:
     const char * m_serverAddr;
     const int m_port;

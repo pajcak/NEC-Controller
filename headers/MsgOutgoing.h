@@ -11,11 +11,10 @@ public:
                                      ~CMsgGetCurrParam();
      CAbstractMessage*               clone() const;
     unsigned char                    getCheckCode() const;
-    int                              getLength(unsigned char & hi, unsigned char & lo) const;
+    int                              getLengthInt() const;
     std::basic_string<unsigned char> getLength() const;
     std::basic_string<unsigned char> getBuffer() const;
     //DOES NOT NEED TO BE IMPLEMENTED
-    bool initWithRawData(unsigned char * data) {return false;}
 private:
     unsigned char m_opCodePage [2]; /*Operation code page*/
     unsigned char m_opCode [2]; /*Operation code*/
@@ -30,11 +29,10 @@ public:
                                      ~CMsgSetParam();
      CAbstractMessage*               clone() const;
     unsigned char                    getCheckCode() const;
-    int                              getLength(unsigned char & hi, unsigned char & lo) const;
+    int                              getLengthInt() const;
     std::basic_string<unsigned char> getLength() const;
     std::basic_string<unsigned char> getBuffer() const;
     //DOES NOT NEED TO BE IMPLEMENTED
-    bool initWithRawData(unsigned char * data) {return false;}
 private:
     unsigned char m_opCodePage [2]; /*Operation code page*/
     unsigned char m_opCode [2]; /*Operation code*/
@@ -48,11 +46,10 @@ public:
                                      CMsgCommSaveCurrSettings(); // no params, bcs commandCode is already defined
      CAbstractMessage*               clone() const;
     unsigned char                    getCheckCode() const;
-    int                              getLength(unsigned char & hi, unsigned char & lo) const;
+    int                              getLengthInt() const;
     std::basic_string<unsigned char> getLength() const;
     std::basic_string<unsigned char> getBuffer() const;
     //DOES NOT NEED TO BE IMPLEMENTED
-    bool initWithRawData(unsigned char * data) {return false;}
 private:
     unsigned char m_commandCode [2]; /* 'O','C' (0x30, 0x43)*/
 
