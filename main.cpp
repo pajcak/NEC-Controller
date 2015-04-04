@@ -15,7 +15,8 @@ using namespace std;
 
 int main(int argc, char * argv []) {
     CController c;
-    c.getBrightness();
+//    c.getBrightness();
+    printf("SetBrightness: %s\n", c.setBrightness(80) ? "succesfull" : "fail");
 //    return 0;
 //    snprintf(buffer, sizeof ( buffer), "%d: %s\n", i, "blablabla typu const char*");
 

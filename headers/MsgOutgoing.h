@@ -14,7 +14,6 @@ public:
     int                              getLengthInt() const;
     std::basic_string<unsigned char> getLength() const;
     std::basic_string<unsigned char> getBuffer() const;
-    //DOES NOT NEED TO BE IMPLEMENTED
 private:
     unsigned char m_opCodePage [2]; /*Operation code page*/
     unsigned char m_opCode [2]; /*Operation code*/
@@ -32,7 +31,6 @@ public:
     int                              getLengthInt() const;
     std::basic_string<unsigned char> getLength() const;
     std::basic_string<unsigned char> getBuffer() const;
-    //DOES NOT NEED TO BE IMPLEMENTED
 private:
     unsigned char m_opCodePage [2]; /*Operation code page*/
     unsigned char m_opCode [2]; /*Operation code*/

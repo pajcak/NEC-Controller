@@ -1,5 +1,5 @@
 #include "headers/MsgIncoming.h"
-
+#include "headers/Utils.h"
 /** \brief Fills fields from bytes in parameter.
  * Also checks if the bytes content corresponds to this exact message
  * 
@@ -41,13 +41,6 @@ CMsgGetCurrParamReply::CMsgGetCurrParamReply(const unsigned char * _buffer) {
     m_currValue[3] = _buffer[16];
 }
 
-CMsgGetCurrParamReply::CMsgGetCurrParamReply(unsigned char _opCodePage[2], unsigned char _opCode[2]) {
-    m_opCodePage[0] = _opCodePage[0];
-    m_opCodePage[1] = _opCodePage[1];
-    m_opCode[0] = _opCode[0];
-    m_opCode[1] = _opCode[1];
-
-}
 CMsgGetCurrParamReply::CMsgGetCurrParamReply(const CMsgGetCurrParamReply& rhs)
 : CAbstractMessage(rhs) {
     //TODO
@@ -114,6 +107,31 @@ CMsgSetParamReply::CMsgSetParamReply(const unsigned char * _buffer) {
     //unsigned char type [2]; /*Operation type code - 0x30,0x30(set parameter) / 0x30,0x31(momentary)*/
     //unsigned char maxValue[4]; /*Maximum value that monitor can accept.*/
     //unsigned char reqSettingVal[4]; /*Echoes back the parameter for confirmation.*/
+    if (_buffer[0] != 0x02) throw "CMsgSetParamReply(const unsigned char*): STX exception\n";
+    if (_buffer[1] == 0x30) m_result[0] = _buffer[1];
+    else throw "CMsgSetParamReply(const unsigned char*): result exception\n";
+    if (_buffer[2] == 0x30 || _buffer[2] == 0x31) m_result[1] = _buffer[2];
+    else throw "CMsgSetParamReply(const unsigned char*): result exception\n";
+    if (m_result[1] == 0x31) 
+        throw "CMsgSetParamReply(const unsigned char*): m_result: unsupported operation\n";
+    
+    m_opCodePage[0] = _buffer[3];
+    m_opCodePage[1] = _buffer[4];
+    m_opCode[0]     = _buffer[5]; 
+    m_opCode[1]     = _buffer[6];
+
+    if (_buffer[7] == 0x30) m_type[0] = _buffer[7];
+    else throw "CMsgSetParamReply(const unsigned char*): operation type code exception\n";
+    if (_buffer[8] == 0x30 || _buffer[8] == 0x31) m_type[1] = _buffer[8];
+    else throw "CMsgSetParamReply(const unsigned char*): operation type code exception\n";
+    m_maxValue[0] = _buffer[9];
+    m_maxValue[1] = _buffer[10];
+    m_maxValue[2] = _buffer[11];
+    m_maxValue[3] = _buffer[12];
+    m_reqSettingVal[0] = _buffer[13];
+    m_reqSettingVal[1] = _buffer[14];
+    m_reqSettingVal[2] = _buffer[15];
+    m_reqSettingVal[3] = _buffer[16];
 }
 
 CMsgSetParamReply::CMsgSetParamReply(const CMsgSetParamReply & rhs)
@@ -147,6 +165,13 @@ std::basic_string<unsigned char> CMsgSetParamReply::getLength() const {
 std::basic_string<unsigned char> CMsgSetParamReply::getBuffer() const {
     //TODO
     return std::basic_string<unsigned char>();
+}
+int                              CMsgSetParamReply::getMaxValue() const {
+   return fourBytesToInt(m_maxValue[0], m_maxValue[1], m_maxValue[2], m_maxValue[3]); 
+}
+int                              CMsgSetParamReply::getCurrValue() const {
+    return fourBytesToInt(m_reqSettingVal[0], m_reqSettingVal[1],
+                          m_reqSettingVal[2], m_reqSettingVal[3]);
 }
 //******************************************************************************
 

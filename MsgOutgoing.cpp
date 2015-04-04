@@ -1,4 +1,5 @@
 #include "headers/MsgOutgoing.h"
+#include "headers/Utils.h"
 #include <cstring> //std::basic_string()
 /*
  *               PACKET STRUCTURE

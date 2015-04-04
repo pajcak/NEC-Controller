@@ -12,6 +12,7 @@
         <itemPath>headers/CPacket.h</itemPath>
         <itemPath>headers/MsgIncoming.h</itemPath>
         <itemPath>headers/MsgOutgoing.h</itemPath>
+        <itemPath>headers/Utils.h</itemPath>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
@@ -82,6 +83,8 @@
       </item>
       <item path="headers/MsgOutgoing.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="headers/Utils.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
@@ -130,6 +133,8 @@
       <item path="headers/MsgIncoming.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="headers/MsgOutgoing.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="headers/Utils.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
