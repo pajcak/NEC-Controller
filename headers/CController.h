@@ -9,7 +9,7 @@ public:
     virtual ~CController();
 //-----------------------API----------------------------
     int getBrightness();
-    bool setBrightness(const int & val);
+    void setBrightness(const int & val);
     
 private:
     CMonitor * m_monitor;

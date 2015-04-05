@@ -56,7 +56,8 @@ public:
     std::basic_string<unsigned char> getLength() const;
     std::basic_string<unsigned char> getBuffer() const; // MAYBE NOT NEEDED
 private:
-    unsigned char m_commandCode [4]; /* '0','0', '0', 'C' (0x30, 0x30, 0x30, 0x43)*/
+    unsigned char m_result[2]; /*'0','0', (0x30, 0x30)*/
+    unsigned char m_commandCode [2]; /* '0', 'C' (0x30, 0x43)*/
 };
 //******************************************************************************
 class CMsgCommNull : public CAbstractMessage {

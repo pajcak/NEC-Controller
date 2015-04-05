@@ -16,7 +16,11 @@ using namespace std;
 int main(int argc, char * argv []) {
     CController c;
 //    c.getBrightness();
-    printf("SetBrightness: %s\n", c.setBrightness(80) ? "succesfull" : "fail");
+    try {
+        c.setBrightness(80);
+    } catch (const char * x) {
+        printf("MAIN: caught:%s\n", x);
+    }
 //    return 0;
 //    snprintf(buffer, sizeof ( buffer), "%d: %s\n", i, "blablabla typu const char*");
 

@@ -21,17 +21,14 @@ int  CController::getBrightness() {
     unsigned char opCode[2]     = {'1', '0'};/*operation code for Brightness*/
     CAbstractMessage * msg = new CMsgGetCurrParam(opCodePage, opCode);
     CAbstractMessage * gprMsg;
-    try {
-        gprMsg = m_monitor->getParameter(msg);
-    } catch (const char * s) {
-        printf("CAUGHT: %s", s);
-        //here i have to throw exception higher
-        throw s;
-    }
-    if (!gprMsg) throw "CController::getBrightness(): NullObject received.";
-    
+
+    gprMsg = m_monitor->getParameter(msg);
+
     CMsgGetCurrParamReply * getParamReply = dynamic_cast<CMsgGetCurrParamReply*>(gprMsg);
-    if (getParamReply == 0) throw "CController::getBrightness(): dynamic_cast.";
+    if (getParamReply == 0) {
+        delete msg;
+        throw "CController::getBrightness(): dynamic_cast.";
+    }
     
     int brightness = getParamReply->getCurrValue();
     printf ("MaxVal=  [%d]\n", getParamReply->getMaxValue());
@@ -40,7 +37,7 @@ int  CController::getBrightness() {
     delete msg;
     return brightness;
 }
-bool CController::setBrightness(const int & val) {
+void CController::setBrightness(const int & val) {
     unsigned char opCodePage[2] = {'0', '0'};/*operation code page for Brightness*/
     unsigned char opCode[2]     = {'1', '0'};/*operation code for Brightness*/
 
@@ -48,18 +45,8 @@ bool CController::setBrightness(const int & val) {
     IntToFourBytes(val, value);
     CAbstractMessage * msg = new CMsgSetParam(opCodePage, opCode, value);
     CAbstractMessage * sprMsg;
-    try {
-        sprMsg = m_monitor->setParameter(msg);
-    } catch (const char * s) {
-        printf("CAUGHT: %s", s);
-        delete msg;
-        //here i have to throw exception higher
-        throw s;
-    }
-    if (!sprMsg) {
-        delete msg;
-        throw "CController::setBrightness(): NullObject received.";
-    }
+
+    sprMsg = m_monitor->setParameter(msg);
     
     CMsgSetParamReply * setParamReply = dynamic_cast<CMsgSetParamReply*>(sprMsg);
     if (setParamReply == 0) {
@@ -70,7 +57,11 @@ bool CController::setBrightness(const int & val) {
     printf("MaxVal: %d\n", setParamReply->getMaxValue());
     printf("CurrVal: %d\n", setParamReply->getCurrValue());
     
+    if (setParamReply->getCurrValue() != val) 
+        throw "CController::setBrightness(): incorrect confirm value in setParameterReply";
+    
+    m_monitor->saveCurrentSettings();
+    
     if (sprMsg) delete sprMsg;
     delete msg;
-    return (setParamReply->getCurrValue() == val);
 }

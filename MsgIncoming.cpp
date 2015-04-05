@@ -39,6 +39,8 @@ CMsgGetCurrParamReply::CMsgGetCurrParamReply(const unsigned char * _buffer) {
     m_currValue[1] = _buffer[14];
     m_currValue[2] = _buffer[15];
     m_currValue[3] = _buffer[16];
+    if (_buffer[17] != 0x03) 
+        throw "CMsgGetCurrParamReply(const unsigned char*): ETX exception\n";
 }
 
 CMsgGetCurrParamReply::CMsgGetCurrParamReply(const CMsgGetCurrParamReply& rhs)
@@ -132,6 +134,8 @@ CMsgSetParamReply::CMsgSetParamReply(const unsigned char * _buffer) {
     m_reqSettingVal[1] = _buffer[14];
     m_reqSettingVal[2] = _buffer[15];
     m_reqSettingVal[3] = _buffer[16];
+    if (_buffer[17] != 0x03) 
+        throw "CMsgSetParamReply(const unsigned char*): ETX exception\n";
 }
 
 CMsgSetParamReply::CMsgSetParamReply(const CMsgSetParamReply & rhs)
@@ -177,7 +181,24 @@ int                              CMsgSetParamReply::getCurrValue() const {
 
 CMsgCommSaveCurrSettingsReply::CMsgCommSaveCurrSettingsReply(const unsigned char * _buffer) {
     //unsigned char m_commandCode [4]; /* '0','0', '0', 'C' (0x30, 0x30, 0x30, 0x43)*/
-    //    if ()
+    if (_buffer[0] != 0x02) 
+        throw "CMsgCommSaveCurrSettingsReply(const unsigned char*): STX exception\n";
+    if (_buffer[1] == 0x30) m_result[0] = _buffer[1];
+    else throw "CMsgCommSaveCurrSettingsReply(const unsigned char*): result exception\n";
+    if (_buffer[2] == 0x30 || _buffer[2] == 0x31) m_result[1] = _buffer[2];
+    else throw "CMsgCommSaveCurrSettingsReply(const unsigned char*): result exception\n";
+    if (m_result[1] == 0x31) 
+        throw "CMsgCommSaveCurrSettingsReply(const unsigned char*): m_result: unsupported operation\n";
+    
+    if (_buffer[3] == 0x30) m_commandCode[0] = _buffer[3];
+    else throw "CMsgCommSaveCurrSettingsReply(const unsigned char*): command code exception\n";
+    
+    if (_buffer[4] == 0x43) m_commandCode[1] = _buffer[4];
+    else throw "CMsgCommSaveCurrSettingsReply(const unsigned char*): command code exception\n";
+    
+    
+    if (_buffer[5] != 0x03) 
+        throw "CMsgCommSaveCurrSettingsReply(const unsigned char*): ETX exception\n";
 }
 
 CAbstractMessage* CMsgCommSaveCurrSettingsReply::clone() const {

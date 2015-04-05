@@ -16,7 +16,7 @@ public:
  * If NullMsg was received, simply return sNULL, if error, throw exception
  * \return CMsgGetCurrParamReply if correct data were received.
  * If incorrect data arrived, exception is thrown.
- * If nullMsg was received, it returns false.
+ * If nullMsg was received, exception is thrown.
  */
 CAbstractMessage * getParameter(const CAbstractMessage * msg);
 
@@ -24,13 +24,17 @@ CAbstractMessage * getParameter(const CAbstractMessage * msg);
  * If NullMsg was received, simply return sNULL, if error, throw exception
  * \return CMsgSetParamReply if correct data were received.
  * If incorrect data arrived, exception is thrown.
- * If nullMsg was received, it returns false.
+ * If nullMsg was received, it exception is thrown.
  */
 CAbstractMessage *     setParameter(const CAbstractMessage * param);
 /*now methods for each command*/
 
+void saveCurrentSettings(void);
 
 private:
+    void sendPacket(const unsigned char & DESTINATION,
+                    const unsigned char & MSG_TYPE,
+                    const CAbstractMessage * msg);
     const char * m_serverAddr;
     const int m_port;
     int m_socketFD;
