@@ -77,12 +77,13 @@ void CMonitor::sendPacket(  const unsigned char & DESTINATION,
 }
 void CMonitor::receiveData(CHeader * header, CAbstractMessage * msg) {
 //-----------------HEADER---------------
+    printf("==============RECEIVING==============\n");
     unsigned char headBuffer [7];
     int readLength = read(m_socketFD, headBuffer, sizeof (headBuffer));
     if (readLength < 7) throw "receiveData(): header readLength too small.";
     
     for (int i = 0; i < readLength; i++) {
-        printf("recvHead[%d]: 0x%02x | %c\n", i, headBuffer[i], headBuffer[i]);
+        printf("Head[%d]: [0x%02x] | [%c]\n", i, headBuffer[i], headBuffer[i]);
     }
     printf("\n");
     
@@ -102,7 +103,7 @@ void CMonitor::receiveData(CHeader * header, CAbstractMessage * msg) {
 
     std::basic_string<unsigned char> x = msg->getBuffer();
     for (int i = 0; i < msg->getLengthInt(); i++) {
-        printf("msg[%d]: [0x%02x] | [%c]\n", i, x.at(i), x.at(i));
+        printf("Message[%d]: [0x%02x] | [%c]\n", i, x.at(i), x.at(i));
     }
     printf("\n");
     
@@ -116,6 +117,7 @@ void CMonitor::receiveData(CHeader * header, CAbstractMessage * msg) {
 //        throw "receiveData(): incorrect delimiter.";
     printf("CheckCode: [0x%02x] | [%c]\n", checkCode, checkCode);
     printf("Delimiter: [0x%02x] | [%c]\n", delimiter, delimiter);
+    printf("==============RECEIVED===============\n");
 }
 
 CAbstractMessage * CMonitor::getParameter(const CAbstractMessage * msg) {
@@ -150,17 +152,18 @@ void CMonitor::saveCurrentSettings(void) {
     
     delete msg;
 }
-CAbstractMessage *      CMonitor::powerStatusRead(void) {
+int      CMonitor::powerStatusRead(void) {
     CAbstractMessage * msg = new CMsgCommPowerStatusRead ();
     sendPacket('A', 'A', msg);
     //================RECEIVING==========================
-    //TODO NOW
-//    CHeader header;
-//    CMsgCommSaveCurrSettingsReply recvMessage;
-//    receiveData(&header, &recvMessage);    
-//    
+    CHeader header;
+    CMsgCommPowerStatusReadReply recvMessage;
+    receiveData(&header, &recvMessage);    
+    
+    if (recvMessage.getMaxModeCount() != 4) throw "powerStatusRead(): invalid number of max modes.";
+    
     delete msg;
-    return NULL;/*new CMsgCommPowerStatusReadReply*/
+    return recvMessage.getCurrMode();
 }
 
 /*MESSAGE TYPE(msgType)*/

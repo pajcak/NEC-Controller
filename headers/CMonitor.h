@@ -30,7 +30,7 @@ CAbstractMessage *      setParameter(const CAbstractMessage * param);
 /*now methods for each command*/
 
 void                    saveCurrentSettings(void);
-CAbstractMessage *      powerStatusRead(void);
+int                     powerStatusRead(void);
 
 private:
     void sendPacket(const unsigned char & DESTINATION,

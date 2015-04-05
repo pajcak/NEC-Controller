@@ -67,6 +67,28 @@ private:
     unsigned char m_commandCode [4]; /* '0','0', '0', 'C' (0x30, 0x30, 0x30, 0x43)*/
 };
 //******************************************************************************
+class CMsgCommPowerStatusReadReply : public CAbstractMessage {
+public:
+                                     CMsgCommPowerStatusReadReply() {}
+                                     CMsgCommPowerStatusReadReply(const unsigned char * _buffer);
+    void   initWithRawData(const unsigned char * _buffer);
+    CAbstractMessage*                clone() const;
+    unsigned char                    getCheckCode() const;
+    int                              getLengthInt() const;
+    std::basic_string<unsigned char> getLength() const;
+    std::basic_string<unsigned char> getBuffer() const; // MAYBE NOT NEEDED
+    int                              getMaxModeCount() const;
+    int                              getCurrMode() const;
+private:
+    unsigned char m_reserved [2]; /* 0x30,0x32 */
+    unsigned char m_result [2]; /*Result code - 0x30,0x30(no error) / 0x30,0x31(Unsupported operation) */
+    unsigned char m_commandCode [2]; /* 'D','6' (0x44, 0x36)*/
+    unsigned char m_type [2]; /*Operation type code - 0x30,0x30(set parameter) / 0x30,0x31(momentary)*/
+    unsigned char m_maxValue[4]; /*Maximum value of power modes. ('0', '0', '0', '4') */
+    unsigned char m_currValue[4]; /*Current power mode.('0', '0', '0', '1'->'4')*/
+};
+
+//******************************************************************************
 class CMsgCommNull : public CAbstractMessage {
 public:
                                      CMsgCommNull();

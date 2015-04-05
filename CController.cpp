@@ -65,6 +65,5 @@ void CController::setBrightness(const int & val) {
     if (sprMsg) delete sprMsg;
 }
 int CController::powerStatusRead() {
-    int status;
-    return status;
+    return m_monitor->powerStatusRead();
 }

@@ -7,6 +7,9 @@
  * @param data
  */
 CMsgGetCurrParamReply::CMsgGetCurrParamReply(const unsigned char * _buffer) {
+    this->initWithRawData(_buffer);
+}
+void CMsgGetCurrParamReply::initWithRawData(const unsigned char * _buffer) {
     //s_STX = 0x02;
     //unsigned char result [2]; /*Result code - 0x30,0x30(no error) / 0x30,0x31(Unsupported operation) */
     //unsigned char opCodePage [2]; /*Operation code page*/
@@ -15,35 +18,6 @@ CMsgGetCurrParamReply::CMsgGetCurrParamReply(const unsigned char * _buffer) {
     //unsigned char maxValue[4]; /*Maximum value which monitor can accept.*/
     //unsigned char currValue[4];
     //s_ETX = 0x03;
-    if (_buffer[0] != 0x02) throw "CMsgGetCurrParamReply(const unsigned char*): STX exception\n";
-    if (_buffer[1] == 0x30) m_result[0] = _buffer[1];
-    else throw "CMsgGetCurrParamReply(const unsigned char*): result exception\n";
-    if (_buffer[2] == 0x30 || _buffer[2] == 0x31) m_result[1] = _buffer[2];
-    else throw "CMsgGetCurrParamReply(const unsigned char*): result exception\n";
-    if (m_result[1] == 0x31) 
-        throw "CMsgGetCurrParamReply(const unsigned char*): m_result: unsupported operation\n";
-    
-    m_opCodePage[0] = _buffer[3];
-    m_opCodePage[1] = _buffer[4];
-    m_opCode[0]     = _buffer[5]; 
-    m_opCode[1]     = _buffer[6];
-
-    if (_buffer[7] == 0x30) m_type[0] = _buffer[7];
-    else throw "CMsgGetCurrParamReply(const unsigned char*): operation type code exception\n";
-    if (_buffer[8] == 0x30 || _buffer[8] == 0x31) m_type[1] = _buffer[8];
-    else throw "CMsgGetCurrParamReply(const unsigned char*): operation type code exception\n";
-    m_maxValue[0] = _buffer[9];
-    m_maxValue[1] = _buffer[10];
-    m_maxValue[2] = _buffer[11];
-    m_maxValue[3] = _buffer[12];
-    m_currValue[0] = _buffer[13];
-    m_currValue[1] = _buffer[14];
-    m_currValue[2] = _buffer[15];
-    m_currValue[3] = _buffer[16];
-    if (_buffer[17] != 0x03) 
-        throw "CMsgGetCurrParamReply(const unsigned char*): ETX exception\n";
-}
-void CMsgGetCurrParamReply::initWithRawData(const unsigned char * _buffer) {
     if (_buffer[0] != 0x02) throw "CMsgGetCurrParamReply(const unsigned char*): STX exception\n";
     if (_buffer[1] == 0x30) m_result[0] = _buffer[1];
     else throw "CMsgGetCurrParamReply(const unsigned char*): result exception\n";
@@ -132,41 +106,15 @@ int CMsgGetCurrParamReply::getCurrValue() const {
 //******************************************************************************
 
 CMsgSetParamReply::CMsgSetParamReply(const unsigned char * _buffer) {
+    this->initWithRawData(_buffer);
+}
+void CMsgSetParamReply::initWithRawData(const unsigned char * _buffer) {
     //unsigned char result [2]; /*Result code - 0x30,0x30(no error) / 0x30,0x31(Unsupported operation) */
     //unsigned char opCodePage [2]; /*Operation code page*/
     //unsigned char opCode [2]; /*Operation code*/
     //unsigned char type [2]; /*Operation type code - 0x30,0x30(set parameter) / 0x30,0x31(momentary)*/
     //unsigned char maxValue[4]; /*Maximum value that monitor can accept.*/
     //unsigned char reqSettingVal[4]; /*Echoes back the parameter for confirmation.*/
-    if (_buffer[0] != 0x02) throw "CMsgSetParamReply(const unsigned char*): STX exception\n";
-    if (_buffer[1] == 0x30) m_result[0] = _buffer[1];
-    else throw "CMsgSetParamReply(const unsigned char*): result exception\n";
-    if (_buffer[2] == 0x30 || _buffer[2] == 0x31) m_result[1] = _buffer[2];
-    else throw "CMsgSetParamReply(const unsigned char*): result exception\n";
-    if (m_result[1] == 0x31) 
-        throw "CMsgSetParamReply(const unsigned char*): m_result: unsupported operation\n";
-    
-    m_opCodePage[0] = _buffer[3];
-    m_opCodePage[1] = _buffer[4];
-    m_opCode[0]     = _buffer[5]; 
-    m_opCode[1]     = _buffer[6];
-
-    if (_buffer[7] == 0x30) m_type[0] = _buffer[7];
-    else throw "CMsgSetParamReply(const unsigned char*): operation type code exception\n";
-    if (_buffer[8] == 0x30 || _buffer[8] == 0x31) m_type[1] = _buffer[8];
-    else throw "CMsgSetParamReply(const unsigned char*): operation type code exception\n";
-    m_maxValue[0] = _buffer[9];
-    m_maxValue[1] = _buffer[10];
-    m_maxValue[2] = _buffer[11];
-    m_maxValue[3] = _buffer[12];
-    m_reqSettingVal[0] = _buffer[13];
-    m_reqSettingVal[1] = _buffer[14];
-    m_reqSettingVal[2] = _buffer[15];
-    m_reqSettingVal[3] = _buffer[16];
-    if (_buffer[17] != 0x03) 
-        throw "CMsgSetParamReply(const unsigned char*): ETX exception\n";
-}
-void CMsgSetParamReply::initWithRawData(const unsigned char * _buffer) {
     
     if (_buffer[0] != 0x02) throw "CMsgSetParamReply(const unsigned char*): STX exception\n";
     if (_buffer[1] == 0x30) m_result[0] = _buffer[1];
@@ -256,28 +204,16 @@ int                              CMsgSetParamReply::getCurrValue() const {
 //******************************************************************************
 
 CMsgCommSaveCurrSettingsReply::CMsgCommSaveCurrSettingsReply(const unsigned char * _buffer) {
-    if (_buffer[0] != 0x02) 
-        throw "CMsgCommSaveCurrSettingsReply(const unsigned char*): STX exception\n";
-    if (_buffer[1] == 0x30) m_commandCode[0] = _buffer[1];
-    else throw "CMsgCommSaveCurrSettingsReply(const unsigned char*): command exception\n";
-    if (_buffer[2] == 0x30) m_commandCode[1] = _buffer[2];
-    else throw "CMsgCommSaveCurrSettingsReply(const unsigned char*): command exception\n";
-    if (_buffer[3] == 0x30) m_commandCode[2] = _buffer[3];
-    else throw "CMsgCommSaveCurrSettingsReply(const unsigned char*): command code exception\n";
-    if (_buffer[4] == 0x43) m_commandCode[3] = _buffer[4];
-    else throw "CMsgCommSaveCurrSettingsReply(const unsigned char*): command code exception\n";
-        
-    if (_buffer[5] != 0x03) 
-        throw "CMsgCommSaveCurrSettingsReply(const unsigned char*): ETX exception\n";
+    this->initWithRawData(_buffer);
 }
 
 void CMsgCommSaveCurrSettingsReply::initWithRawData(const unsigned char * _buffer) {
     if (_buffer[0] != 0x02) 
         throw "CMsgCommSaveCurrSettingsReply(const unsigned char*): STX exception\n";
     if (_buffer[1] == 0x30) m_commandCode[0] = _buffer[1];
-    else throw "CMsgCommSaveCurrSettingsReply(const unsigned char*): command exception\n";
+    else throw "CMsgCommSaveCurrSettingsReply(const unsigned char*): command code exception\n";
     if (_buffer[2] == 0x30) m_commandCode[1] = _buffer[2];
-    else throw "CMsgCommSaveCurrSettingsReply(const unsigned char*): command exception\n";
+    else throw "CMsgCommSaveCurrSettingsReply(const unsigned char*): command code exception\n";
     if (_buffer[3] == 0x30) m_commandCode[2] = _buffer[3];
     else throw "CMsgCommSaveCurrSettingsReply(const unsigned char*): command code exception\n";
     if (_buffer[4] == 0x43) m_commandCode[3] = _buffer[4];
@@ -318,7 +254,110 @@ std::basic_string<unsigned char> CMsgCommSaveCurrSettingsReply::getBuffer() cons
     return ustr;
         
 }
+//******************************************************************************
 
+CMsgCommPowerStatusReadReply::CMsgCommPowerStatusReadReply(const unsigned char * _buffer) {
+    this->initWithRawData(_buffer);
+}
+void CMsgCommPowerStatusReadReply::initWithRawData(const unsigned char * _buffer) {
+//    unsigned char m_reserved [2]; /* 0x30,0x32 */
+//    unsigned char m_result [2]; /*Result code - 0x30,0x30(no error) / 0x30,0x31(Unsupported operation) */
+//    unsigned char m_commandCode [2]; /* 'D','6' (0x44, 0x36)*/
+//    unsigned char m_type [2]; /*Operation type code - 0x30,0x30(set parameter) / 0x30,0x31(momentary)*/
+//    unsigned char m_maxValue[4]; /*Maximum value of power modes. ('0', '0', '0', '4') */
+//    unsigned char m_currValue[4]; /*Current power mode.('0', '0', '0', '1'->'4')*/
+    if (_buffer[0] != 0x02) throw "CMsgCommPowerStatusReadReply(const unsigned char*): STX exception\n";
+    
+    if (_buffer[1] != 0x30 || _buffer[2] != 0x32)
+        throw "CMsgCommPowerStatusReadReply(const unsigned char*): reserved exception\n";
+    
+    if (_buffer[3] == 0x30 && (_buffer[4] == 0x30 || _buffer[4] == 0x31)) {
+        m_result[0] = _buffer[3];
+        m_result[1] = _buffer[4];
+    } else throw "CMsgCommPowerStatusReadReply(const unsigned char*): result exception\n";
+    if (m_result[1] == 0x31) 
+        throw "CMsgCommPowerStatusReadReply(const unsigned char*): m_result: unsupported operation\n";
+    
+    if (_buffer[5] == 0x30 && _buffer[6] == 0x32) {
+        m_commandCode[0] = _buffer[5];
+        m_commandCode[1] = _buffer[6];
+    } else throw "CMsgCommPowerStatusReadReply(const unsigned char*): reserved exception\n";
+
+    if (_buffer[7] == 0x30) m_type[0] = _buffer[7];
+    else throw "CMsgCommPowerStatusReadReply(const unsigned char*): operation type code exception\n";
+    if (_buffer[8] == 0x30 || _buffer[8] == 0x31) m_type[1] = _buffer[8];
+    else throw "CMsgCommPowerStatusReadReply(const unsigned char*): operation type code exception\n";
+    
+    if (_buffer[9] == 0x30) m_maxValue[0] = _buffer[9];
+    else throw "CMsgCommPowerStatusReadReply(const unsigned char*): max value exception\n";
+    if (_buffer[10] == 0x30) m_maxValue[1] = _buffer[10];
+    else throw "CMsgCommPowerStatusReadReply(const unsigned char*): max value exception\n";
+    if (_buffer[11] == 0x30) m_maxValue[2] = _buffer[11];
+    else throw "CMsgCommPowerStatusReadReply(const unsigned char*): max value code exception\n";
+    if (_buffer[12] == 0x34) m_maxValue[3] = _buffer[12];
+    else throw "CMsgCommPowerStatusReadReply(const unsigned char*): max value code exception\n";
+    
+    if (_buffer[13] == 0x30) m_currValue[0] = _buffer[13];
+    else throw "CMsgCommPowerStatusReadReply(const unsigned char*): max value exception\n";
+    if (_buffer[14] == 0x30) m_currValue[1] = _buffer[14];
+    else throw "CMsgCommPowerStatusReadReply(const unsigned char*): max value exception\n";
+    if (_buffer[15] == 0x30) m_currValue[2] = _buffer[15];
+    else throw "CMsgCommPowerStatusReadReply(const unsigned char*): max value code exception\n";
+    m_currValue[3] = _buffer[16];
+    
+    if (_buffer[17] != 0x03) 
+        throw "CMsgCommPowerStatusReadReply(const unsigned char*): ETX exception\n";
+}
+
+CAbstractMessage* CMsgCommPowerStatusReadReply::clone() const {
+    return new CMsgCommPowerStatusReadReply(*this);
+}
+
+unsigned char CMsgCommPowerStatusReadReply::getCheckCode() const {
+    //TODO
+    return 'X';
+}
+
+int CMsgCommPowerStatusReadReply::getLengthInt() const {
+    return 18;
+}
+
+std::basic_string<unsigned char> CMsgCommPowerStatusReadReply::getLength() const {
+    std::basic_string<unsigned char> ustr;
+    ustr.push_back('1');
+    ustr.push_back('2');
+    return ustr;
+}
+
+std::basic_string<unsigned char> CMsgCommPowerStatusReadReply::getBuffer() const {
+    std::basic_string<unsigned char> ustr;
+    ustr.push_back(s_STX);
+    ustr.push_back(m_reserved[0]);
+    ustr.push_back(m_reserved[1]);
+    ustr.push_back(m_result[0]);
+    ustr.push_back(m_result[1]);
+    ustr.push_back(m_commandCode[0]);
+    ustr.push_back(m_commandCode[1]);
+    ustr.push_back(m_type[0]);
+    ustr.push_back(m_type[1]);
+    ustr.push_back(m_maxValue[0]);
+    ustr.push_back(m_maxValue[1]);
+    ustr.push_back(m_maxValue[2]);
+    ustr.push_back(m_maxValue[3]);
+    ustr.push_back(m_currValue[0]);
+    ustr.push_back(m_currValue[1]);
+    ustr.push_back(m_currValue[2]);
+    ustr.push_back(m_currValue[3]);
+    ustr.push_back(s_ETX);
+    return ustr;
+}
+int                              CMsgCommPowerStatusReadReply::getMaxModeCount() const {
+   return fourBytesToInt(m_maxValue[0], m_maxValue[1], m_maxValue[2], m_maxValue[3]); 
+}
+int                              CMsgCommPowerStatusReadReply::getCurrMode() const {
+    return fourBytesToInt(m_currValue[0], m_currValue[1],
+                          m_currValue[2], m_currValue[3]);
+}
 //******************************************************************************
 
 CMsgCommNull::CMsgCommNull() {
