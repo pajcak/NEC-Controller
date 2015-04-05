@@ -1,6 +1,7 @@
 #include "headers/CMonitor.h"
 #include "headers/MsgIncoming.h"
-#include "headers/MsgOutgoing.h"   
+#include "headers/MsgOutgoing.h"
+#include "headers/IReceivable.h"
 //#include <cstdlib>
 #include <cstdio>
 #include <cstring>
@@ -74,48 +75,57 @@ void CMonitor::sendPacket(  const unsigned char & DESTINATION,
         throw "sendPacket(): written length too small.";
 
 }
-CAbstractMessage * CMonitor::getParameter(const CAbstractMessage * msg) {
-    //'A' = monitor with ID = 1
-    //'C' = "Get current parameter" type of message
-    sendPacket('A', 'C', msg);
-//================RECEIVING==========================
+void CMonitor::receiveData(CHeader * header, CAbstractMessage * msg) {
 //-----------------HEADER---------------
     unsigned char headBuffer [7];
     int readLength = read(m_socketFD, headBuffer, sizeof (headBuffer));
-    if (readLength < 7) throw "getParameter(): header readLength too small.";
-//        for (int i = 0; i < readLength; i++) {
-//            printf("headBuffer[%d]: 0x%02x | %c\n", i, headBuffer[i], headBuffer[i]);
-//        }
-//        printf("\n");
+    if (readLength < 7) throw "receiveData(): header readLength too small.";
     
-    CHeader recvHeader(headBuffer);
-    //received message is NULLMessage
-    if (recvHeader.getMsgType() == 'B') throw  "getParameter(): NULL MESSAGE.";
+    for (int i = 0; i < readLength; i++) {
+        printf("recvHead[%d]: 0x%02x | %c\n", i, headBuffer[i], headBuffer[i]);
+    }
+    printf("\n");
+    
+    header->initWithRawData(headBuffer);
+    //received message is NULLMessage 
+    if (header->getMsgLenInt() == CMsgCommNull().getLengthInt())
+        throw "saveCurrentSettings(): NULL MESSAGE.";
 //-----------------MESSAGE---------------
-    const int MSG_LEN = recvHeader.getMsgLenInt();
+    const int MSG_LEN = header->getMsgLenInt();
     unsigned char msgBuffer [MSG_LEN];
-    readLength = read(m_socketFD, msgBuffer, sizeof (msgBuffer));    
-    if (readLength < recvHeader.getMsgLenInt())
-        throw "getParameter(): msg readLength too small.";
+    readLength = read(m_socketFD, msgBuffer, MSG_LEN);    
+
+    if (readLength < MSG_LEN)
+        throw "receiveData(): msg readLength too small.";
     
-//    for (int i = 0; i < readLength; i++) {
-//        printf("msgBuffer[%d]: [0x%02x] | [%c]\n", i, msgBuffer[i], msgBuffer[i]);
-//    }
-//    printf("\n");
-    CAbstractMessage * recvMessage = new CMsgGetCurrParamReply(msgBuffer);
-//    std::basic_string<unsigned char> x = recvMessage->getBuffer();
-//    for (int i = 0; i < recvMessage->getLengthInt(); i++) {
-//        printf("msg[%d]: [0x%02x] | [%c]\n", i, x.at(i), x.at(i));
-//    }
-//    printf("\n");
+    msg->initWithRawData(msgBuffer);
+
+    std::basic_string<unsigned char> x = msg->getBuffer();
+    for (int i = 0; i < msg->getLengthInt(); i++) {
+        printf("msg[%d]: [0x%02x] | [%c]\n", i, x.at(i), x.at(i));
+    }
+    printf("\n");
     
     unsigned char checkCode;
     unsigned char delimiter;
     read(m_socketFD, &checkCode, 1);
+//    if (checkCode != (header->getCheckCode() ^ msg->getCheckCode()))
+//        throw "receiveData(): incorrect checkCode.";
     read(m_socketFD, &delimiter, 1);
-//    printf("CheckCode: [0x%02x] | [%c]\n", checkCode, checkCode);
-//    printf("Delimiter: [0x%02x] | [%c]\n", delimiter, delimiter);
-    
+//    if (delimiter != 0x0D)
+//        throw "receiveData(): incorrect delimiter.";
+    printf("CheckCode: [0x%02x] | [%c]\n", checkCode, checkCode);
+    printf("Delimiter: [0x%02x] | [%c]\n", delimiter, delimiter);
+}
+
+CAbstractMessage * CMonitor::getParameter(const CAbstractMessage * msg) {
+    //'A' = monitor with ID = 1
+    //'C' = "Get current parameter" type of message
+    sendPacket('A', 'C', msg);
+       //================RECEIVING==========================
+    CHeader header;
+    CMsgGetCurrParamReply * recvMessage = new CMsgGetCurrParamReply();
+    receiveData(&header, recvMessage);
     return recvMessage;
 }
 
@@ -123,79 +133,36 @@ CAbstractMessage * CMonitor::setParameter(const CAbstractMessage* msg) {
     //monitor with ID = 1
     //"Set parameter" type of message
     sendPacket('A', 'E', msg);
-    //================RECEIVING==========================
-//-----------------HEADER---------------
-    unsigned char headBuffer [7];
-    int readLength = read(m_socketFD, headBuffer, sizeof (headBuffer));
-    if (readLength < 7) throw "setParameter(): header readLength too small.";
-//        for (int i = 0; i < readLength; i++) {
-//            printf("headBuffer[%d]: 0x%02x | %c\n", i, headBuffer[i], headBuffer[i]);
-//        }
-//        printf("\n");
-    
-    CHeader recvHeader(headBuffer);
-    //received message is NULLMessage
-    if (recvHeader.getMsgType() == 'B') throw "setParameter(): NULL MESSAGE.";
-//-----------------MESSAGE---------------
-    const int MSG_LEN = recvHeader.getMsgLenInt();
-    unsigned char msgBuffer [MSG_LEN];
-    readLength = read(m_socketFD, msgBuffer, sizeof (msgBuffer));    
-//    printf("REST readLength=%d\n", readLength);
-    if (readLength < MSG_LEN)
-        throw "setParameter(): msg readLength too small.";
-    
-//    for (int i = 0; i < readLength; i++) {
-//        printf("msgBuffer[%d]: [0x%02x] | [%c]\n", i, msgBuffer[i], msgBuffer[i]);
-//    }
-//    printf("\n");
-    CAbstractMessage * recvMessage = new CMsgSetParamReply(msgBuffer);
-//    std::basic_string<unsigned char> x = recvMessage->getBuffer();
-//    for (int i = 0; i < recvMessage->getLengthInt(); i++) {
-//        printf("msg[%d]: [0x%02x] | [%c]\n", i, x.at(i), x.at(i));
-//    }
-//    printf("\n");
-    
-    unsigned char checkCode;
-    unsigned char delimiter;
-    read(m_socketFD, &checkCode, 1);
-    read(m_socketFD, &delimiter, 1);
-//    printf("CheckCode: [0x%02x] | [%c]\n", checkCode, checkCode);
-//    printf("Delimiter: [0x%02x] | [%c]\n", delimiter, delimiter);
-    
+       //================RECEIVING==========================
+    CHeader header;
+    CMsgSetParamReply * recvMessage = new CMsgSetParamReply();
+    receiveData(&header, recvMessage);
     return recvMessage;
 }
+
 void CMonitor::saveCurrentSettings(void) {
     CAbstractMessage * msg = new CMsgCommSaveCurrSettings();
     sendPacket('A', 'A', msg);
     //================RECEIVING==========================
-//-----------------HEADER---------------
-    unsigned char headBuffer [7];
-    int readLength = read(m_socketFD, headBuffer, sizeof (headBuffer));
-    if (readLength < 7) throw "saveCurrentSettings(): header readLength too small.";
-
-    CHeader recvHeader(headBuffer);
-//-----------------MESSAGE---------------
-    const int MSG_LEN = recvHeader.getMsgLenInt();
-    unsigned char msgBuffer [MSG_LEN];
-    readLength = read(m_socketFD, msgBuffer, sizeof (msgBuffer));    
-
-    if (readLength < MSG_LEN)
-        throw "saveCurrentSettings(): msg readLength too small.";
-
-    CAbstractMessage * recvMessage = new CMsgCommSaveCurrSettingsReply(msgBuffer);
+    CHeader header;
+    CMsgCommSaveCurrSettingsReply recvMessage;
+    receiveData(&header, &recvMessage);    
     
-    //received message is NULLMessage 
-    if (recvMessage->getLengthInt() == CMsgCommNull().getLengthInt())
-        throw "saveCurrentSettings(): NULL MESSAGE.";
-    
-    unsigned char checkCode;
-    unsigned char delimiter;
-    read(m_socketFD, &checkCode, 1);
-    read(m_socketFD, &delimiter, 1);
-    
-    if (recvMessage) delete recvMessage;
     delete msg;
 }
+CAbstractMessage *      CMonitor::powerStatusRead(void) {
+    CAbstractMessage * msg = new CMsgCommPowerStatusRead ();
+    sendPacket('A', 'A', msg);
+    //================RECEIVING==========================
+    //TODO NOW
+//    CHeader header;
+//    CMsgCommSaveCurrSettingsReply recvMessage;
+//    receiveData(&header, &recvMessage);    
+//    
+    delete msg;
+    return NULL;/*new CMsgCommPowerStatusReadReply*/
+}
+
 /*MESSAGE TYPE(msgType)*/
 //ASCII 'A' (0x41): Command.
 //ASCII 'B' (0x42): Command reply.

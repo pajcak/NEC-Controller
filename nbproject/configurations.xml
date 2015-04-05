@@ -10,6 +10,7 @@
         <itemPath>headers/CHeader.h</itemPath>
         <itemPath>headers/CMonitor.h</itemPath>
         <itemPath>headers/CPacket.h</itemPath>
+        <itemPath>headers/IReceivable.h</itemPath>
         <itemPath>headers/MsgIncoming.h</itemPath>
         <itemPath>headers/MsgOutgoing.h</itemPath>
         <itemPath>headers/Utils.h</itemPath>
@@ -79,6 +80,8 @@
       </item>
       <item path="headers/CPacket.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="headers/IReceivable.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="headers/MsgIncoming.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="headers/MsgOutgoing.h" ex="false" tool="3" flavor2="0">
@@ -129,6 +132,8 @@
       <item path="headers/CMonitor.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="headers/CPacket.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="headers/IReceivable.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="headers/MsgIncoming.h" ex="false" tool="3" flavor2="0">
       </item>

@@ -29,6 +29,18 @@ CHeader::CHeader(const unsigned char * _buffer)
     m_msgLen[0] = _buffer[5];
     m_msgLen[1] = _buffer[6];
 }
+void CHeader::initWithRawData(const unsigned char * _buffer) {
+    if (_buffer[0] != 0x01) throw "CHeader::initWithRawData(): invalid SOH from buffer\n";
+    m_SOH = _buffer[0];
+    if (_buffer[1] != 0x30) throw "CHeader::initWithRawData(): invalid RESERVED from buffer\n";
+    m_RESERVED = _buffer[1];
+    if (_buffer[2] != 0x30) throw "CHeader::initWithRawData(): invalid destination from buffer\n";
+    m_destination = _buffer[2];
+    m_source = _buffer[3];
+    m_msgType = _buffer[4];
+    m_msgLen[0] = _buffer[5];
+    m_msgLen[1] = _buffer[6];
+}
 CHeader::CHeader(const CHeader & header)
 : m_SOH(0x01), m_RESERVED(0x30), m_destination(header.m_destination),
         m_source(header.m_source), m_msgType(header.m_msgType)

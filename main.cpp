@@ -15,8 +15,8 @@ using namespace std;
 
 int main(int argc, char * argv []) {
     CController c;
-//    c.getBrightness();
     try {
+//        c.getBrightness();
         c.setBrightness(80);
     } catch (const char * x) {
         printf("MAIN: caught:%s\n", x);

@@ -28,8 +28,8 @@ CPacket::CPacket(const CHeader & header, const CAbstractMessage & message)
     m_checkCode = ( m_header->getCheckCode() ^ m_message->getCheckCode() );
 }
 CPacket::~CPacket() {
-    delete m_header;
-    delete m_message;
+//    delete m_header;
+//    delete m_message;
 }
 std::basic_string<unsigned char> CPacket::getBuffer() const {
     std::basic_string<unsigned char> uString;

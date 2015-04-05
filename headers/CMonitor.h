@@ -26,15 +26,18 @@ CAbstractMessage * getParameter(const CAbstractMessage * msg);
  * If incorrect data arrived, exception is thrown.
  * If nullMsg was received, it exception is thrown.
  */
-CAbstractMessage *     setParameter(const CAbstractMessage * param);
+CAbstractMessage *      setParameter(const CAbstractMessage * param);
 /*now methods for each command*/
 
-void saveCurrentSettings(void);
+void                    saveCurrentSettings(void);
+CAbstractMessage *      powerStatusRead(void);
 
 private:
     void sendPacket(const unsigned char & DESTINATION,
                     const unsigned char & MSG_TYPE,
                     const CAbstractMessage * msg);
+    void receiveData(CHeader * header, CAbstractMessage * msg);
+    
     const char * m_serverAddr;
     const int m_port;
     int m_socketFD;

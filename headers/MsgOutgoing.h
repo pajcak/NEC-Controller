@@ -58,5 +58,17 @@ private:
 // SOH-'0'-'0'-'A'-'B'-'0'-'6'-STX-'0'-'0'-'0'-'C'-ETX-CHK- CR
 };
 //******************************************************************************
+class CMsgCommPowerStatusRead : public CAbstractMessage {
+public:
+                                     CMsgCommPowerStatusRead(); // no params, bcs commandCode is already defined
+     CAbstractMessage*               clone() const;
+    unsigned char                    getCheckCode() const;
+    int                              getLengthInt() const;
+    std::basic_string<unsigned char> getLength() const;
+    std::basic_string<unsigned char> getBuffer() const;
+    //DOES NOT NEED TO BE IMPLEMENTED
+private:
+    unsigned char m_commandCode [4]; /* 'O', '1', 'D', '6' */
+};
 
 #endif /* __MSGCONTROLLER_H__ */

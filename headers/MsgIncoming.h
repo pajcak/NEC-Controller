@@ -2,13 +2,17 @@
 #define	__MSGINCOMING_H__
 
 #include "CAbstractMessage.h"
+#include "IReceivable.h"
 
 class CMsgGetCurrParamReply : public CAbstractMessage {
 public:
+                                     CMsgGetCurrParamReply() {}
                                      CMsgGetCurrParamReply(const unsigned char * _buffer);
                                      CMsgGetCurrParamReply(const CMsgGetCurrParamReply &);
                                      ~CMsgGetCurrParamReply();
-     CAbstractMessage*               clone() const;
+                                     
+    void                               initWithRawData(const unsigned char * _buffer);
+    CAbstractMessage*                clone() const;
     unsigned char                    getCheckCode() const;
     int                              getLengthInt() const;
     std::basic_string<unsigned char> getLength() const;
@@ -26,10 +30,12 @@ private:
 //******************************************************************************
 class CMsgSetParamReply : public CAbstractMessage {
 public:
+                                     CMsgSetParamReply() {}
                                      CMsgSetParamReply(const unsigned char * _buffer);
                                      CMsgSetParamReply(const CMsgSetParamReply&);
                                      ~CMsgSetParamReply();
-     CAbstractMessage*               clone() const;
+    void               initWithRawData(const unsigned char * _buffer);
+    CAbstractMessage*                clone() const;
     unsigned char                    getCheckCode() const;
     int                              getLengthInt() const;
     std::basic_string<unsigned char> getLength() const;
@@ -49,15 +55,16 @@ private:
 //*******************************************************************************
 class CMsgCommSaveCurrSettingsReply : public CAbstractMessage {
 public:
+                                     CMsgCommSaveCurrSettingsReply() {}
                                      CMsgCommSaveCurrSettingsReply(const unsigned char * _buffer);
-     CAbstractMessage*               clone() const;
+    void   initWithRawData(const unsigned char * _buffer);
+    CAbstractMessage*                clone() const;
     unsigned char                    getCheckCode() const;
     int                              getLengthInt() const;
     std::basic_string<unsigned char> getLength() const;
     std::basic_string<unsigned char> getBuffer() const; // MAYBE NOT NEEDED
 private:
-    unsigned char m_result[2]; /*'0','0', (0x30, 0x30)*/
-    unsigned char m_commandCode [2]; /* '0', 'C' (0x30, 0x43)*/
+    unsigned char m_commandCode [4]; /* '0','0', '0', 'C' (0x30, 0x30, 0x30, 0x43)*/
 };
 //******************************************************************************
 class CMsgCommNull : public CAbstractMessage {
@@ -66,6 +73,7 @@ public:
                                      CMsgCommNull(const unsigned char * _buffer);
                                      CMsgCommNull(const CMsgCommNull&);
                                      ~CMsgCommNull();
+    void                    initWithRawData(const unsigned char * _buffer);
      CAbstractMessage*               clone() const;
     unsigned char                    getCheckCode() const;
     int                              getLengthInt() const;

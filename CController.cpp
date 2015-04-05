@@ -7,6 +7,7 @@
 #include <cstdio>
 CController::CController() {
     //temporary
+//    m_monitor = new CMonitor("10.0.0.100", 7142);
     m_monitor = new CMonitor("localhost", 12345);
     m_monitor->establishConnection();
 }
@@ -43,14 +44,13 @@ void CController::setBrightness(const int & val) {
 
     unsigned char value[4];
     IntToFourBytes(val, value);
-    CAbstractMessage * msg = new CMsgSetParam(opCodePage, opCode, value);
+    CMsgSetParam msg (opCodePage, opCode, value);
     CAbstractMessage * sprMsg;
 
-    sprMsg = m_monitor->setParameter(msg);
+    sprMsg = m_monitor->setParameter(&msg);
     
     CMsgSetParamReply * setParamReply = dynamic_cast<CMsgSetParamReply*>(sprMsg);
     if (setParamReply == 0) {
-        delete msg;
         throw "CController::setBrightness(): dynamic_cast.";
     }
     
@@ -63,5 +63,8 @@ void CController::setBrightness(const int & val) {
     m_monitor->saveCurrentSettings();
     
     if (sprMsg) delete sprMsg;
-    delete msg;
+}
+int CController::powerStatusRead() {
+    int status;
+    return status;
 }

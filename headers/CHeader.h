@@ -3,12 +3,17 @@
 
 #include <string>
 
-class CHeader {
+#include "IReceivable.h"
+
+class CHeader : public IReceivable{
 public:
+    CHeader() {}
     CHeader(unsigned char _destination,
             unsigned char _msgType,
             const unsigned char _msgLen [2]);
     CHeader(const unsigned char * _buffer);
+
+    void initWithRawData(const unsigned char * _buffer);
     CHeader(const CHeader & header);
     unsigned char getCheckCode() const;
     std::basic_string<unsigned char> getBuffer() const;

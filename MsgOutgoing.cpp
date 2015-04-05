@@ -175,3 +175,39 @@ std::basic_string<unsigned char> CMsgCommSaveCurrSettings::getBuffer() const {
 // SOH-'0'-'0'-'A'-'B'-'0'-'6'-STX-'0'-'0'-'0'-'C'-ETX-CHK- CR
 
 //******************************************************************************
+CMsgCommPowerStatusRead::CMsgCommPowerStatusRead() { // no params, bcs commandCode is already defined
+    m_commandCode[0] = 0x30;
+    m_commandCode[1] = 0x31;
+    m_commandCode[2] = 0x44;
+    m_commandCode[3] = 0x36;
+//    unsigned char m_commandCode [4]; /* 'O', '1', 'D', '6' */
+}
+
+CAbstractMessage* CMsgCommPowerStatusRead::clone() const {
+    return new CMsgCommPowerStatusRead();    
+}
+
+unsigned char CMsgCommPowerStatusRead::getCheckCode() const {
+    return (s_STX ^ m_commandCode[0] ^ m_commandCode[1] ^ m_commandCode[2] ^ m_commandCode[3] ^ s_ETX);
+}
+
+int CMsgCommPowerStatusRead::getLengthInt() const {
+    return 6;
+}
+
+std::basic_string<unsigned char> CMsgCommPowerStatusRead::getLength() const {
+    std::basic_string<unsigned char> ustr;
+    ustr.push_back('0');
+    ustr.push_back('6');
+    return ustr;
+}
+std::basic_string<unsigned char> CMsgCommPowerStatusRead::getBuffer() const {
+    std::basic_string<unsigned char> ustr;
+    ustr.push_back(s_STX);
+    ustr.push_back(m_commandCode[0]);
+    ustr.push_back(m_commandCode[1]);
+    ustr.push_back(m_commandCode[2]);
+    ustr.push_back(m_commandCode[3]);
+    ustr.push_back(s_ETX);
+    return ustr;
+}
