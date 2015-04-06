@@ -266,11 +266,16 @@ void CMsgCommPowerStatusReadReply::initWithRawData(const unsigned char * _buffer
 //    unsigned char m_type [2]; /*Operation type code - 0x30,0x30(set parameter) / 0x30,0x31(momentary)*/
 //    unsigned char m_maxValue[4]; /*Maximum value of power modes. ('0', '0', '0', '4') */
 //    unsigned char m_currValue[4]; /*Current power mode.('0', '0', '0', '1'->'4')*/
+//for (int i = 0; i < 18; i++) printf("Received[%d]: 0x%02x | %c\n", i, _buffer[i], _buffer[i]);
+
     if (_buffer[0] != 0x02) throw "CMsgCommPowerStatusReadReply(const unsigned char*): STX exception\n";
     
     if (_buffer[1] != 0x30 || _buffer[2] != 0x32)
         throw "CMsgCommPowerStatusReadReply(const unsigned char*): reserved exception\n";
-    
+    else {
+        m_reserved[0] = _buffer[1];
+        m_reserved[1] = _buffer[2];
+    }
     if (_buffer[3] == 0x30 && (_buffer[4] == 0x30 || _buffer[4] == 0x31)) {
         m_result[0] = _buffer[3];
         m_result[1] = _buffer[4];
@@ -278,10 +283,10 @@ void CMsgCommPowerStatusReadReply::initWithRawData(const unsigned char * _buffer
     if (m_result[1] == 0x31) 
         throw "CMsgCommPowerStatusReadReply(const unsigned char*): m_result: unsupported operation\n";
     
-    if (_buffer[5] == 0x30 && _buffer[6] == 0x32) {
+    if (_buffer[5] == 0x44 && _buffer[6] == 0x36) {
         m_commandCode[0] = _buffer[5];
         m_commandCode[1] = _buffer[6];
-    } else throw "CMsgCommPowerStatusReadReply(const unsigned char*): reserved exception\n";
+    } else throw "CMsgCommPowerStatusReadReply(const unsigned char*): command code\n";
 
     if (_buffer[7] == 0x30) m_type[0] = _buffer[7];
     else throw "CMsgCommPowerStatusReadReply(const unsigned char*): operation type code exception\n";
@@ -293,16 +298,16 @@ void CMsgCommPowerStatusReadReply::initWithRawData(const unsigned char * _buffer
     if (_buffer[10] == 0x30) m_maxValue[1] = _buffer[10];
     else throw "CMsgCommPowerStatusReadReply(const unsigned char*): max value exception\n";
     if (_buffer[11] == 0x30) m_maxValue[2] = _buffer[11];
-    else throw "CMsgCommPowerStatusReadReply(const unsigned char*): max value code exception\n";
+    else throw "CMsgCommPowerStatusReadReply(const unsigned char*): max value exception\n";
     if (_buffer[12] == 0x34) m_maxValue[3] = _buffer[12];
-    else throw "CMsgCommPowerStatusReadReply(const unsigned char*): max value code exception\n";
+    else throw "CMsgCommPowerStatusReadReply(const unsigned char*): max value exception\n";
     
     if (_buffer[13] == 0x30) m_currValue[0] = _buffer[13];
-    else throw "CMsgCommPowerStatusReadReply(const unsigned char*): max value exception\n";
+    else throw "CMsgCommPowerStatusReadReply(const unsigned char*): curr value exception\n";
     if (_buffer[14] == 0x30) m_currValue[1] = _buffer[14];
-    else throw "CMsgCommPowerStatusReadReply(const unsigned char*): max value exception\n";
+    else throw "CMsgCommPowerStatusReadReply(const unsigned char*): curr value exception\n";
     if (_buffer[15] == 0x30) m_currValue[2] = _buffer[15];
-    else throw "CMsgCommPowerStatusReadReply(const unsigned char*): max value code exception\n";
+    else throw "CMsgCommPowerStatusReadReply(const unsigned char*): curr value exception\n";
     m_currValue[3] = _buffer[16];
     
     if (_buffer[17] != 0x03) 

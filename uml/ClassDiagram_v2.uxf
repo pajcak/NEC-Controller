@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?><diagram program="umlet" version="11.3">
-  <zoom_level>6</zoom_level>
+  <zoom_level>7</zoom_level>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>624</x>
-      <y>792</y>
-      <w>156</w>
-      <h>102</h>
+      <x>728</x>
+      <y>924</y>
+      <w>182</w>
+      <h>119</h>
     </coordinates>
     <panel_attributes>/CAbstractMessage/
 {Abstract}
@@ -24,10 +24,10 @@
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>372</x>
-      <y>1002</y>
-      <w>264</w>
-      <h>48</h>
+      <x>434</x>
+      <y>1169</y>
+      <w>308</w>
+      <h>56</h>
     </coordinates>
     <panel_attributes>CMsgGetCurrParam
 --
@@ -40,10 +40,10 @@
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>720</x>
-      <y>990</y>
-      <w>240</w>
-      <h>90</h>
+      <x>840</x>
+      <y>1155</y>
+      <w>280</w>
+      <h>105</h>
     </coordinates>
     <panel_attributes>CMsgGetCurrParamReply
 --
@@ -60,10 +60,10 @@
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>720</x>
-      <y>1086</y>
-      <w>240</w>
-      <h>96</h>
+      <x>840</x>
+      <y>1267</y>
+      <w>280</w>
+      <h>112</h>
     </coordinates>
     <panel_attributes>CMsgSetParamReply
 --
@@ -80,10 +80,10 @@
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>372</x>
-      <y>1056</y>
-      <w>324</w>
-      <h>60</h>
+      <x>434</x>
+      <y>1232</y>
+      <w>378</w>
+      <h>70</h>
     </coordinates>
     <panel_attributes>CMsgSetParam
 --
@@ -97,10 +97,10 @@
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>720</x>
-      <y>1218</y>
-      <w>222</w>
-      <h>30</h>
+      <x>840</x>
+      <y>1421</y>
+      <w>259</w>
+      <h>35</h>
     </coordinates>
     <panel_attributes>CMsgCommNull
 --
@@ -110,10 +110,10 @@
   <element>
     <type>com.umlet.element.Package</type>
     <coordinates>
-      <x>366</x>
-      <y>984</y>
-      <w>342</w>
-      <h>588</h>
+      <x>427</x>
+      <y>1148</y>
+      <w>399</w>
+      <h>686</h>
     </coordinates>
     <panel_attributes>MsgOutgoing</panel_attributes>
     <additional_attributes/>
@@ -121,10 +121,10 @@
   <element>
     <type>com.umlet.element.Package</type>
     <coordinates>
-      <x>714</x>
-      <y>972</y>
-      <w>342</w>
-      <h>600</h>
+      <x>833</x>
+      <y>1134</y>
+      <w>399</w>
+      <h>700</h>
     </coordinates>
     <panel_attributes>MsgIncoming</panel_attributes>
     <additional_attributes/>
@@ -132,32 +132,32 @@
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>714</x>
-      <y>876</y>
-      <w>156</w>
-      <h>120</h>
+      <x>833</x>
+      <y>1022</y>
+      <w>182</w>
+      <h>140</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>18;18;144;108</additional_attributes>
+    <additional_attributes>21;21;168;126</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>486</x>
-      <y>876</y>
-      <w>186</w>
-      <h>132</h>
+      <x>567</x>
+      <y>1022</y>
+      <w>217</w>
+      <h>154</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>174;18;18;120</additional_attributes>
+    <additional_attributes>203;21;21;140</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>906</x>
-      <y>630</y>
-      <w>270</w>
-      <h>132</h>
+      <x>1057</x>
+      <y>735</y>
+      <w>315</w>
+      <h>154</h>
     </coordinates>
     <panel_attributes>CHeader
 --
@@ -178,10 +178,10 @@
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>762</x>
-      <y>432</y>
-      <w>306</w>
-      <h>156</h>
+      <x>889</x>
+      <y>504</y>
+      <w>357</w>
+      <h>182</h>
     </coordinates>
     <panel_attributes>CMonitor
 --
@@ -204,10 +204,10 @@ setParameter(param : CMsgSetParam) : CMsgSetParamReply
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>240</x>
-      <y>252</y>
-      <w>396</w>
-      <h>318</h>
+      <x>280</x>
+      <y>294</y>
+      <w>462</w>
+      <h>371</h>
     </coordinates>
     <panel_attributes>CController
 {public API}
@@ -223,7 +223,7 @@ setParameter(param : CMsgSetParam) : CMsgSetParamReply
 + printMonitorList() : void
 + printParameterList() : void
 -------
-/*Monitor connection*/
+/*Monitor connection management*/
 + connect(monitorID : int ...) : bool
 + disconnect(monitorID : int ...) : void
 + isConnected(monitorID : int) : bool
@@ -239,24 +239,24 @@ setParameter(param : CMsgSetParam) : CMsgSetParamReply
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>618</x>
-      <y>468</y>
-      <w>156</w>
-      <h>30</h>
+      <x>721</x>
+      <y>546</y>
+      <w>181</w>
+      <h>34</h>
     </coordinates>
     <panel_attributes>lt=-
 m1=1
 m2=0..n
 </panel_attributes>
-    <additional_attributes>18;18;144;18</additional_attributes>
+    <additional_attributes>21;21;168;21</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>372</x>
-      <y>1266</y>
-      <w>192</w>
-      <h>30</h>
+      <x>434</x>
+      <y>1477</y>
+      <w>224</w>
+      <h>35</h>
     </coordinates>
     <panel_attributes>CMsgCommandSaveCurrSettings
 --
@@ -266,10 +266,10 @@ m2=0..n
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>54</x>
-      <y>624</y>
-      <w>258</w>
-      <h>96</h>
+      <x>63</x>
+      <y>728</y>
+      <w>301</w>
+      <h>112</h>
     </coordinates>
     <panel_attributes>/exception/
 {from exception header}
@@ -286,9 +286,9 @@ m2=0..n
     <type>com.umlet.element.Class</type>
     <coordinates>
       <x>0</x>
-      <y>804</y>
-      <w>126</w>
-      <h>30</h>
+      <y>938</y>
+      <w>147</w>
+      <h>35</h>
     </coordinates>
     <panel_attributes>CConnectionException
 --</panel_attributes>
@@ -297,10 +297,10 @@ m2=0..n
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>150</x>
-      <y>804</y>
-      <w>126</w>
-      <h>30</h>
+      <x>175</x>
+      <y>938</y>
+      <w>147</w>
+      <h>35</h>
     </coordinates>
     <panel_attributes>CMessageException
 --</panel_attributes>
@@ -309,32 +309,32 @@ m2=0..n
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>48</x>
-      <y>702</y>
-      <w>84</w>
-      <h>114</h>
+      <x>56</x>
+      <y>819</y>
+      <w>97</w>
+      <h>132</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>72;18;18;102</additional_attributes>
+    <additional_attributes>84;21;21;119</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>150</x>
-      <y>702</y>
-      <w>78</w>
-      <h>114</h>
+      <x>175</x>
+      <y>819</y>
+      <w>90</w>
+      <h>132</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>18;18;66;102</additional_attributes>
+    <additional_attributes>21;21;77;119</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>672</x>
-      <y>252</y>
-      <w>306</w>
-      <h>102</h>
+      <x>784</x>
+      <y>294</y>
+      <w>357</w>
+      <h>119</h>
     </coordinates>
     <panel_attributes>CParameter
 --
@@ -351,10 +351,10 @@ m2=0..n
   <element>
     <type>com.umlet.element.Actor</type>
     <coordinates>
-      <x>774</x>
-      <y>120</y>
-      <w>60</w>
-      <h>72</h>
+      <x>903</x>
+      <y>140</y>
+      <w>70</w>
+      <h>84</h>
     </coordinates>
     <panel_attributes>Controller
 </panel_attributes>
@@ -363,10 +363,10 @@ m2=0..n
   <element>
     <type>com.umlet.element.UseCase</type>
     <coordinates>
-      <x>918</x>
+      <x>1071</x>
       <y>0</y>
-      <w>90</w>
-      <h>48</h>
+      <w>105</w>
+      <h>56</h>
     </coordinates>
     <panel_attributes>*GetBrigthness*
 </panel_attributes>
@@ -375,21 +375,21 @@ m2=0..n
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>786</x>
-      <y>12</y>
-      <w>144</w>
-      <h>138</h>
+      <x>917</x>
+      <y>14</y>
+      <w>167</w>
+      <h>160</h>
     </coordinates>
     <panel_attributes/>
-    <additional_attributes>18;126;132;18</additional_attributes>
+    <additional_attributes>21;147;154;21</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.UseCase</type>
     <coordinates>
-      <x>936</x>
-      <y>72</y>
-      <w>90</w>
-      <h>48</h>
+      <x>1092</x>
+      <y>84</y>
+      <w>105</w>
+      <h>56</h>
     </coordinates>
     <panel_attributes>*SetBrightness*
 </panel_attributes>
@@ -398,21 +398,21 @@ m2=0..n
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>786</x>
-      <y>84</y>
-      <w>162</w>
-      <h>66</h>
+      <x>917</x>
+      <y>98</y>
+      <w>188</w>
+      <h>76</h>
     </coordinates>
     <panel_attributes/>
-    <additional_attributes>18;54;150;18</additional_attributes>
+    <additional_attributes>21;63;175;21</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>294</x>
-      <y>804</y>
-      <w>126</w>
-      <h>30</h>
+      <x>343</x>
+      <y>938</y>
+      <w>147</w>
+      <h>35</h>
     </coordinates>
     <panel_attributes>CParameterException
 --</panel_attributes>
@@ -421,21 +421,21 @@ m2=0..n
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>192</x>
-      <y>702</y>
-      <w>174</w>
-      <h>114</h>
+      <x>224</x>
+      <y>819</y>
+      <w>202</w>
+      <h>132</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>18;18;162;102</additional_attributes>
+    <additional_attributes>21;21;189;119</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>720</x>
-      <y>1254</y>
-      <w>276</w>
-      <h>42</h>
+      <x>840</x>
+      <y>1463</y>
+      <w>322</w>
+      <h>49</h>
     </coordinates>
     <panel_attributes>CMsgCommandSaveCurrSettingsReply
 --
@@ -447,10 +447,10 @@ m2=0..n
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>372</x>
-      <y>1302</y>
-      <w>228</w>
-      <h>30</h>
+      <x>434</x>
+      <y>1519</y>
+      <w>266</w>
+      <h>35</h>
     </coordinates>
     <panel_attributes>CMsgCommandPowerStatusRead
 --
@@ -460,10 +460,10 @@ m2=0..n
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>720</x>
-      <y>1302</y>
-      <w>324</w>
-      <h>120</h>
+      <x>840</x>
+      <y>1519</y>
+      <w>378</w>
+      <h>140</h>
     </coordinates>
     <panel_attributes>CMsgCommandPowerStatusReply
 --
@@ -482,10 +482,10 @@ m2=0..n
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>372</x>
-      <y>1452</y>
-      <w>282</w>
-      <h>84</h>
+      <x>434</x>
+      <y>1694</y>
+      <w>329</w>
+      <h>98</h>
     </coordinates>
     <panel_attributes>CMsgCommandPowerControl
 --
@@ -500,10 +500,10 @@ m2=0..n
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>720</x>
-      <y>1452</y>
-      <w>318</w>
-      <h>96</h>
+      <x>840</x>
+      <y>1694</y>
+      <w>371</w>
+      <h>112</h>
     </coordinates>
     <panel_attributes>CMsgCommandPowerControlReply
 --

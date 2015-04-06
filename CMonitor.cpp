@@ -2,13 +2,15 @@
 #include "headers/MsgIncoming.h"
 #include "headers/MsgOutgoing.h"
 #include "headers/IReceivable.h"
-//#include <cstdlib>
+
 #include <cstdio>
 #include <cstring>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
 #include <unistd.h>
+
+#define DEBUG
 
 CMonitor::CMonitor(const char * _srvAddr, const int & _port)
 : m_serverAddr(_srvAddr), m_port(_port) {
@@ -70,6 +72,23 @@ void CMonitor::sendPacket(  const unsigned char & DESTINATION,
     outBuffer.push_back(CHECK_CODE);
     outBuffer.push_back(DELIMITER);
 
+#ifdef DEBUG/*-------------------------------------------------------------*/
+    printf("===============SENDING================\n");
+    printf("Destination : [0x%02x] | [%c]\n", DESTINATION, DESTINATION);
+    printf("Message type: [0x%02x] | [%c]\n", MSG_TYPE, MSG_TYPE);
+    std::basic_string<unsigned char> hBuff = header.getBuffer();
+    for (unsigned int i = 0; i < hBuff.length(); i++) {
+        printf("Head[%d]: [0x%02x] | [%c]\n", i, hBuff[i], hBuff[i]);
+    }
+    printf("\n");
+    std::basic_string<unsigned char> mBuff = msg->getBuffer();
+    for (unsigned int i = 0; i < mBuff.length(); i++) {
+        printf("Message[%d]: [0x%02x] | [%c]\n", i, mBuff.at(i), mBuff.at(i));
+    }
+    printf("\n");
+    printf("CheckCode: [0x%02x] | [%c]\n", CHECK_CODE, CHECK_CODE);
+    printf("Delimiter: [0x%02x] | [%c]\n", DELIMITER, DELIMITER);
+#endif /*-----------------------------------------------------------------*/
     int writtenLen = write(m_socketFD, outBuffer.c_str(), strlen((const char *) outBuffer.c_str()));
     if (writtenLen < (header.getLen() + msg->getLengthInt() + 2))
         throw "sendPacket(): written length too small.";
@@ -77,15 +96,10 @@ void CMonitor::sendPacket(  const unsigned char & DESTINATION,
 }
 void CMonitor::receiveData(CHeader * header, CAbstractMessage * msg) {
 //-----------------HEADER---------------
-    printf("==============RECEIVING==============\n");
     unsigned char headBuffer [7];
     int readLength = read(m_socketFD, headBuffer, sizeof (headBuffer));
     if (readLength < 7) throw "receiveData(): header readLength too small.";
     
-    for (int i = 0; i < readLength; i++) {
-        printf("Head[%d]: [0x%02x] | [%c]\n", i, headBuffer[i], headBuffer[i]);
-    }
-    printf("\n");
     
     header->initWithRawData(headBuffer);
     //received message is NULLMessage 
@@ -101,12 +115,6 @@ void CMonitor::receiveData(CHeader * header, CAbstractMessage * msg) {
     
     msg->initWithRawData(msgBuffer);
 
-    std::basic_string<unsigned char> x = msg->getBuffer();
-    for (int i = 0; i < msg->getLengthInt(); i++) {
-        printf("Message[%d]: [0x%02x] | [%c]\n", i, x.at(i), x.at(i));
-    }
-    printf("\n");
-    
     unsigned char checkCode;
     unsigned char delimiter;
     read(m_socketFD, &checkCode, 1);
@@ -115,9 +123,24 @@ void CMonitor::receiveData(CHeader * header, CAbstractMessage * msg) {
     read(m_socketFD, &delimiter, 1);
 //    if (delimiter != 0x0D)
 //        throw "receiveData(): incorrect delimiter.";
+
+#ifdef DEBUG/*-------------------------------------------------------------*/
+    printf("==============RECEIVED===============\n");
+    
+    std::basic_string<unsigned char> hBuff = header->getBuffer();
+    for (unsigned int i = 0; i < hBuff.length(); i++) {
+        printf("Head[%d]: [0x%02x] | [%c]\n", i, hBuff[i], hBuff[i]);
+    }
+    printf("\n");
+    std::basic_string<unsigned char> mBuff = msg->getBuffer();
+    for (unsigned int i = 0; i < mBuff.length(); i++) {
+        printf("Message[%d]: [0x%02x] | [%c]\n", i, mBuff.at(i), mBuff.at(i));
+    }
+    printf("\n");
     printf("CheckCode: [0x%02x] | [%c]\n", checkCode, checkCode);
     printf("Delimiter: [0x%02x] | [%c]\n", delimiter, delimiter);
-    printf("==============RECEIVED===============\n");
+#endif /*-----------------------------------------------------------------*/
+    
 }
 
 CAbstractMessage * CMonitor::getParameter(const CAbstractMessage * msg) {
@@ -127,7 +150,12 @@ CAbstractMessage * CMonitor::getParameter(const CAbstractMessage * msg) {
        //================RECEIVING==========================
     CHeader header;
     CMsgGetCurrParamReply * recvMessage = new CMsgGetCurrParamReply();
-    receiveData(&header, recvMessage);
+    try {
+        receiveData(&header, recvMessage);
+    } catch (...) {
+        delete recvMessage;
+        throw;
+    }
     return recvMessage;
 }
 
@@ -137,8 +165,13 @@ CAbstractMessage * CMonitor::setParameter(const CAbstractMessage* msg) {
     sendPacket('A', 'E', msg);
        //================RECEIVING==========================
     CHeader header;
-    CMsgSetParamReply * recvMessage = new CMsgSetParamReply();
-    receiveData(&header, recvMessage);
+    CAbstractMessage* recvMessage = new CMsgSetParamReply ();
+    try {
+        receiveData(&header, recvMessage);
+    } catch (...) {
+        delete recvMessage;
+        throw;
+    }
     return recvMessage;
 }
 
@@ -148,7 +181,12 @@ void CMonitor::saveCurrentSettings(void) {
     //================RECEIVING==========================
     CHeader header;
     CMsgCommSaveCurrSettingsReply recvMessage;
-    receiveData(&header, &recvMessage);    
+    try {
+        receiveData(&header, &recvMessage);
+    } catch (...) {
+        delete msg;
+        throw;
+    }
     
     delete msg;
 }
@@ -158,8 +196,13 @@ int      CMonitor::powerStatusRead(void) {
     //================RECEIVING==========================
     CHeader header;
     CMsgCommPowerStatusReadReply recvMessage;
-    receiveData(&header, &recvMessage);    
-    
+    try {
+        receiveData(&header, &recvMessage);
+    } catch (...) {
+        delete msg;
+        throw;
+    }
+
     if (recvMessage.getMaxModeCount() != 4) throw "powerStatusRead(): invalid number of max modes.";
     
     delete msg;
