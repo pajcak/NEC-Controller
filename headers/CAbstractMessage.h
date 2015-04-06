@@ -13,7 +13,6 @@ public:
                                               CAbstractMessage(const CAbstractMessage&) {}
     void                                      initWithRawData(const unsigned char * _buffer) {}
     virtual                                   ~CAbstractMessage() {}
-    virtual CAbstractMessage*                 clone() const = 0;
     virtual unsigned char                     getCheckCode() const = 0;
     // saves length of certain message into two bytes hi and lo and returns the length in integer
     virtual int                               getLengthInt() const = 0;

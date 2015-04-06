@@ -38,9 +38,9 @@ OBJECTFILES= \
 	${OBJECTDIR}/CController.o \
 	${OBJECTDIR}/CHeader.o \
 	${OBJECTDIR}/CMonitor.o \
-	${OBJECTDIR}/CPacket.o \
 	${OBJECTDIR}/MsgIncoming.o \
 	${OBJECTDIR}/MsgOutgoing.o \
+	${OBJECTDIR}/Utils.o \
 	${OBJECTDIR}/main.o
 
 
@@ -83,11 +83,6 @@ ${OBJECTDIR}/CMonitor.o: CMonitor.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/CMonitor.o CMonitor.cpp
 
-${OBJECTDIR}/CPacket.o: CPacket.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/CPacket.o CPacket.cpp
-
 ${OBJECTDIR}/MsgIncoming.o: MsgIncoming.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
@@ -97,6 +92,11 @@ ${OBJECTDIR}/MsgOutgoing.o: MsgOutgoing.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/MsgOutgoing.o MsgOutgoing.cpp
+
+${OBJECTDIR}/Utils.o: Utils.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Utils.o Utils.cpp
 
 ${OBJECTDIR}/main.o: main.cpp 
 	${MKDIR} -p ${OBJECTDIR}

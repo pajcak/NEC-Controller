@@ -41,16 +41,11 @@ CMsgGetCurrParam::CMsgGetCurrParam(const CMsgGetCurrParam& rhs)
 CMsgGetCurrParam::~CMsgGetCurrParam() {
 }
 
-CAbstractMessage* CMsgGetCurrParam::clone() const {
-    return new CMsgGetCurrParam(*this);    
-}
-
 unsigned char CMsgGetCurrParam::getCheckCode() const {
     return (s_STX ^ m_opCodePage[0] ^ m_opCodePage[1] ^ m_opCode[0] ^ m_opCode[1] ^ s_ETX);
 }
 
 int CMsgGetCurrParam::getLengthInt() const {
-    //    (int)((((hi>='A')?(hi-'A'+10):(hi-'0'))<<4)+((lo>='A')?(lo-'A'+10):(lo-'0')))
     return 6;
 }
 
@@ -99,10 +94,6 @@ CMsgSetParam::CMsgSetParam(const CMsgSetParam& rhs) {
 CMsgSetParam::~CMsgSetParam() {
 }
 
-CAbstractMessage* CMsgSetParam::clone() const {
-    return new CMsgSetParam(*this);    
-}
-
 unsigned char CMsgSetParam::getCheckCode() const {
     return (s_STX ^ m_opCodePage[0] ^ m_opCodePage[1] ^ m_opCode[0] ^ m_opCode[1]
             ^ m_setValue[0] ^ m_setValue[1] ^ m_setValue[2] ^ m_setValue[3] ^ s_ETX);
@@ -142,10 +133,6 @@ CMsgCommSaveCurrSettings::CMsgCommSaveCurrSettings() { // no params, bcs command
     //unsigned char commandCode [2]; /* 'O','C' (0x30, 0x43)*/
 }
 
-CAbstractMessage* CMsgCommSaveCurrSettings::clone() const {
-    return new CMsgCommSaveCurrSettings();    
-}
-
 unsigned char CMsgCommSaveCurrSettings::getCheckCode() const {
     return (s_STX ^ m_commandCode[0] ^ m_commandCode[1] ^ s_ETX);
 }
@@ -183,10 +170,6 @@ CMsgCommPowerStatusRead::CMsgCommPowerStatusRead() { // no params, bcs commandCo
 //    unsigned char m_commandCode [4]; /* 'O', '1', 'D', '6' */
 }
 
-CAbstractMessage* CMsgCommPowerStatusRead::clone() const {
-    return new CMsgCommPowerStatusRead();    
-}
-
 unsigned char CMsgCommPowerStatusRead::getCheckCode() const {
     return (s_STX ^ m_commandCode[0] ^ m_commandCode[1] ^ m_commandCode[2] ^ m_commandCode[3] ^ s_ETX);
 }
@@ -208,6 +191,65 @@ std::basic_string<unsigned char> CMsgCommPowerStatusRead::getBuffer() const {
     ustr.push_back(m_commandCode[1]);
     ustr.push_back(m_commandCode[2]);
     ustr.push_back(m_commandCode[3]);
+    ustr.push_back(s_ETX);
+    return ustr;
+}
+//******************************************************************************
+CMsgCommPowerControl::CMsgCommPowerControl(unsigned char _powerMode) { // no params, bcs commandCode is already defined
+//    unsigned char m_commandCode [6]; /* 'C', '2', '0', '3', 'D', '6' */
+//    unsigned char m_powerMode [4]; /* '0', '0', '0', '1'->'4' */
+    m_commandCode[0] = 0x43;
+    m_commandCode[1] = 0x32;
+    m_commandCode[2] = 0x30;
+    m_commandCode[3] = 0x33;
+    m_commandCode[4] = 0x44;
+    m_commandCode[5] = 0x36;
+    m_powerMode[0] = 0x30;
+    m_powerMode[1] = 0x30;
+    m_powerMode[2] = 0x30;
+    if (_powerMode != 0x31 || _powerMode != 0x32 || _powerMode != 0x33 || _powerMode != 0x34)
+        throw "CMsgCommPowerControl(unsigned char): invalid power mode value.";
+    else m_powerMode[3] = _powerMode;
+}
+
+unsigned char CMsgCommPowerControl::getCheckCode() const {
+    return (s_STX ^
+            m_commandCode[0] ^
+            m_commandCode[1] ^
+            m_commandCode[2] ^
+            m_commandCode[3] ^
+            m_commandCode[4] ^
+            m_commandCode[5] ^
+            m_powerMode[0] ^
+            m_powerMode[1] ^
+            m_powerMode[2] ^
+            m_powerMode[3] ^
+            s_ETX);
+}
+
+int CMsgCommPowerControl::getLengthInt() const {
+    return 12;
+}
+
+std::basic_string<unsigned char> CMsgCommPowerControl::getLength() const {
+    std::basic_string<unsigned char> ustr;
+    ustr.push_back('0');
+    ustr.push_back('C');
+    return ustr;
+}
+std::basic_string<unsigned char> CMsgCommPowerControl::getBuffer() const {
+    std::basic_string<unsigned char> ustr;
+    ustr.push_back(s_STX);
+    ustr.push_back(m_commandCode[0]);
+    ustr.push_back(m_commandCode[1]);
+    ustr.push_back(m_commandCode[2]);
+    ustr.push_back(m_commandCode[3]);
+    ustr.push_back(m_commandCode[4]);
+    ustr.push_back(m_commandCode[5]);
+    ustr.push_back(m_powerMode[0]);
+    ustr.push_back(m_powerMode[1]);
+    ustr.push_back(m_powerMode[2]);
+    ustr.push_back(m_powerMode[3]);
     ustr.push_back(s_ETX);
     return ustr;
 }

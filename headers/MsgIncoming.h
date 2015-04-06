@@ -12,7 +12,6 @@ public:
                                      ~CMsgGetCurrParamReply();
                                      
     void                               initWithRawData(const unsigned char * _buffer);
-    CAbstractMessage*                clone() const;
     unsigned char                    getCheckCode() const;
     int                              getLengthInt() const;
     std::basic_string<unsigned char> getLength() const;
@@ -35,7 +34,6 @@ public:
                                      CMsgSetParamReply(const CMsgSetParamReply&);
                                      ~CMsgSetParamReply();
     void               initWithRawData(const unsigned char * _buffer);
-    CAbstractMessage*                clone() const;
     unsigned char                    getCheckCode() const;
     int                              getLengthInt() const;
     std::basic_string<unsigned char> getLength() const;
@@ -58,7 +56,6 @@ public:
                                      CMsgCommSaveCurrSettingsReply() {}
                                      CMsgCommSaveCurrSettingsReply(const unsigned char * _buffer);
     void   initWithRawData(const unsigned char * _buffer);
-    CAbstractMessage*                clone() const;
     unsigned char                    getCheckCode() const;
     int                              getLengthInt() const;
     std::basic_string<unsigned char> getLength() const;
@@ -72,7 +69,6 @@ public:
                                      CMsgCommPowerStatusReadReply() {}
                                      CMsgCommPowerStatusReadReply(const unsigned char * _buffer);
     void   initWithRawData(const unsigned char * _buffer);
-    CAbstractMessage*                clone() const;
     unsigned char                    getCheckCode() const;
     int                              getLengthInt() const;
     std::basic_string<unsigned char> getLength() const;
@@ -96,7 +92,6 @@ public:
                                      CMsgCommNull(const CMsgCommNull&);
                                      ~CMsgCommNull();
     void                    initWithRawData(const unsigned char * _buffer);
-     CAbstractMessage*               clone() const;
     unsigned char                    getCheckCode() const;
     int                              getLengthInt() const;
     std::basic_string<unsigned char> getLength() const;

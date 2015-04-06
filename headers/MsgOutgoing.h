@@ -9,7 +9,6 @@ public:
                                      CMsgGetCurrParam(unsigned char _opCodePage[2], unsigned char _opCode[2]);
                                      CMsgGetCurrParam(const CMsgGetCurrParam&);
                                      ~CMsgGetCurrParam();
-     CAbstractMessage*               clone() const;
     unsigned char                    getCheckCode() const;
     int                              getLengthInt() const;
     std::basic_string<unsigned char> getLength() const;
@@ -26,7 +25,6 @@ public:
                                                  unsigned char _setValue[4]);
                                      CMsgSetParam(const CMsgSetParam&);
                                      ~CMsgSetParam();
-     CAbstractMessage*               clone() const;
     unsigned char                    getCheckCode() const;
     int                              getLengthInt() const;
     std::basic_string<unsigned char> getLength() const;
@@ -42,12 +40,10 @@ private:
 class CMsgCommSaveCurrSettings : public CAbstractMessage {
 public:
                                      CMsgCommSaveCurrSettings(); // no params, bcs commandCode is already defined
-     CAbstractMessage*               clone() const;
     unsigned char                    getCheckCode() const;
     int                              getLengthInt() const;
     std::basic_string<unsigned char> getLength() const;
     std::basic_string<unsigned char> getBuffer() const;
-    //DOES NOT NEED TO BE IMPLEMENTED
 private:
     unsigned char m_commandCode [2]; /* 'O','C' (0x30, 0x43)*/
 
@@ -61,14 +57,24 @@ private:
 class CMsgCommPowerStatusRead : public CAbstractMessage {
 public:
                                      CMsgCommPowerStatusRead(); // no params, bcs commandCode is already defined
-     CAbstractMessage*               clone() const;
     unsigned char                    getCheckCode() const;
     int                              getLengthInt() const;
     std::basic_string<unsigned char> getLength() const;
     std::basic_string<unsigned char> getBuffer() const;
-    //DOES NOT NEED TO BE IMPLEMENTED
 private:
     unsigned char m_commandCode [4]; /* 'O', '1', 'D', '6' */
+};
+//******************************************************************************
+class CMsgCommPowerControl : public CAbstractMessage {
+public:
+                                     CMsgCommPowerControl(unsigned char _powerMode); // no params, bcs commandCode is already defined
+    unsigned char                    getCheckCode() const;
+    int                              getLengthInt() const;
+    std::basic_string<unsigned char> getLength() const;
+    std::basic_string<unsigned char> getBuffer() const;
+private:
+    unsigned char m_commandCode [6]; /* 'C', '2', '0', '3', 'D', '6' */
+    unsigned char m_powerMode [4]; /* '0', '0', '0', '1'->'4' */
 };
 
 #endif /* __MSGCONTROLLER_H__ */

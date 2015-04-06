@@ -1,14 +1,15 @@
 #include "headers/CController.h"
-#include "headers/CPacket.h"
 #include "headers/MsgOutgoing.h"
 #include "headers/CMonitor.h"
 #include "headers/MsgIncoming.h"
 #include "headers/Utils.h"
 #include <cstdio>
+
+#define DEBUG
 CController::CController() {
     //temporary
-    m_monitor = new CMonitor("10.0.0.100", 7142);
-//    m_monitor = new CMonitor("localhost", 12345);
+//    m_monitor = new CMonitor("10.0.0.100", 7142);
+    m_monitor = new CMonitor("localhost", 12345);
     m_monitor->establishConnection();
 }
 

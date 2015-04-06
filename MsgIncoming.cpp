@@ -54,10 +54,6 @@ CMsgGetCurrParamReply::CMsgGetCurrParamReply(const CMsgGetCurrParamReply& rhs)
 CMsgGetCurrParamReply::~CMsgGetCurrParamReply() {
 }
 
-CAbstractMessage* CMsgGetCurrParamReply::clone() const {
-    return new CMsgGetCurrParamReply(*this);
-}
-
 unsigned char CMsgGetCurrParamReply::getCheckCode() const {
     //TODO
     return 'X';
@@ -152,10 +148,6 @@ CMsgSetParamReply::CMsgSetParamReply(const CMsgSetParamReply & rhs)
 CMsgSetParamReply::~CMsgSetParamReply() {
 }
 
-CAbstractMessage* CMsgSetParamReply::clone() const {
-    return new CMsgSetParamReply(*this);
-}
-
 unsigned char CMsgSetParamReply::getCheckCode() const {
     //TODO
     return 'X';
@@ -222,9 +214,6 @@ void CMsgCommSaveCurrSettingsReply::initWithRawData(const unsigned char * _buffe
     if (_buffer[5] != 0x03) 
         throw "CMsgCommSaveCurrSettingsReply(const unsigned char*): ETX exception\n";
 }
-CAbstractMessage* CMsgCommSaveCurrSettingsReply::clone() const {
-    return NULL;
-}
 
 unsigned char CMsgCommSaveCurrSettingsReply::getCheckCode() const {
     //TODO
@@ -243,7 +232,7 @@ std::basic_string<unsigned char> CMsgCommSaveCurrSettingsReply::getLength() cons
 }
 
 std::basic_string<unsigned char> CMsgCommSaveCurrSettingsReply::getBuffer() const {
-//        unsigned char m_commandCode [4]; /* '0','0', '0', 'C' (0x30, 0x30, 0x30, 0x43)*/
+//    unsigned char m_commandCode [4]; /* '0','0', '0', 'C' (0x30, 0x30, 0x30, 0x43)*/
     std::basic_string<unsigned char> ustr;
     ustr.push_back(s_STX);
     ustr.push_back(m_commandCode[0]);
@@ -314,10 +303,6 @@ void CMsgCommPowerStatusReadReply::initWithRawData(const unsigned char * _buffer
         throw "CMsgCommPowerStatusReadReply(const unsigned char*): ETX exception\n";
 }
 
-CAbstractMessage* CMsgCommPowerStatusReadReply::clone() const {
-    return new CMsgCommPowerStatusReadReply(*this);
-}
-
 unsigned char CMsgCommPowerStatusReadReply::getCheckCode() const {
     //TODO
     return 'X';
@@ -384,9 +369,6 @@ CMsgCommNull::CMsgCommNull(const CMsgCommNull& rhs)
 CMsgCommNull::~CMsgCommNull() {
 }
 
-CAbstractMessage* CMsgCommNull::clone() const {
-    return new CMsgCommNull(*this);
-}
 
 unsigned char CMsgCommNull::getCheckCode() const {
     //TODO

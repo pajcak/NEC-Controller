@@ -1,8 +1,19 @@
 #ifndef __CCONNECTION_H__
 #define	__CCONNECTION_H__
 
-#include "CPacket.h"
 #include "MsgIncoming.h"
+#include "CHeader.h"
+/*
+*               PACKET STRUCTURE
+*    ___________________________________________
+*   | HEADER | MESSAGE | CHECK CODE | DELIMITER |
+*   |________|_________|____________|___________|
+*   (CHeader)|(CMessage)| calculate |  CR(0x0D) |
+*                           1B            1B
+* 
+*Check code is the Block Check Code(=XOR) between the Header and the End of Message except SOH.
+**/
+
 
 class CMonitor {
 public:
