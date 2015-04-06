@@ -6,7 +6,7 @@
 
 class CMsgGetCurrParamReply : public CAbstractMessage {
 public:
-                                     CMsgGetCurrParamReply() {}
+                                     CMsgGetCurrParamReply();
                                      CMsgGetCurrParamReply(const unsigned char * _buffer);
                                      CMsgGetCurrParamReply(const CMsgGetCurrParamReply &);
                                      ~CMsgGetCurrParamReply();
@@ -29,7 +29,7 @@ private:
 //******************************************************************************
 class CMsgSetParamReply : public CAbstractMessage {
 public:
-                                     CMsgSetParamReply() {}
+                                     CMsgSetParamReply();
                                      CMsgSetParamReply(const unsigned char * _buffer);
                                      CMsgSetParamReply(const CMsgSetParamReply&);
                                      ~CMsgSetParamReply();
@@ -53,7 +53,7 @@ private:
 //*******************************************************************************
 class CMsgCommSaveCurrSettingsReply : public CAbstractMessage {
 public:
-                                     CMsgCommSaveCurrSettingsReply() {}
+                                     CMsgCommSaveCurrSettingsReply();
                                      CMsgCommSaveCurrSettingsReply(const unsigned char * _buffer);
     void   initWithRawData(const unsigned char * _buffer);
     unsigned char                    getCheckCode() const;
@@ -66,7 +66,7 @@ private:
 //******************************************************************************
 class CMsgCommPowerStatusReadReply : public CAbstractMessage {
 public:
-                                     CMsgCommPowerStatusReadReply() {}
+                                     CMsgCommPowerStatusReadReply();
                                      CMsgCommPowerStatusReadReply(const unsigned char * _buffer);
     void   initWithRawData(const unsigned char * _buffer);
     unsigned char                    getCheckCode() const;
@@ -82,6 +82,22 @@ private:
     unsigned char m_type [2]; /*Operation type code - 0x30,0x30(set parameter) / 0x30,0x31(momentary)*/
     unsigned char m_maxValue[4]; /*Maximum value of power modes. ('0', '0', '0', '4') */
     unsigned char m_currValue[4]; /*Current power mode.('0', '0', '0', '1'->'4')*/
+};
+//******************************************************************************
+class CMsgCommPowerControlReply : public CAbstractMessage {
+public:
+                                     CMsgCommPowerControlReply();
+                                     CMsgCommPowerControlReply(const unsigned char * _buffer);
+    void   initWithRawData(const unsigned char * _buffer);
+    unsigned char                    getCheckCode() const;
+    int                              getLengthInt() const;
+    std::basic_string<unsigned char> getLength() const;
+    std::basic_string<unsigned char> getBuffer() const; // MAYBE NOT NEEDED
+    int                              getCurrMode() const;
+private:
+    unsigned char m_result [2]; /*Result code - 0x30,0x30(no error) / 0x30,0x31(Unsupported operation) */
+    unsigned char m_commandCode [6]; /* 'C', '2', '0', '3', 'D', '6' */
+    unsigned char m_powerMode [4]; /* '0', '0', '0', '1'->'4' */
 };
 
 //******************************************************************************

@@ -1,6 +1,12 @@
 #include "headers/MsgIncoming.h"
 #include "headers/Utils.h"
 #include <cstdio>
+
+
+//******************************************************************************
+CMsgGetCurrParamReply::CMsgGetCurrParamReply() {
+
+}
 /** \brief Fills fields from bytes in parameter.
  * Also checks if the bytes content corresponds to this exact message
  * 
@@ -100,6 +106,9 @@ int CMsgGetCurrParamReply::getCurrValue() const {
 }
 
 //******************************************************************************
+CMsgSetParamReply::CMsgSetParamReply() {
+
+}
 
 CMsgSetParamReply::CMsgSetParamReply(const unsigned char * _buffer) {
     this->initWithRawData(_buffer);
@@ -194,6 +203,9 @@ int                              CMsgSetParamReply::getCurrValue() const {
                           m_reqSettingVal[2], m_reqSettingVal[3]);
 }
 //******************************************************************************
+CMsgCommSaveCurrSettingsReply::CMsgCommSaveCurrSettingsReply() {
+
+}
 
 CMsgCommSaveCurrSettingsReply::CMsgCommSaveCurrSettingsReply(const unsigned char * _buffer) {
     this->initWithRawData(_buffer);
@@ -244,7 +256,9 @@ std::basic_string<unsigned char> CMsgCommSaveCurrSettingsReply::getBuffer() cons
         
 }
 //******************************************************************************
+CMsgCommPowerStatusReadReply::CMsgCommPowerStatusReadReply() {
 
+}
 CMsgCommPowerStatusReadReply::CMsgCommPowerStatusReadReply(const unsigned char * _buffer) {
     this->initWithRawData(_buffer);
 }
@@ -275,7 +289,7 @@ void CMsgCommPowerStatusReadReply::initWithRawData(const unsigned char * _buffer
     if (_buffer[5] == 0x44 && _buffer[6] == 0x36) {
         m_commandCode[0] = _buffer[5];
         m_commandCode[1] = _buffer[6];
-    } else throw "CMsgCommPowerStatusReadReply(const unsigned char*): command code\n";
+    } else throw "CMsgCommPowerStatusReadReply(const unsigned char*): command code exception\n";
 
     if (_buffer[7] == 0x30) m_type[0] = _buffer[7];
     else throw "CMsgCommPowerStatusReadReply(const unsigned char*): operation type code exception\n";
@@ -347,6 +361,90 @@ int                              CMsgCommPowerStatusReadReply::getMaxModeCount()
 int                              CMsgCommPowerStatusReadReply::getCurrMode() const {
     return fourBytesToInt(m_currValue[0], m_currValue[1],
                           m_currValue[2], m_currValue[3]);
+}
+//******************************************************************************
+CMsgCommPowerControlReply::CMsgCommPowerControlReply() {
+
+}
+CMsgCommPowerControlReply::CMsgCommPowerControlReply(const unsigned char * _buffer) {
+    this->initWithRawData(_buffer);
+}
+void CMsgCommPowerControlReply::initWithRawData(const unsigned char * _buffer) {
+//    unsigned char m_result [2]; /*Result code - 0x30,0x30(no error) / 0x30,0x31(Unsupported operation) */
+//    unsigned char m_commandCode [6]; /* 'C', '2', '0', '3', 'D', '6' */
+//    unsigned char m_powerMode [4]; /* '0', '0', '0', '1'->'4' */
+
+    if (_buffer[0] != 0x02) throw "CMsgCommPowerControlReply(const unsigned char*): STX exception\n";
+    
+    if (_buffer[1] == 0x30 && (_buffer[2] == 0x30 || _buffer[2] == 0x31)) {
+        m_result[0] = _buffer[1];
+        m_result[1] = _buffer[2];
+    } else throw "CMsgCommPowerControlReply(const unsigned char*): result exception\n";
+    if (m_result[1] == 0x31) 
+        throw "CMsgCommPowerControlReply(const unsigned char*): m_result: unsupported operation\n";
+    
+    if (_buffer[3] == 0x43 && _buffer[4] == 0x32 && _buffer[5] == 0x30
+        && _buffer[6] == 0x33 && _buffer[7] == 0x44 && _buffer[8] == 0x36) {
+        m_commandCode[0] = _buffer[3];
+        m_commandCode[1] = _buffer[4];
+        m_commandCode[2] = _buffer[5];
+        m_commandCode[3] = _buffer[6];
+        m_commandCode[4] = _buffer[7];
+        m_commandCode[5] = _buffer[8];
+    } else throw "CMsgCommPowerControlReply(const unsigned char*): command code exception.\n";
+
+    if (_buffer[9] == 0x30) m_powerMode[0] = _buffer[9];
+    else throw "CMsgCommPowerControlReply(const unsigned char*): power mode exception\n";
+    if (_buffer[10] == 0x30) m_powerMode[1] = _buffer[10];
+    else throw "CMsgCommPowerControlReply(const unsigned char*): power mode exception\n";
+    if (_buffer[11] == 0x30) m_powerMode[2] = _buffer[11];
+    else throw "CMsgCommPowerControlReply(const unsigned char*): pwoer mode exception\n";
+    m_powerMode[3] = _buffer[12];
+    
+    if (_buffer[13] != 0x03) 
+        throw "CMsgCommPowerControlReply(const unsigned char*): ETX exception\n";
+}
+
+unsigned char CMsgCommPowerControlReply::getCheckCode() const {
+    //TODO
+    return 'X';
+}
+
+int CMsgCommPowerControlReply::getLengthInt() const {
+    return 14;
+}
+
+std::basic_string<unsigned char> CMsgCommPowerControlReply::getLength() const {
+    std::basic_string<unsigned char> ustr;
+    ustr.push_back('0');
+    ustr.push_back('E');
+    return ustr;
+}
+
+std::basic_string<unsigned char> CMsgCommPowerControlReply::getBuffer() const {
+//    unsigned char m_result [2]; /*Result code - 0x30,0x30(no error) / 0x30,0x31(Unsupported operation) */
+//    unsigned char m_commandCode [6]; /* 'C', '2', '0', '3', 'D', '6' */
+//    unsigned char m_powerMode [4]; /* '0', '0', '0', '1'->'4' */
+    std::basic_string<unsigned char> ustr;
+    ustr.push_back(s_STX);
+    ustr.push_back(m_result[0]);
+    ustr.push_back(m_result[1]);
+    ustr.push_back(m_commandCode[0]);
+    ustr.push_back(m_commandCode[1]);
+    ustr.push_back(m_commandCode[2]);
+    ustr.push_back(m_commandCode[3]);
+    ustr.push_back(m_commandCode[4]);
+    ustr.push_back(m_commandCode[5]);
+    ustr.push_back(m_powerMode[0]);
+    ustr.push_back(m_powerMode[1]);
+    ustr.push_back(m_powerMode[2]);
+    ustr.push_back(m_powerMode[3]);
+    ustr.push_back(s_ETX);
+    return ustr;
+}
+int                              CMsgCommPowerControlReply::getCurrMode() const {
+    return fourBytesToInt(m_powerMode[0], m_powerMode[1],
+                          m_powerMode[2], m_powerMode[3]);
 }
 //******************************************************************************
 

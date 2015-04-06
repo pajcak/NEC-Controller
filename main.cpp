@@ -15,14 +15,21 @@ using namespace std;
 int main(int argc, char * argv []) {
     CController c;
     try {
+//        c.getBrightness();
+//==========================================
+//        c.setBrightness(80);
+//==========================================
 //        switch (c.powerStatusRead()) {
 //            case 1: { printf("Power status = ON\n"); break;}
 //            case 2: { printf("Power status = Stand-by\n"); break;}
 //            case 3: { printf("Power status = Suspend\n"); break;}
 //            case 4: { printf("Power status = OFF\n"); break;}
 //        }
-        c.getBrightness();
-//        c.setBrightness(80);
+//==========================================
+//        printf("PowerStatus: %d\n", c.powerStatusRead());
+//==========================================
+        c.powerControl(1);
+//==========================================
     } catch (const char * x) {
         printf("MAIN: caught:%s\n", x);
     }

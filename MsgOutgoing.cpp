@@ -207,9 +207,9 @@ CMsgCommPowerControl::CMsgCommPowerControl(unsigned char _powerMode) { // no par
     m_powerMode[0] = 0x30;
     m_powerMode[1] = 0x30;
     m_powerMode[2] = 0x30;
-    if (_powerMode != 0x31 || _powerMode != 0x32 || _powerMode != 0x33 || _powerMode != 0x34)
-        throw "CMsgCommPowerControl(unsigned char): invalid power mode value.";
-    else m_powerMode[3] = _powerMode;
+    if (_powerMode == 0x31 || _powerMode == 0x32 || _powerMode == 0x33 || _powerMode == 0x34)
+        m_powerMode[3] = _powerMode;
+    else throw "CMsgCommPowerControl(unsigned char): invalid power mode value.";
 }
 
 unsigned char CMsgCommPowerControl::getCheckCode() const {

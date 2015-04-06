@@ -9,15 +9,19 @@ public:
     virtual ~CController();
 //-----------------------API----------------------------
     int getBrightness();
-    void setBrightness(const int & val);
+    void setBrightness(int val);
     /**
-     * <Status>
      * @return 1: ON\n
      * 2: Stand-by (power save)\n
      * 3: Suspend (power save)\n
      * 4: OFF (same as IR power off)
      */
     int powerStatusRead();
+    /**
+     * 
+     * @param powerMode - 1(ON) or 4(OFF)
+     */
+    void powerControl(int powerMode);
     
 private:
     CMonitor * m_monitor;

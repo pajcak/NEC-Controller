@@ -208,6 +208,22 @@ int      CMonitor::powerStatusRead(void) {
     delete msg;
     return recvMessage.getCurrMode();
 }
+int CMonitor::powerControl(const unsigned char & powerMode) {
+    CAbstractMessage * msg = new CMsgCommPowerControl (powerMode);
+    sendPacket('A', 'A', msg);
+    //================RECEIVING==========================
+    CHeader header;
+    CMsgCommPowerControlReply recvMessage;
+    try {
+        receiveData(&header, &recvMessage);
+    } catch (...) {
+        delete msg;
+        throw;
+    }
+
+    delete msg;
+    return recvMessage.getCurrMode();
+}
 
 /*MESSAGE TYPE(msgType)*/
 //ASCII 'A' (0x41): Command.

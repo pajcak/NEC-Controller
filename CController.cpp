@@ -40,7 +40,7 @@ int  CController::getBrightness() {
     if (gprMsg) delete gprMsg;
     return brightness;
 }
-void CController::setBrightness(const int & val) {
+void CController::setBrightness(int val) {
     unsigned char opCodePage[2] = {'0', '0'};/*operation code page for Brightness*/
     unsigned char opCode[2]     = {'1', '0'};/*operation code for Brightness*/
 
@@ -61,7 +61,7 @@ void CController::setBrightness(const int & val) {
 #endif /*-----------------------------------------------------------------*/
     
     if (setParamReply->getCurrValue() != val) 
-        throw "CController::setBrightness(): incorrect confirm value in setParameterReply";
+        throw "CController::setBrightness(): incorrect confirm value in setParameterReply.";
     
     m_monitor->saveCurrentSettings();
     
@@ -69,4 +69,14 @@ void CController::setBrightness(const int & val) {
 }
 int CController::powerStatusRead() {
     return m_monitor->powerStatusRead();
+}
+void CController::powerControl(int powerMode) {
+    unsigned char mode;
+    if (powerMode == 1) mode = '1';
+    else if (powerMode == 4) mode = '4';
+    else throw "CController::powerControl(int): invalid power mode number (1 or 4 allowed).";
+    
+    int repliedValue = m_monitor->powerControl(mode);
+    if (powerMode != repliedValue)
+        throw "CController::powerControl(int): incorrect confirm value from monitor.";
 }

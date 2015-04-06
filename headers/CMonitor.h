@@ -42,6 +42,7 @@ CAbstractMessage *      setParameter(const CAbstractMessage * param);
 
 void                    saveCurrentSettings(void);
 int                     powerStatusRead(void);
+int                     powerControl(const unsigned char & powerMode);
 
 private:
     void sendPacket(const unsigned char & DESTINATION,
