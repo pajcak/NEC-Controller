@@ -15,9 +15,15 @@ using namespace std;
 int main(int argc, char * argv []) {
     CController c;
     try {
-//        c.getBrightness();
+//        printf("Actual brightness = %d\n", c.getBrightness());
 //==========================================
-//        c.setBrightness(80);
+//        if (argc != 3) printf("Usage: %s <brightness> <monitorAddr>\n", argv[0]);
+//        int brightness = atoi(argv[1]);
+//        char * monitorAddr = argv[2];
+//        CController c(monitorAddr);
+//        if (brightness < 0 ||  brightness > 100)
+//            printf("brightness range must be: 0(dark) to 100(bright) inclusive\n");
+        /*else */c.setBrightness(80);
 //==========================================
 //        switch (c.powerStatusRead()) {
 //            case 1: { printf("Power status = ON\n"); break;}
@@ -28,7 +34,10 @@ int main(int argc, char * argv []) {
 //==========================================
 //        printf("PowerStatus: %d\n", c.powerStatusRead());
 //==========================================
-        c.powerControl(1);
+//        if (argc != 2) printf("Usage: %s <powerModeNumber>\n", argv[0]);
+//        int powerMode = atoi(argv[1]);
+//        if (powerMode != 1 && powerMode != 4) printf("powerModeNumber must be: 1(ON) or 4(OFF)\n");
+//        else c.powerControl(powerMode);
 //==========================================
     } catch (const char * x) {
         printf("MAIN: caught:%s\n", x);

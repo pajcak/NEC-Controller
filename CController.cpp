@@ -8,8 +8,14 @@
 #define DEBUG
 CController::CController() {
     //temporary
+    initParameters();
 //    m_monitor = new CMonitor("10.0.0.100", 7142);
     m_monitor = new CMonitor("localhost", 12345);
+    m_monitor->establishConnection();
+}
+CController::CController(const char * monitorAddr) {
+    initParameters();
+    m_monitor = new CMonitor(monitorAddr, 7142);
     m_monitor->establishConnection();
 }
 
@@ -18,10 +24,11 @@ CController::~CController() {
     delete m_monitor;
 }
 
+//-----------------------API----------------------------
 int  CController::getBrightness() {
-    unsigned char opCodePage[2] = {'0', '0'};/*operation code page for Brightness*/
-    unsigned char opCode[2]     = {'1', '0'};/*operation code for Brightness*/
-    CMsgGetCurrParam msg(opCodePage, opCode);
+    std::map<std::string, CParameter>::iterator it = m_parameters.find("brightness");
+
+    CMsgGetCurrParam msg(it->second.m_opCodePage, it->second.m_opCode);
     
     CAbstractMessage * gprMsg = m_monitor->getParameter(&msg);
     
@@ -41,12 +48,17 @@ int  CController::getBrightness() {
     return brightness;
 }
 void CController::setBrightness(int val) {
-    unsigned char opCodePage[2] = {'0', '0'};/*operation code page for Brightness*/
-    unsigned char opCode[2]     = {'1', '0'};/*operation code for Brightness*/
+    std::map<std::string, CParameter>::iterator it = m_parameters.find("brightness");
 
+    if (it == m_parameters.end()) throw "ASD";
+
+    if (!it->second.m_range->contains(val))
+        throw "CController::setBrightness(): requested value out of range.";
+    
     unsigned char value[4];
     IntToFourBytes(val, value);
-    CMsgSetParam msg (opCodePage, opCode, value);
+    
+    CMsgSetParam msg (it->second.m_opCodePage, it->second.m_opCode, value);
 
     CAbstractMessage * sprMsg = m_monitor->setParameter(&msg);
     
@@ -79,4 +91,15 @@ void CController::powerControl(int powerMode) {
     int repliedValue = m_monitor->powerControl(mode);
     if (powerMode != repliedValue)
         throw "CController::powerControl(int): incorrect confirm value from monitor.";
+}
+//------------------------------------------------------------------------------
+void CController::initParameters() {
+    m_parameters.insert(std::pair<std::string, CParameter>(
+                            "brightness",CParameter(
+                                        (const unsigned char)'0',
+                                        (const unsigned char)'0',
+                                        (const unsigned char)'1',
+                                        (const unsigned char)'0',
+                                        new CRangeInterval(0, "dark", 100, "bright")))
+                        );
 }

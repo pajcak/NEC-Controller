@@ -9,6 +9,7 @@
         <itemPath>headers/CController.h</itemPath>
         <itemPath>headers/CHeader.h</itemPath>
         <itemPath>headers/CMonitor.h</itemPath>
+        <itemPath>headers/CParameter.h</itemPath>
         <itemPath>headers/IReceivable.h</itemPath>
         <itemPath>headers/MsgIncoming.h</itemPath>
         <itemPath>headers/MsgOutgoing.h</itemPath>
@@ -25,6 +26,7 @@
       <itemPath>CController.cpp</itemPath>
       <itemPath>CHeader.cpp</itemPath>
       <itemPath>CMonitor.cpp</itemPath>
+      <itemPath>CParameter.cpp</itemPath>
       <itemPath>MsgIncoming.cpp</itemPath>
       <itemPath>MsgOutgoing.cpp</itemPath>
       <itemPath>Utils.cpp</itemPath>
@@ -63,6 +65,8 @@
       </item>
       <item path="CMonitor.cpp" ex="false" tool="1" flavor2="0">
       </item>
+      <item path="CParameter.cpp" ex="false" tool="1" flavor2="0">
+      </item>
       <item path="MsgIncoming.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="MsgOutgoing.cpp" ex="false" tool="1" flavor2="0">
@@ -76,6 +80,8 @@
       <item path="headers/CHeader.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="headers/CMonitor.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="headers/CParameter.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="headers/IReceivable.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -114,6 +120,8 @@
       </item>
       <item path="CMonitor.cpp" ex="false" tool="1" flavor2="0">
       </item>
+      <item path="CParameter.cpp" ex="false" tool="1" flavor2="0">
+      </item>
       <item path="MsgIncoming.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="MsgOutgoing.cpp" ex="false" tool="1" flavor2="0">
@@ -127,6 +135,8 @@
       <item path="headers/CHeader.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="headers/CMonitor.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="headers/CParameter.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="headers/IReceivable.h" ex="false" tool="3" flavor2="0">
       </item>

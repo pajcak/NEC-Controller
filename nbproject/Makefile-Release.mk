@@ -38,6 +38,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/CController.o \
 	${OBJECTDIR}/CHeader.o \
 	${OBJECTDIR}/CMonitor.o \
+	${OBJECTDIR}/CParameter.o \
 	${OBJECTDIR}/MsgIncoming.o \
 	${OBJECTDIR}/MsgOutgoing.o \
 	${OBJECTDIR}/Utils.o \
@@ -82,6 +83,11 @@ ${OBJECTDIR}/CMonitor.o: CMonitor.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/CMonitor.o CMonitor.cpp
+
+${OBJECTDIR}/CParameter.o: CParameter.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/CParameter.o CParameter.cpp
 
 ${OBJECTDIR}/MsgIncoming.o: MsgIncoming.cpp 
 	${MKDIR} -p ${OBJECTDIR}

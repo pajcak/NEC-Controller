@@ -2,10 +2,13 @@
 #define	__CCONTROLLER_H__
 
 #include "CMonitor.h"
+#include "CParameter.h"
+#include <set>
 
 class CController {
 public:
     CController();
+    CController(const char * monitorAddr);
     virtual ~CController();
 //-----------------------API----------------------------
     int getBrightness();
@@ -25,6 +28,9 @@ public:
     
 private:
     CMonitor * m_monitor;
+    
+    void initParameters();
+    std::map<std::string, CParameter> m_parameters;
 };
 
 #endif	/* __CCONTROLLER_H__ */

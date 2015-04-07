@@ -23,21 +23,21 @@ CMonitor::~CMonitor() {
 }
 
 bool CMonitor::establishConnection() {
-    struct addrinfo * ai;
+//    struct addrinfo * ai;
     char portStr[10];
 
     snprintf(portStr, sizeof ( portStr), "%d", m_port);
-    if (getaddrinfo(m_serverAddr, portStr, NULL, &ai)) {
+    if (getaddrinfo(m_serverAddr, portStr, NULL, &m_addrInfo)) {
         throw "Getaddrinfo() failed...\n";
         return false;
     }
-    m_socketFD = socket(ai -> ai_family, SOCK_STREAM, 0);
+    m_socketFD = socket(m_addrInfo -> ai_family, SOCK_STREAM, 0);
     if (m_socketFD == -1) {
         //        freeaddrinfo(ai); -->destructor called even though exception is thrown
         throw "Socket() failed...\n";
         return false;
     }
-    if (connect(m_socketFD, ai -> ai_addr, ai -> ai_addrlen) == -1) {
+    if (connect(m_socketFD, m_addrInfo -> ai_addr, m_addrInfo -> ai_addrlen) == -1) {
         close(m_socketFD);
         //        freeaddrinfo(m_addrInfo); -->destructor called even though exception is thrown
         //        close(m_socketFD); -->destructor called even though exception is thrown
