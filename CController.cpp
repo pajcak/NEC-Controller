@@ -4,24 +4,49 @@
 #include "headers/MsgIncoming.h"
 #include "headers/Utils.h"
 #include <cstdio>
-
+#include <arpa/inet.h>
 #define DEBUG
 CController::CController() {
     //temporary
     initParameters();
-//    m_monitor = new CMonitor("10.0.0.100", 7142);
-    m_monitor = new CMonitor("localhost", 12345);
-    m_monitor->establishConnection();
-}
-CController::CController(const char * monitorAddr) {
-    initParameters();
-    m_monitor = new CMonitor(monitorAddr, 7142);
-    m_monitor->establishConnection();
 }
 
 CController::~CController() {
-    m_monitor->disconnect();
-    delete m_monitor;
+    //REPLACE THIS WITH METHOD LIKE CLEANUP
+    for (std::map<int, CMonitor*>::iterator it = m_monitors.begin();
+            it != m_monitors.end(); ++it)
+    {
+        it->second->disconnect();
+        delete it->second;
+    }
+}
+void CController::addMonitor (const char * monitorAddr, int port,  int monitorID) {
+    struct sockaddr_in sa;
+    if (inet_pton(AF_INET, monitorAddr, &(sa.sin_addr)) != 1)
+        throw "CController::addMonitor: invalid monitorAddr.";
+    if (port <= 1024 || port > 65535) throw "CController::addMonitor: invalid port.";
+    m_monitors.insert(std::pair<int, CMonitor*>(monitorID, new CMonitor(monitorAddr, port)));
+}
+void CController::connectAll() {
+    //What if some of them return false in establishConnection ??
+    for (std::map<int, CMonitor*>::iterator it = m_monitors.begin();
+            it != m_monitors.end(); ++it)
+    {
+        it->second->establishConnection();
+    }
+}
+void CController::disconnectAll() {
+    for (std::map<int, CMonitor*>::iterator it = m_monitors.begin();
+            it != m_monitors.end(); ++it)
+    {
+        it->second->disconnect();
+    }
+    
+}
+bool CController::isConnected(int monitorID) {
+    std::map<int, CMonitor*>::iterator it = m_monitors.find(monitorID);
+    if (it == m_monitors.end()) throw "CController::isConnected: invalid monitor ID.";
+    return it->second->isConnected();
 }
 
 //-----------------------API----------------------------
@@ -30,7 +55,7 @@ int  CController::getBrightness() {
 
     CMsgGetCurrParam msg(it->second.m_opCodePage, it->second.m_opCode);
     
-    CAbstractMessage * gprMsg = m_monitor->getParameter(&msg);
+    CAbstractMessage * gprMsg = m_monitors[1]->getParameter(&msg);
     
     CMsgGetCurrParamReply * getParamReply = dynamic_cast<CMsgGetCurrParamReply*>(gprMsg);
     if (getParamReply == 0) {
@@ -60,7 +85,7 @@ void CController::setBrightness(int val) {
     
     CMsgSetParam msg (it->second.m_opCodePage, it->second.m_opCode, value);
 
-    CAbstractMessage * sprMsg = m_monitor->setParameter(&msg);
+    CAbstractMessage * sprMsg = m_monitors[1]->setParameter(&msg);
     
     CMsgSetParamReply * setParamReply = dynamic_cast<CMsgSetParamReply*>(sprMsg);
     if (setParamReply == 0) {
@@ -75,12 +100,12 @@ void CController::setBrightness(int val) {
     if (setParamReply->getCurrValue() != val) 
         throw "CController::setBrightness(): incorrect confirm value in setParameterReply.";
     
-    m_monitor->saveCurrentSettings();
+    m_monitors[1]->saveCurrentSettings();
     
     if (sprMsg) delete sprMsg;
 }
 int CController::powerStatusRead() {
-    return m_monitor->powerStatusRead();
+    return m_monitors[1]->powerStatusRead();
 }
 void CController::powerControl(int powerMode) {
     unsigned char mode;
@@ -88,7 +113,7 @@ void CController::powerControl(int powerMode) {
     else if (powerMode == 4) mode = '4';
     else throw "CController::powerControl(int): invalid power mode number (1 or 4 allowed).";
     
-    int repliedValue = m_monitor->powerControl(mode);
+    int repliedValue = m_monitors[1]->powerControl(mode);
     if (powerMode != repliedValue)
         throw "CController::powerControl(int): incorrect confirm value from monitor.";
 }

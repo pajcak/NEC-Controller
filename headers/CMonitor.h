@@ -14,7 +14,7 @@
 *Check code is the Block Check Code(=XOR) between the Header and the End of Message except SOH.
 **/
 
-
+#include <cstdio>
 class CMonitor {
 public:
     CMonitor(const char * srvAddr, const int & port);

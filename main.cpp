@@ -15,6 +15,11 @@ using namespace std;
 int main(int argc, char * argv []) {
     CController c;
     try {
+        c.addMonitor("127.0.0.1", 12345, 1);
+        c.connectAll();
+//==========================================
+//        printf("is connected= %s", (c.isConnected(1) ? "yes" : "no"));
+//==========================================
 //        printf("Actual brightness = %d\n", c.getBrightness());
 //==========================================
 //        if (argc != 3) printf("Usage: %s <brightness> <monitorAddr>\n", argv[0]);
@@ -39,15 +44,9 @@ int main(int argc, char * argv []) {
 //        if (powerMode != 1 && powerMode != 4) printf("powerModeNumber must be: 1(ON) or 4(OFF)\n");
 //        else c.powerControl(powerMode);
 //==========================================
+        c.disconnectAll();
     } catch (const char * x) {
         printf("MAIN: caught:%s\n", x);
     }
-//    return 0;
-//    snprintf(buffer, sizeof ( buffer), "%d: %s\n", i, "blablabla typu const char*");
-
-        
-/*The controller(here) should wait for a packet interval before next command is sent.
-The packet interval needs to be longer than 600msec for the LCD monitor.*/
-//        usleep(delay * 1000);
     return 0;
 }

@@ -18,15 +18,15 @@ CMonitor::CMonitor(const char * _srvAddr, const int & _port)
 }
 
 CMonitor::~CMonitor() {
-    freeaddrinfo(m_addrInfo);
-    close(m_socketFD);
+//    if (m_addrInfo != NULL) freeaddrinfo(m_addrInfo);
+//    close(m_socketFD);
 }
 
 bool CMonitor::establishConnection() {
 //    struct addrinfo * ai;
     char portStr[10];
 
-    snprintf(portStr, sizeof ( portStr), "%d", m_port);
+    snprintf(portStr, sizeof (portStr), "%d", m_port);
     if (getaddrinfo(m_serverAddr, portStr, NULL, &m_addrInfo)) {
         throw "Getaddrinfo() failed...\n";
         return false;
@@ -44,6 +44,7 @@ bool CMonitor::establishConnection() {
         throw "Connect() failed...\n";
         return false;
     }
+    freeaddrinfo(m_addrInfo);
     /*Connected to the server*/
     return true;
 }
@@ -53,9 +54,11 @@ void CMonitor::disconnect() {
 }
 
 bool CMonitor::isConnected() {
-    if (getpeername(m_socketFD, m_addrInfo->ai_addr,
-            &m_addrInfo->ai_addrlen) == -1) return false;
-    return true;
+    int error_code;
+    socklen_t error_code_size = sizeof(error_code);
+    getsockopt(m_socketFD, SOL_SOCKET, SO_ERROR, &error_code, &error_code_size);
+    
+    return (error_code == 0);
 }
 void CMonitor::sendPacket(  const unsigned char & DESTINATION,
                             const unsigned char & MSG_TYPE,

@@ -9,7 +9,13 @@ class CController {
 public:
     CController();
     CController(const char * monitorAddr);
+    //REPLACE THIS WITH METHOD LIKE CLEANUP
     virtual ~CController();
+    void addMonitor (const char * monitorAddr, int port, int monitorID);
+    void connectAll();
+    //method for connecting/disconnecting enum of monitors
+    void disconnectAll();
+    bool isConnected(int monitorID);
 //-----------------------API----------------------------
     int getBrightness();
     void setBrightness(int val);
@@ -27,7 +33,7 @@ public:
     void powerControl(int powerMode);
     
 private:
-    CMonitor * m_monitor;
+    std::map<int, CMonitor*> m_monitors;
     
     void initParameters();
     std::map<std::string, CParameter> m_parameters;
