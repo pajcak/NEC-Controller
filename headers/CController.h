@@ -11,26 +11,31 @@ public:
     CController(const char * monitorAddr);
     //REPLACE THIS WITH METHOD LIKE CLEANUP
     virtual ~CController();
-    void addMonitor (const char * monitorAddr, int port, int monitorID);
-    void connectAll();
+    void addMonitor     (const char * monitorAddr, int port, int monitorID);
+    bool deleteMonitor  (int monitorID);
+    
+    bool connectMonitor     (int monitorID);
+    bool disconnectMonitor  (int monitorID);
+    
+    bool connectAll();
     //method for connecting/disconnecting enum of monitors
     void disconnectAll();
     bool isConnected(int monitorID);
 //-----------------------API----------------------------
-    int getBrightness();
-    void setBrightness(int val);
+    int getBrightness(int monitorID);
+    void setBrightness(int monitorID, int val);
     /**
      * @return 1: ON\n
      * 2: Stand-by (power save)\n
      * 3: Suspend (power save)\n
      * 4: OFF (same as IR power off)
      */
-    int powerStatusRead();
+    int powerStatusRead(int monitorID);
     /**
      * 
      * @param powerMode - 1(ON) or 4(OFF)
      */
-    void powerControl(int powerMode);
+    void powerControl(int monitorID, int powerMode);
     
 private:
     std::map<int, CMonitor*> m_monitors;
