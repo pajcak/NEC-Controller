@@ -23,10 +23,9 @@ public:
      * @param monitorID - ID of monitor to get the state of connection from
      * @return true if monitor specified by monitorID disconnected successfully, otherwise false
      */
-    bool deleteMonitor      (int monitorID);
+    void deleteMonitor      (int monitorID);
     /**
      * @param monitorID - ID of monitor to connect
-     * @return true if monitor specified by monitorID connected successfully, otherwise false
      */
     bool connectMonitor     (int monitorID);
     /**

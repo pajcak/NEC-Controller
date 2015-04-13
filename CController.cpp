@@ -6,7 +6,7 @@
 #include <cstdio>
 #include <arpa/inet.h>
 
-#define DEBUG
+//#define DEBUG
 CController::CController() {}
 
 CController::~CController() {}
@@ -35,14 +35,14 @@ void CController::addMonitor (const char * monitorAddr, int port,  int monitorID
     m_monitors.insert(std::pair<int, CMonitor*>(monitorID, new CMonitor(monitorAddr, port)));
     pthread_mutex_unlock(&m_monitorsMutex);
 }
-bool CController::deleteMonitor  (int monitorID) {
+void CController::deleteMonitor  (int monitorID) {
 
     pthread_mutex_lock(&m_monitorsMutex);
     
     std::map<int, CMonitor*>::iterator it = m_monitors.find(monitorID);
     if (it == m_monitors.end()) {
         pthread_mutex_unlock(&m_monitorsMutex);
-        return false;
+        throw "CController::deleteMonitor(int): invalid monitor ID.";
     }
     
     pthread_mutex_lock(&it->second->m_mutex);
@@ -55,14 +55,13 @@ bool CController::deleteMonitor  (int monitorID) {
     delete *tmp;
     
     pthread_mutex_unlock(&m_monitorsMutex);
-    return true;
 }
 bool CController::connectMonitor     (int monitorID) {
     pthread_mutex_lock(&m_monitorsMutex);
     std::map<int, CMonitor*>::iterator it = m_monitors.find(monitorID);
     if (it == m_monitors.end()) {
         pthread_mutex_unlock(&m_monitorsMutex);
-        throw "CController::isConnected: invalid monitor ID.";
+        throw "CController::connectMonitor: invalid monitor ID.";
     }
     if (!it->second->isConnected()) {
         bool res;
@@ -84,7 +83,7 @@ void CController::disconnectMonitor  (int monitorID) {
     std::map<int, CMonitor*>::iterator it = m_monitors.find(monitorID);
     if (it == m_monitors.end()) {
         pthread_mutex_unlock(&m_monitorsMutex);
-        throw "CController::isConnected: invalid monitor ID.";
+        throw "CController::disconnectMonitor(int): invalid monitor ID.";
     }
     
     if (it->second->isConnected())
@@ -93,7 +92,7 @@ void CController::disconnectMonitor  (int monitorID) {
 }    
 bool CController::connectAll() {
     pthread_mutex_lock(&m_monitorsMutex);
-    bool connOK = false;
+    bool connOK = true;
     for (std::map<int, CMonitor*>::iterator it = m_monitors.begin();
             it != m_monitors.end(); ++it)
     {
