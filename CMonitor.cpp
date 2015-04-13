@@ -208,7 +208,8 @@ int      CMonitor::powerStatusRead(void) {
         throw;
     }
 
-    if (recvMessage.getMaxModeCount() != 4) throw "powerStatusRead(): invalid number of max modes.";
+    if (recvMessage.getMaxModeCount() != 4) 
+        throw "CMonitor::powerStatusRead(): invalid number of max modes.";
     
     delete msg;
     return recvMessage.getCurrMode();

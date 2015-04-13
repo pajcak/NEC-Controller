@@ -21,7 +21,9 @@ void * thrFunc (CController * c) {
     printf("threadFunc\n");
 //    int res = 0;
     try {
-        c->setBrightness(1, 80);
+        c->powerControl(1, 1);
+//        res = c->powerStatusRead(1);
+//        c->setBacklight(1, 80);
 //        res = c->setBrightness(1);
     } catch (char const * s) {
         pthread_mutex_lock(&g_printMtx);
