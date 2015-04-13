@@ -6,7 +6,8 @@
 //******************************************************************************
 class CMsgGetCurrParam : public CAbstractMessage {
 public:
-                                     CMsgGetCurrParam(unsigned char _opCodePage[2], unsigned char _opCode[2]);
+                                     CMsgGetCurrParam(const unsigned char _opCodePage[2],
+                                             const unsigned char _opCode[2]);
                                      CMsgGetCurrParam(const CMsgGetCurrParam&);
                                      ~CMsgGetCurrParam();
     unsigned char                    getCheckCode() const;
@@ -21,8 +22,9 @@ private:
 class CMsgSetParam : public CAbstractMessage {
 public:
     
-                                     CMsgSetParam(unsigned char _opCodePage[2], unsigned char _opCode[2],
-                                                 unsigned char _setValue[4]);
+                                     CMsgSetParam(const unsigned char _opCodePage[2],
+                                             const unsigned char _opCode[2],
+                                                 const unsigned char _setValue[4]);
                                      CMsgSetParam(const CMsgSetParam&);
                                      ~CMsgSetParam();
     unsigned char                    getCheckCode() const;

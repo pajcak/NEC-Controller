@@ -21,7 +21,7 @@ public:
     ~CMonitor();
     bool establishConnection();
     void disconnect();
-    bool isConnected();
+    bool isConnected() const;
 
 /** \Brief Blocking, sends CMsgGetCurrParam and returns received data in CMsgGetCurrParamReply.
  * If NullMsg was received, simply return sNULL, if error, throw exception
@@ -44,6 +44,7 @@ void                    saveCurrentSettings(void);
 int                     powerStatusRead(void);
 int                     powerControl(const unsigned char & powerMode);
 
+    pthread_mutex_t m_mutex;
 private:
     void sendPacket(const unsigned char & DESTINATION,
                     const unsigned char & MSG_TYPE,

@@ -21,7 +21,7 @@
 //ASCII 'F' (0x46): "Set parameter" reply.
 
 //******************************************************************************
-CMsgGetCurrParam::CMsgGetCurrParam(unsigned char _opCodePage[2], unsigned char _opCode[2]) {
+CMsgGetCurrParam::CMsgGetCurrParam(const unsigned char _opCodePage[2], const unsigned char _opCode[2]) {
     m_opCodePage[0] = _opCodePage[0];
     m_opCodePage[1] = _opCodePage[1];
     m_opCode[0] = _opCode[0];
@@ -68,8 +68,8 @@ std::basic_string<unsigned char> CMsgGetCurrParam::getBuffer() const {
 }
 //******************************************************************************
 
-CMsgSetParam::CMsgSetParam(unsigned char _opCodePage[2], unsigned char _opCode[2],
-        unsigned char _setValue[4]) {
+CMsgSetParam::CMsgSetParam(const unsigned char _opCodePage[2], const unsigned char _opCode[2],
+        const unsigned char _setValue[4]) {
     m_opCodePage[0] = _opCodePage[0];
     m_opCodePage[1] = _opCodePage[1];
     m_opCode[0] = _opCode[0];

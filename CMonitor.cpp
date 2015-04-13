@@ -10,20 +10,22 @@
 #include <netdb.h>
 #include <unistd.h>
 
-#define DEBUG
+//#define DEBUG
 
 CMonitor::CMonitor(const char * _srvAddr, const int & _port)
-: m_serverAddr(_srvAddr), m_port(_port) {
-
+: m_serverAddr(_srvAddr), m_port(_port)
+{
+    pthread_mutex_init(&m_mutex, NULL);
 }
 
-CMonitor::~CMonitor() {
+CMonitor::~CMonitor()
+{
+//    pthread_mutex_destroy(&m_mutex);
 //    if (m_addrInfo != NULL) freeaddrinfo(m_addrInfo);
 //    close(m_socketFD);
 }
 
 bool CMonitor::establishConnection() {
-//    struct addrinfo * ai;
     char portStr[10];
 
     snprintf(portStr, sizeof (portStr), "%d", m_port);
@@ -53,7 +55,7 @@ void CMonitor::disconnect() {
     close(m_socketFD);
 }
 
-bool CMonitor::isConnected() {
+bool CMonitor::isConnected() const {
     int error_code;
     socklen_t error_code_size = sizeof(error_code);
     getsockopt(m_socketFD, SOL_SOCKET, SO_ERROR, &error_code, &error_code_size);

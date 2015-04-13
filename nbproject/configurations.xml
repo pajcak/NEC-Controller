@@ -58,6 +58,9 @@
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
       <compileType>
+        <linkerTool>
+          <commandLine>-lpthread</commandLine>
+        </linkerTool>
       </compileType>
       <item path="CController.cpp" ex="false" tool="1" flavor2="0">
       </item>

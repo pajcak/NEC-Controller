@@ -5,14 +5,18 @@
 #include "headers/Utils.h"
 #include <cstdio>
 #include <arpa/inet.h>
-#define DEBUG
-CController::CController() {
-    //REPLACE THIS WITH METHOD LIKE INIT
-    initParameters();
-}
 
-CController::~CController() {
-    //REPLACE THIS WITH METHOD LIKE CLEANUP
+#define DEBUG
+CController::CController() {}
+
+CController::~CController() {}
+
+void CController::initController() {
+    initParameters();
+    pthread_mutex_init(&m_monitorsMutex, NULL);
+}
+void CController::destroyController() {
+    pthread_mutex_destroy(&m_monitorsMutex);
     for (std::map<int, CMonitor*>::iterator it = m_monitors.begin();
             it != m_monitors.end(); ++it)
     {
@@ -20,75 +24,148 @@ CController::~CController() {
         delete it->second; // CMonitor* is dynamicly allocated in m_monitors std::map
     }
 }
+
 void CController::addMonitor (const char * monitorAddr, int port,  int monitorID) {
     struct sockaddr_in sa;
     if (inet_pton(AF_INET, monitorAddr, &(sa.sin_addr)) != 1)
         throw "CController::addMonitor: invalid monitorAddr.";
     if (port <= 1024 || port > 65535) throw "CController::addMonitor: invalid port.";
+    
+    pthread_mutex_lock(&m_monitorsMutex);
     m_monitors.insert(std::pair<int, CMonitor*>(monitorID, new CMonitor(monitorAddr, port)));
+    pthread_mutex_unlock(&m_monitorsMutex);
 }
 bool CController::deleteMonitor  (int monitorID) {
+
+    pthread_mutex_lock(&m_monitorsMutex);
+    
     std::map<int, CMonitor*>::iterator it = m_monitors.find(monitorID);
-    if (it == m_monitors.end()) return false;
+    if (it == m_monitors.end()) {
+        pthread_mutex_unlock(&m_monitorsMutex);
+        return false;
+    }
+    
+    pthread_mutex_lock(&it->second->m_mutex);
     if (it->second->isConnected()) it->second->disconnect();
     
-    delete it->second;
+    CMonitor ** tmp = &it->second;
     m_monitors.erase(it);
+    pthread_mutex_unlock(&(*tmp)->m_mutex);
+    pthread_mutex_destroy(&(*tmp)->m_mutex);
+    delete *tmp;
+    
+    pthread_mutex_unlock(&m_monitorsMutex);
     return true;
 }
 bool CController::connectMonitor     (int monitorID) {
+    pthread_mutex_lock(&m_monitorsMutex);
     std::map<int, CMonitor*>::iterator it = m_monitors.find(monitorID);
-    if (it == m_monitors.end()) return false;
-    if (!it->second->isConnected()) return it->second->establishConnection();
+    if (it == m_monitors.end()) {
+        pthread_mutex_unlock(&m_monitorsMutex);
+        return false;
+    }
+    if (!it->second->isConnected()) {
+        bool res;
+        try {
+            res = it->second->establishConnection();
+        } catch (...) {
+            pthread_mutex_unlock(&m_monitorsMutex);
+            throw;
+        }
+        pthread_mutex_unlock(&m_monitorsMutex);
+        return res;
+    }
+    pthread_mutex_unlock(&m_monitorsMutex);
     return true;
 }
 bool CController::disconnectMonitor  (int monitorID) {
+    pthread_mutex_lock(&m_monitorsMutex);
+    
     std::map<int, CMonitor*>::iterator it = m_monitors.find(monitorID);
-    if (it == m_monitors.end()) return false;
-    if (it->second->isConnected()) it->second->disconnect();
+    if (it == m_monitors.end()) {
+        pthread_mutex_unlock(&m_monitorsMutex);
+        return false;
+    }
+    
+    if (it->second->isConnected())
+        it->second->disconnect();
+    pthread_mutex_unlock(&m_monitorsMutex);
     return true;
 }    
 bool CController::connectAll() {
+    pthread_mutex_lock(&m_monitorsMutex);
     bool connOK = false;
     for (std::map<int, CMonitor*>::iterator it = m_monitors.begin();
             it != m_monitors.end(); ++it)
     {
-        if (!isConnected(it->first))
-            if (!it->second->establishConnection()) connOK = false;
+        if (!it->second->isConnected())
+            try {
+                if (!it->second->establishConnection()) connOK = false;
+            } catch (...) {
+                pthread_mutex_unlock(&m_monitorsMutex);
+                throw;
+            }
     }
+    pthread_mutex_unlock(&m_monitorsMutex);
     return connOK;
 }
 void CController::disconnectAll() {
+    pthread_mutex_lock(&m_monitorsMutex);
     for (std::map<int, CMonitor*>::iterator it = m_monitors.begin();
             it != m_monitors.end(); ++it)
     {
-        it->second->disconnect();
+        if (it->second->isConnected()) it->second->disconnect();
     }
+    pthread_mutex_unlock(&m_monitorsMutex);
     
 }
 bool CController::isConnected(int monitorID) {
+    pthread_mutex_lock(&m_monitorsMutex);
     std::map<int, CMonitor*>::iterator it = m_monitors.find(monitorID);
-    if (it == m_monitors.end()) throw "CController::isConnected: invalid monitor ID.";
-    return it->second->isConnected();
+    if (it == m_monitors.end()) {
+        pthread_mutex_unlock(&m_monitorsMutex);
+        throw "CController::isConnected: invalid monitor ID.";
+    }
+    bool res = it->second->isConnected();
+    pthread_mutex_unlock(&m_monitorsMutex);
+    return res;
 }
 
 //-----------------------API----------------------------
 int  CController::getBrightness(int monitorID) {
     if (!isConnected(monitorID)) throw "CController::getBrightness(): monitor not connected.";
     
-    std::map<std::string, CParameter>::iterator it = m_parameters.find("brightness");
-
-    CMsgGetCurrParam msg(it->second.m_opCodePage, it->second.m_opCode);
+    std::map<std::string, CParameter>::const_iterator paramIt = m_parameters.find("brightness");
+    if (paramIt == m_parameters.end()) 
+        throw "CController::getBrightness(): Internal error, no such parameter.";
     
+    CMsgGetCurrParam msg(paramIt->second.m_opCodePage, paramIt->second.m_opCode);
+    
+    pthread_mutex_lock(&m_monitorsMutex);
     std::map<int, CMonitor*>::iterator monitIt = m_monitors.find(monitorID);
-    if (monitIt == m_monitors.end()) throw "CController::getBrightness(): no such monitor.";
+    if (monitIt == m_monitors.end()) {
+        pthread_mutex_unlock(&m_monitorsMutex);
+        throw "CController::getBrightness(): no such monitor.";
+    }
+    
+    pthread_mutex_lock(&(monitIt->second->m_mutex));
+    CMonitor ** monitItPtr = &(monitIt->second);
+   
+    pthread_mutex_unlock(&m_monitorsMutex);    
 
-    CAbstractMessage * gprMsg = monitIt->second->getParameter(&msg);
+    CAbstractMessage * gprMsg;
+    try {
+        gprMsg = (*monitItPtr)->getParameter(&msg);
+    } catch (...) {
+        pthread_mutex_unlock(&((*monitItPtr)->m_mutex));
+        throw;
+    } 
+    pthread_mutex_unlock(&((*monitItPtr)->m_mutex));
+    
     
     CMsgGetCurrParamReply * getParamReply = dynamic_cast<CMsgGetCurrParamReply*>(gprMsg);
-    if (getParamReply == 0) {
-        throw "CController::getBrightness(): dynamic_cast.";
-    }
+    if (getParamReply == 0)
+        throw "CController::getBrightness(): Internal error, dynamic_cast.";
     
     int brightness = getParamReply->getCurrValue();
 
@@ -102,27 +179,42 @@ int  CController::getBrightness(int monitorID) {
 }
 void CController::setBrightness(int monitorID, int val) {
     if (!isConnected(monitorID)) throw "CController::setBrightness(): monitor not connected.";
-            
-    std::map<std::string, CParameter>::iterator paramIt = m_parameters.find("brightness");
+    
+    std::map<std::string, CParameter>::const_iterator paramIt = m_parameters.find("brightness");
 
     if (paramIt == m_parameters.end()) throw "CController::setBrightness(): no such parameter.";
 
     if (!paramIt->second.m_range->contains(val))
-        throw "CController::setBrightness(): requested value out of range.";
+        throw "CController::setBrightness(): requested value is out of range.";
     
     unsigned char value[4];
     IntToFourBytes(val, value);
     
     CMsgSetParam msg (paramIt->second.m_opCodePage, paramIt->second.m_opCode, value);
 
+    pthread_mutex_lock(&m_monitorsMutex);
     std::map<int, CMonitor*>::iterator monitIt = m_monitors.find(monitorID);
-    if (monitIt == m_monitors.end()) throw "CController::setBrightness(): no such monitor.";
+    if (monitIt == m_monitors.end()) {
+        pthread_mutex_unlock(&m_monitorsMutex);
+        throw "CController::setBrightness(): no such monitor.";
+    }
     
-    CAbstractMessage * sprMsg = monitIt->second->setParameter(&msg);
+    pthread_mutex_lock(&(monitIt->second->m_mutex));
+    CMonitor ** monitItPtr = &(monitIt->second);
     
+    pthread_mutex_unlock(&m_monitorsMutex);    
+    
+    CAbstractMessage * sprMsg;
+    try {
+        sprMsg = monitIt->second->setParameter(&msg);
+    } catch (...) {
+        pthread_mutex_unlock(&((*monitItPtr)->m_mutex));
+        throw;
+    }
     CMsgSetParamReply * setParamReply = dynamic_cast<CMsgSetParamReply*>(sprMsg);
     if (setParamReply == 0) {
-        throw "CController::setBrightness(): bad dynamic_cast.";
+        pthread_mutex_unlock(&((*monitItPtr)->m_mutex));
+        throw "CController::setBrightness(): Internal error, bad dynamic_cast.";
     }
     
 #ifdef DEBUG/*-------------------------------------------------------------*/
@@ -130,11 +222,18 @@ void CController::setBrightness(int monitorID, int val) {
     printf("CurrVal: %d\n", setParamReply->getCurrValue());
 #endif /*-----------------------------------------------------------------*/
     
-    if (setParamReply->getCurrValue() != val) 
+    if (setParamReply->getCurrValue() != val) {
+        pthread_mutex_unlock(&((*monitItPtr)->m_mutex));
         throw "CController::setBrightness(): incorrect confirm value in setParameterReply.";
-    
-    monitIt->second->saveCurrentSettings();
-    
+    }
+    try {
+        monitIt->second->saveCurrentSettings();
+    } catch (...) {
+        pthread_mutex_unlock(&((*monitItPtr)->m_mutex));
+        throw;
+    }
+    pthread_mutex_unlock(&((*monitItPtr)->m_mutex));
+        
     if (sprMsg) delete sprMsg;
 }
 int CController::powerStatusRead(int monitorID) {

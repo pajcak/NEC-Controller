@@ -67,7 +67,7 @@ LDLIBSOPTIONS=
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/nec-controller: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/nec-controller ${OBJECTFILES} ${LDLIBSOPTIONS}
+	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/nec-controller ${OBJECTFILES} ${LDLIBSOPTIONS} -lpthread
 
 ${OBJECTDIR}/CController.o: CController.cpp 
 	${MKDIR} -p ${OBJECTDIR}

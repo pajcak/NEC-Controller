@@ -7,23 +7,24 @@
 
 class CController {
 public:
-    CController();
-    CController(const char * monitorAddr);
-    //REPLACE THIS WITH METHOD LIKE CLEANUP
-    virtual ~CController();
-    void addMonitor     (const char * monitorAddr, int port, int monitorID);
-    bool deleteMonitor  (int monitorID);
+    CController             ();
+    CController             (const char * monitorAddr);
+    virtual ~CController    ();
+    
+    void initController     ();
+    void destroyController  ();
+//------------------------------------------------------
+    void addMonitor         (const char * monitorAddr, int port, int monitorID);
+    bool deleteMonitor      (int monitorID);
     
     bool connectMonitor     (int monitorID);
     bool disconnectMonitor  (int monitorID);
-    
-    bool connectAll();
-    //method for connecting/disconnecting enum of monitors
-    void disconnectAll();
-    bool isConnected(int monitorID);
+    bool connectAll         ();
+    void disconnectAll      ();
+    bool isConnected        (int monitorID);
 //-----------------------API----------------------------
-    int getBrightness(int monitorID);
-    void setBrightness(int monitorID, int val);
+    int getBrightness       (int monitorID);
+    void setBrightness      (int monitorID, int val);
     /**
      * @return 1: ON\n
      * 2: Stand-by (power save)\n
@@ -38,6 +39,7 @@ public:
     void powerControl(int monitorID, int powerMode);
     
 private:
+    pthread_mutex_t m_monitorsMutex;
     std::map<int, CMonitor*> m_monitors;
     
     void initParameters();
