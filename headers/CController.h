@@ -19,12 +19,30 @@ public:
     void destroyController  (); 
 //------------------------------------------------------
     void addMonitor         (const char * monitorAddr, int port, int monitorID);
+    /**
+     * @param monitorID - ID of monitor to get the state of connection from
+     * @return true if monitor specified by monitorID disconnected successfully, otherwise false
+     */
     bool deleteMonitor      (int monitorID);
-    
+    /**
+     * @param monitorID - ID of monitor to connect
+     * @return true if monitor specified by monitorID connected successfully, otherwise false
+     */
     bool connectMonitor     (int monitorID);
-    bool disconnectMonitor  (int monitorID);
+    /**
+     * @param monitorID - ID of monitor to disconnect
+     */
+    void disconnectMonitor  (int monitorID);
+    /**
+     * @return true if all monitors successfully connected, otherwise false
+     */
     bool connectAll         ();
+    
     void disconnectAll      ();
+    /**
+     * @param monitorID - ID of monitor to get the state of connection from
+     * @return true if monitor specified by monitorID is connected, otherwise false
+     */
     bool isConnected        (int monitorID);
 //======================================================
 //=========================API==========================

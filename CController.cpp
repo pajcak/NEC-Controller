@@ -62,7 +62,7 @@ bool CController::connectMonitor     (int monitorID) {
     std::map<int, CMonitor*>::iterator it = m_monitors.find(monitorID);
     if (it == m_monitors.end()) {
         pthread_mutex_unlock(&m_monitorsMutex);
-        return false;
+        throw "CController::isConnected: invalid monitor ID.";
     }
     if (!it->second->isConnected()) {
         bool res;
@@ -78,19 +78,18 @@ bool CController::connectMonitor     (int monitorID) {
     pthread_mutex_unlock(&m_monitorsMutex);
     return true;
 }
-bool CController::disconnectMonitor  (int monitorID) {
+void CController::disconnectMonitor  (int monitorID) {
     pthread_mutex_lock(&m_monitorsMutex);
     
     std::map<int, CMonitor*>::iterator it = m_monitors.find(monitorID);
     if (it == m_monitors.end()) {
         pthread_mutex_unlock(&m_monitorsMutex);
-        return false;
+        throw "CController::isConnected: invalid monitor ID.";
     }
     
     if (it->second->isConnected())
         it->second->disconnect();
     pthread_mutex_unlock(&m_monitorsMutex);
-    return true;
 }    
 bool CController::connectAll() {
     pthread_mutex_lock(&m_monitorsMutex);
