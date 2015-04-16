@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS=-c -Wall -pedantic -Wno-long-long
+CFLAGS=-c -fPIC -Wall -pedantic -Wno-long-long
 LDFLAGS=-lpthread
 
 SOURCES=$(wildcard *.cpp)
@@ -7,7 +7,7 @@ SOURCES=$(wildcard *.cpp)
 OBJS=$(SOURCES:.cpp=.o)
 EXEC=faistpat
 
-all: compile doc
+all: compile doc shared
 
 compile: $(EXEC)
 
@@ -23,6 +23,8 @@ doc:
 %.o: %.cpp 
 	$(CC) $(CFLAGS) -c $< -o $@
 
+shared: CController.o
+	$(CC) -shared -o controller.so CController.o
 
 clean:
-	rm -rf $(OBJS) $(EXEC) ./doc
+	rm -rf $(OBJS) $(EXEC) ./doc controller.so
