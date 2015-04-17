@@ -11,6 +11,7 @@ CController::CController() {}
 
 CController::~CController() {}
 
+extern "C" {
 void CController::initController() {
     initParameters();
     pthread_mutex_init(&m_monitorsMutex, NULL);
@@ -1137,6 +1138,7 @@ void CController::powerControl(int monitorID, int powerMode) {
     if (powerMode != repliedValue)
         throw "CController::powerControl(int): incorrect confirm value from monitor.";
 }
+}
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 void CController::initParameters() {
@@ -1229,3 +1231,4 @@ m_parameters.insert(std::pair<std::string, CParameter>(
                                         new CRangeInterval(0, "whisper", 100, "loud")))
                         );
 }
+

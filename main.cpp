@@ -71,6 +71,8 @@ int main(int argc, char * argv []) {
         c.addMonitor("127.0.0.1", 12345, 1);
         
         c.connectAll();
+//        int (CController::* ptr) (int) = &CController::getBacklight;
+//        printf("GET: %d\n", (c.*ptr)(1));
         multiAccess(10, &c);
         c.disconnectAll();
         

@@ -11,6 +11,7 @@ public:
     CController             (const char * monitorAddr);
     virtual ~CController    ();
     
+        
     /** CALL THIS METHOD BEFORE USING ANY OTHER OPERATION
      */
     void initController     (); 
