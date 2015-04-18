@@ -24,7 +24,7 @@ doc:
 	$(CC) $(CFLAGS) -c $< -o $@
 
 shared: CController.o
-	$(CC) -shared -o controller.so CController.o
+	$(CC) -shared -o controller.so *.o
 
 clean:
 	rm -rf $(OBJS) $(EXEC) ./doc controller.so

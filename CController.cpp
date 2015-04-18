@@ -7,16 +7,13 @@
 #include <arpa/inet.h>
 
 //#define DEBUG
-CController::CController() {}
 
-CController::~CController() {}
 
-extern "C" {
-void CController::initController() {
+void initController() {
     initParameters();
     pthread_mutex_init(&m_monitorsMutex, NULL);
 }
-void CController::destroyController() {
+void destroyController() {
     pthread_mutex_destroy(&m_monitorsMutex);
     for (std::map<int, CMonitor*>::iterator it = m_monitors.begin();
             it != m_monitors.end(); ++it)
@@ -26,7 +23,7 @@ void CController::destroyController() {
     }
 }
 
-void CController::addMonitor (const char * monitorAddr, int port,  int monitorID) {
+void addMonitor (const char * monitorAddr, int port,  int monitorID) {
     struct sockaddr_in sa;
     if (inet_pton(AF_INET, monitorAddr, &(sa.sin_addr)) != 1)
         throw "CController::addMonitor: invalid monitorAddr.";
@@ -36,7 +33,7 @@ void CController::addMonitor (const char * monitorAddr, int port,  int monitorID
     m_monitors.insert(std::pair<int, CMonitor*>(monitorID, new CMonitor(monitorAddr, port)));
     pthread_mutex_unlock(&m_monitorsMutex);
 }
-void CController::deleteMonitor  (int monitorID) {
+void deleteMonitor  (int monitorID) {
 
     pthread_mutex_lock(&m_monitorsMutex);
     
@@ -57,7 +54,7 @@ void CController::deleteMonitor  (int monitorID) {
     
     pthread_mutex_unlock(&m_monitorsMutex);
 }
-bool CController::connectMonitor     (int monitorID) {
+bool connectMonitor     (int monitorID) {
     pthread_mutex_lock(&m_monitorsMutex);
     std::map<int, CMonitor*>::iterator it = m_monitors.find(monitorID);
     if (it == m_monitors.end()) {
@@ -78,7 +75,7 @@ bool CController::connectMonitor     (int monitorID) {
     pthread_mutex_unlock(&m_monitorsMutex);
     return true;
 }
-void CController::disconnectMonitor  (int monitorID) {
+void disconnectMonitor  (int monitorID) {
     pthread_mutex_lock(&m_monitorsMutex);
     
     std::map<int, CMonitor*>::iterator it = m_monitors.find(monitorID);
@@ -91,7 +88,7 @@ void CController::disconnectMonitor  (int monitorID) {
         it->second->disconnect();
     pthread_mutex_unlock(&m_monitorsMutex);
 }    
-bool CController::connectAll() {
+bool connectAll() {
     pthread_mutex_lock(&m_monitorsMutex);
     bool connOK = true;
     for (std::map<int, CMonitor*>::iterator it = m_monitors.begin();
@@ -108,7 +105,7 @@ bool CController::connectAll() {
     pthread_mutex_unlock(&m_monitorsMutex);
     return connOK;
 }
-void CController::disconnectAll() {
+void disconnectAll() {
     pthread_mutex_lock(&m_monitorsMutex);
     for (std::map<int, CMonitor*>::iterator it = m_monitors.begin();
             it != m_monitors.end(); ++it)
@@ -118,7 +115,7 @@ void CController::disconnectAll() {
     pthread_mutex_unlock(&m_monitorsMutex);
     
 }
-bool CController::isConnected(int monitorID) {
+bool isConnected(int monitorID) {
     pthread_mutex_lock(&m_monitorsMutex);
     std::map<int, CMonitor*>::iterator it = m_monitors.find(monitorID);
     if (it == m_monitors.end()) {
@@ -134,7 +131,7 @@ bool CController::isConnected(int monitorID) {
 //-----------------------API----------------------------
 //-----------------------API----------------------------
 //-----------------------API----------------------------
-int  CController::getBacklight(int monitorID) {
+int  getBacklight(int monitorID) {
     if (!isConnected(monitorID)) throw "CController::getBacklight(int): monitor not connected.";
     
     std::map<std::string, CParameter>::const_iterator paramIt = m_parameters.find("backlight");
@@ -179,7 +176,7 @@ int  CController::getBacklight(int monitorID) {
     if (gprMsg) delete gprMsg;
     return backlight;
 }
-void CController::setBacklight(int monitorID, int val) {
+void setBacklight(int monitorID, int val) {
     if (!isConnected(monitorID)) throw "CController::setBacklight(int,int): monitor not connected.";
     
     std::map<std::string, CParameter>::const_iterator paramIt = m_parameters.find("backlight");
@@ -239,7 +236,7 @@ void CController::setBacklight(int monitorID, int val) {
     if (sprMsg) delete sprMsg;
 }
 //------------------------------------------------------------------------------
-int  CController::getContrast            (int monitorID) {
+int  getContrast            (int monitorID) {
     if (!isConnected(monitorID)) throw "CController::getContrast(int): monitor not connected.";
     
     std::map<std::string, CParameter>::const_iterator paramIt = m_parameters.find("contrast");
@@ -284,7 +281,7 @@ int  CController::getContrast            (int monitorID) {
     if (gprMsg) delete gprMsg;
     return contrast;
 }
-void CController::setContrast            (int monitorID, int val) {
+void setContrast            (int monitorID, int val) {
     if (!isConnected(monitorID)) throw "CController::setContrast(int,int): monitor not connected.";
 
     std::map<std::string, CParameter>::const_iterator paramIt = m_parameters.find("contrast");
@@ -344,7 +341,7 @@ void CController::setContrast            (int monitorID, int val) {
     if (sprMsg) delete sprMsg;
 }
 //------------------------------------------------------------------------------
-int  CController::getSharpness           (int monitorID) {
+int  getSharpness           (int monitorID) {
     if (!isConnected(monitorID)) throw "CController::getSharpness(int): monitor not connected.";
     
     std::map<std::string, CParameter>::const_iterator paramIt = m_parameters.find("sharpness");
@@ -389,7 +386,7 @@ int  CController::getSharpness           (int monitorID) {
     if (gprMsg) delete gprMsg;
     return sharpness;
 }
-void CController::setSharpness           (int monitorID, int val) {
+void setSharpness           (int monitorID, int val) {
     if (!isConnected(monitorID)) throw "CController::setSharpness(int,int): monitor not connected.";
     
     std::map<std::string, CParameter>::const_iterator paramIt = m_parameters.find("sharpness");
@@ -449,7 +446,7 @@ void CController::setSharpness           (int monitorID, int val) {
     if (sprMsg) delete sprMsg;
 }
 //------------------------------------------------------------------------------
-int  CController::getBrightness          (int monitorID) {
+int  getBrightness          (int monitorID) {
     if (!isConnected(monitorID)) throw "CController::getBrightness(int): monitor not connected.";
     
     std::map<std::string, CParameter>::const_iterator paramIt = m_parameters.find("brightness");
@@ -494,7 +491,7 @@ int  CController::getBrightness          (int monitorID) {
     if (gprMsg) delete gprMsg;
     return brightness;
 }
-void CController::setBrightness          (int monitorID, int val) {
+void setBrightness          (int monitorID, int val) {
     if (!isConnected(monitorID)) throw "CController::setBrightness(int,int): monitor not connected.";
     
     std::map<std::string, CParameter>::const_iterator paramIt = m_parameters.find("brightness");
@@ -554,7 +551,7 @@ void CController::setBrightness          (int monitorID, int val) {
     if (sprMsg) delete sprMsg;
 }
 //------------------------------------------------------------------------------
-int  CController::getHue                 (int monitorID) {
+int  getHue                 (int monitorID) {
     if (!isConnected(monitorID)) throw "CController::getHue(int): monitor not connected.";
     
     std::map<std::string, CParameter>::const_iterator paramIt = m_parameters.find("hue");
@@ -599,7 +596,7 @@ int  CController::getHue                 (int monitorID) {
     if (gprMsg) delete gprMsg;
     return hue;
 }
-void CController::setHue                 (int monitorID, int val) {
+void setHue                 (int monitorID, int val) {
     if (!isConnected(monitorID)) throw "CController::setHue(int,int): monitor not connected.";
     
     std::map<std::string, CParameter>::const_iterator paramIt = m_parameters.find("hue");
@@ -659,7 +656,7 @@ void CController::setHue                 (int monitorID, int val) {
     if (sprMsg) delete sprMsg;
 }
 //------------------------------------------------------------------------------
-int  CController::getPaleness            (int monitorID) {
+int  getPaleness            (int monitorID) {
     if (!isConnected(monitorID)) throw "CController::getPaleness(int): monitor not connected.";
     
     std::map<std::string, CParameter>::const_iterator paramIt = m_parameters.find("paleness");
@@ -704,7 +701,7 @@ int  CController::getPaleness            (int monitorID) {
     if (gprMsg) delete gprMsg;
     return paleness;
 }
-void CController::setPaleness            (int monitorID, int val) {
+void setPaleness            (int monitorID, int val) {
     if (!isConnected(monitorID)) throw "CController::setPaleness(int,int): monitor not connected.";
     
     std::map<std::string, CParameter>::const_iterator paramIt = m_parameters.find("paleness");
@@ -764,7 +761,7 @@ void CController::setPaleness            (int monitorID, int val) {
     if (sprMsg) delete sprMsg;
 }
 //------------------------------------------------------------------------------
-int  CController::getColorTemperature    (int monitorID) {
+int  getColorTemperature    (int monitorID) {
     if (!isConnected(monitorID)) throw "CController::getColorTemperature(int): monitor not connected.";
     
     std::map<std::string, CParameter>::const_iterator paramIt = m_parameters.find("colorTemperature");
@@ -809,7 +806,7 @@ int  CController::getColorTemperature    (int monitorID) {
     if (gprMsg) delete gprMsg;
     return colorTemperature;
 }
-void CController::setColorTemperature    (int monitorID, int val) {
+void setColorTemperature    (int monitorID, int val) {
     if (!isConnected(monitorID)) throw "CController::setColorTemperature(int,int): monitor not connected.";
     
     std::map<std::string, CParameter>::const_iterator paramIt = m_parameters.find("colorTemperature");
@@ -869,7 +866,7 @@ void CController::setColorTemperature    (int monitorID, int val) {
     if (sprMsg) delete sprMsg;
 }
 //------------------------------------------------------------------------------
-int  CController::getGammaCorrection     (int monitorID) {
+int  getGammaCorrection     (int monitorID) {
     if (!isConnected(monitorID)) throw "CController::getGammaCorrection(int): monitor not connected.";
     
     std::map<std::string, CParameter>::const_iterator paramIt = m_parameters.find("gammaCorrection");
@@ -914,7 +911,7 @@ int  CController::getGammaCorrection     (int monitorID) {
     if (gprMsg) delete gprMsg;
     return gammaCorrection;
 }
-void CController::setGammaCorrection     (int monitorID, int val) {
+void setGammaCorrection     (int monitorID, int val) {
     if (!isConnected(monitorID)) throw "CController::setGammaCorrection(int,int): monitor not connected.";
     
     std::map<std::string, CParameter>::const_iterator paramIt = m_parameters.find("gammaCorrection");
@@ -974,7 +971,7 @@ void CController::setGammaCorrection     (int monitorID, int val) {
     if (sprMsg) delete sprMsg;
 }
 //------------------------------------------------------------------------------
-int  CController::getVolume              (int monitorID) {
+int  getVolume              (int monitorID) {
     if (!isConnected(monitorID)) throw "CController::getVolume(int): monitor not connected.";
     
     std::map<std::string, CParameter>::const_iterator paramIt = m_parameters.find("volume");
@@ -1019,7 +1016,7 @@ int  CController::getVolume              (int monitorID) {
     if (gprMsg) delete gprMsg;
     return volume;
 }
-void CController::setVolume              (int monitorID, int val) {
+void setVolume              (int monitorID, int val) {
     if (!isConnected(monitorID)) throw "CController::setVolume(int,int): monitor not connected.";
     
     std::map<std::string, CParameter>::const_iterator paramIt = m_parameters.find("volume");
@@ -1080,7 +1077,7 @@ void CController::setVolume              (int monitorID, int val) {
 }
 
 //===================COMMANDS===========================
-int CController::powerStatusRead(int monitorID) {
+int powerStatusRead(int monitorID) {
     if (!isConnected(monitorID)) throw "CController::powerStatusRead(): monitor not connected.";
     
     pthread_mutex_lock(&m_monitorsMutex);
@@ -1106,7 +1103,7 @@ int CController::powerStatusRead(int monitorID) {
     return powerStatus;
 }
 //------------------------------------------------------------------------------
-void CController::powerControl(int monitorID, int powerMode) {
+void powerControl(int monitorID, int powerMode) {
     if (!isConnected(monitorID)) throw "CController::powerControl(): monitor not connected.";
     
     unsigned char mode;
@@ -1138,10 +1135,10 @@ void CController::powerControl(int monitorID, int powerMode) {
     if (powerMode != repliedValue)
         throw "CController::powerControl(int): incorrect confirm value from monitor.";
 }
-}
+
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-void CController::initParameters() {
+void initParameters() {
 //---------------------------------FP1--------------------------------------------
 m_parameters.insert(std::pair<std::string, CParameter>(
                             "backlight",CParameter(
