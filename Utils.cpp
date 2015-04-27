@@ -14,8 +14,12 @@ int fourBytesToInt( const unsigned char leftmost,
 }
 void IntToFourBytes(const int & val, unsigned char bytes[4]) {
 	bytes[0] = ((val >> 16) & 15) + '0';
+        if (bytes[0] > '9') bytes[0] += 7;
 	bytes[1] = ((val >> 8) & 15) + '0';
+        if (bytes[1] > '9') bytes[1] += 7;
 	bytes[2] = ((val >> 4) & 15) + '0';
+        if (bytes[2] > '9') bytes[2] += 7;
 	bytes[3] = (val & 15) + '0';
+        if (bytes[3] > '9') bytes[3] += 7;
 }
 
