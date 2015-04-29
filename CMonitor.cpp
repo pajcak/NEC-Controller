@@ -78,23 +78,23 @@ void CMonitor::sendPacket(  const unsigned char & DESTINATION,
     outBuffer.push_back(DELIMITER);
 
 #ifdef DEBUG/*-------------------------------------------------------------*/
-    printf("===============SENDING================\n");
-    printf("Destination : [0x%02x] | [%c]\n", DESTINATION, DESTINATION);
-    printf("Message type: [0x%02x] | [%c]\n", MSG_TYPE, MSG_TYPE);
+    fprintf(stderr, "===============SENDING================\n");
+    fprintf(stderr, "Destination : [0x%02x] | [%c]\n", DESTINATION, DESTINATION);
+    fprintf(stderr, "Message type: [0x%02x] | [%c]\n", MSG_TYPE, MSG_TYPE);
     std::basic_string<unsigned char> hBuff = header.getBuffer();
     for (unsigned int i = 0; i < hBuff.length(); i++) {
-        printf("Head[%d]: [0x%02x] | [%c]\n", i, hBuff[i], hBuff[i]);
+        fprintf(stderr, "Head[%d]: [0x%02x] | [%c]\n", i, hBuff[i], hBuff[i]);
     }
-    printf("\n");
+    fprintf(stderr, "\n");
     std::basic_string<unsigned char> mBuff = msg->getBuffer();
     for (unsigned int i = 0; i < mBuff.length(); i++) {
-        printf("Message[%d]: [0x%02x] | [%c]\n", i, mBuff.at(i), mBuff.at(i));
+        fprintf(stderr, "Message[%d]: [0x%02x] | [%c]\n", i, mBuff.at(i), mBuff.at(i));
     }
-    printf("\n");
-    printf("CheckCode: [0x%02x] | [%c]\n", CHECK_CODE, CHECK_CODE);
-    printf("Delimiter: [0x%02x] | [%c]\n", DELIMITER, DELIMITER);
+    fprintf(stderr, "\n");
+    fprintf(stderr, "CheckCode: [0x%02x] | [%c]\n", CHECK_CODE, CHECK_CODE);
+    fprintf(stderr, "Delimiter: [0x%02x] | [%c]\n", DELIMITER, DELIMITER);
 #endif /*-----------------------------------------------------------------*/
-    int writtenLen = write(m_socketFD, outBuffer.c_str(), strlen((const char *) outBuffer.c_str()));
+    int writtenLen = write(m_socketFD, outBuffer.c_str(), outBuffer.length());
     if (writtenLen < (header.getLen() + msg->getLengthInt() + 2))
         throw "sendPacket(): written length too small.";
 
