@@ -30,7 +30,14 @@ void addMonitor (const char * monitorAddr, int port,  int monitorID) {
     if (port <= 1024 || port > 65535) throw "CController::addMonitor: invalid port.";
     
     pthread_mutex_lock(&m_monitorsMutex);
-    m_monitors.insert(std::pair<int, CMonitor*>(monitorID, new CMonitor(monitorAddr, port)));
+    if (!m_monitors.
+            insert(std::pair<int, CMonitor*>
+                        (monitorID, new CMonitor(monitorAddr, port))
+                )
+        .second) {
+        pthread_mutex_unlock(&m_monitorsMutex);
+        throw "CController::addMonitor: monitorID already exists!";
+    }
     pthread_mutex_unlock(&m_monitorsMutex);
 }
 void deleteMonitor  (int monitorID) {
