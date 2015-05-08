@@ -1,8 +1,23 @@
+//    File: simple_test.cpp
+//    Copyright (C) 2015  Patrik Faistaver
+//    
+//
+//    This program is free software; you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation; either version 2 of the License, or
+//    (at your option) any later version.
+//
+//    This program is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+
 #include <stdlib.h>
 #include <iostream>
 #include <cstdio>
 #include <cstring>
 #include <dlfcn.h>
+#include <unistd.h>
 
 using namespace std;
 
@@ -225,7 +240,7 @@ bool CLibLoader::loadFunctions() {
         cout << "-- " << dlerror() << endl;
         return false;
     }
-    
+
     m_PowerControlFunc = (void (*)(int, int)) dlsym(m_Library, "powerControl");
     if (!m_PowerControlFunc) {
         cout << "-- " << dlerror() << endl;
@@ -259,33 +274,278 @@ void addCorrectMonitors() {
     g_Library.m_addMonitor("10.0.0.118", 7142, 19);
     g_Library.m_addMonitor("10.0.0.119", 7142, 20);
 }
+void turnOnMonitors() {
+    for (int i = 1; i <= 20; i++) {
+        if (g_Library.m_PowerStatusReadFunc(i) == 4)
+            g_Library.m_PowerControlFunc(i, 1);
+    }
+}
+void loopSetParam(void ( *setFunc) (int, int), int from, int to) {
+    int id = 1;
+    for (int i = from; i <= to; i++) {
+    	try {
+        	setFunc(id, i);
+        } catch (char const * s) {
+        	cout << "!! loopSetParam() FUNCTION THREW =" << s << endl;
+        }
+    	if (id == 20) id = 0;
+        id++;
+    }
+}
+
 
 bool testAddNDeleteMonitors() {
     try {
-        addCorrectMonitors();
-        g_Library.m_addMonitor("1.1.1.1", 11214, 1);
+    	g_Library.m_initController();
+    	
+        g_Library.m_addMonitor("127.0.0.1", 65535, 1024);
+        try {// <editor-fold defaultstate="collapsed" desc="invalid address test">
+            cout << "Should catch invalid address:" << endl;
+            g_Library.m_addMonitor("127.0.0", 65535, 1025);
+        } catch (char const * ex) {
+            cout << "\t" << ex << endl;
+        } // </editor-fold>
+
+        try {// <editor-fold defaultstate="collapsed" desc="invalid port test">
+            cout << "Should catch invalid port:" << endl;
+            g_Library.m_addMonitor("127.0.0.1", 65536, 1024);
+        } catch (char const * ex) {
+            cout << "\t" << ex << endl;
+        } // </editor-fold>
+
+
+        try {// <editor-fold defaultstate="collapsed" desc="invalid mnitor ID test">
+            cout << "Should catch invalid monitor ID:" << endl;
+            g_Library.m_deleteMonitor(666);
+        } catch (char const * ex) {
+            cout << "\t" << ex << endl;
+        } // </editor-fold>
+        g_Library.m_deleteMonitor(1024);
+        
+    	g_Library.m_destroyController();
     } catch (char const * str) {
         cout << "-- " << str << endl;
+    	g_Library.m_destroyController();
         return false;
     } catch (...) {
         cout << "-- unknown exception thrown" << endl;
+    	g_Library.m_destroyController();
         return false;
     }
     return true;
 }
 
-int main () {
+bool testConnectMonitors() {
+    try {
+    	g_Library.m_initController();
+    	
+        try {// <editor-fold defaultstate="collapsed" desc="invalid mnitor ID test">
+            cout << "Should catch invalid monitor ID:" << endl;
+            g_Library.m_connectMonitor(666);
+        } catch (char const * ex) {
+            cout << "\t" << ex << endl;
+        } // </editor-fold>
+
+        try {// <editor-fold defaultstate="collapsed" desc="invalid mnitor ID test">
+            cout << "Should catch invalid monitor ID:" << endl;
+            g_Library.m_disconnectMonitor(666);
+        } catch (char const * ex) {
+            cout << "\t" << ex << endl;
+        } // </editor-fold>
+
+        addCorrectMonitors();
+        g_Library.m_connectAll();
+            
+    	g_Library.m_destroyController();
+    } catch (char const * str) {
+        cout << "-- " << str << endl;
+    	g_Library.m_destroyController();
+        return false;
+    } catch (...) {
+        cout << "-- unknown exception thrown" << endl;
+    	g_Library.m_destroyController();
+        return false;
+    }
+    return true;
+}
+
+bool testIsConnected() {
+    try {
+    	g_Library.m_initController();
+    	
+        try {// <editor-fold defaultstate="collapsed" desc="invalid mnitor ID test">
+            cout << "Should catch invalid monitor ID:" << endl;
+            g_Library.m_isConnected(666);
+        } catch (char const * ex) {
+            cout << "\t" << ex << endl;
+        } // </editor-fold>
+
+        g_Library.m_addMonitor("10.0.0.100", 7142, 1);
+        cout << "Should be false: ";
+        if (g_Library.m_isConnected(1)) {
+            cout << "true" << endl;
+	    	g_Library.m_destroyController();
+            return false;
+        } else cout << "false" << endl;
+                 
+        g_Library.m_connectMonitor(1);
+        
+        cout << "Should be true: ";
+        if (g_Library.m_isConnected(1)) cout << "true" << endl;
+        else {
+            cout << "false" << endl;
+	    	g_Library.m_destroyController();
+            return false;
+        }
+        
+    	g_Library.m_destroyController();
+    } catch (char const * str) {
+        cout << "-- " << str << endl;
+    	g_Library.m_destroyController();
+        return false;
+    } catch (...) {
+        cout << "-- unknown exception thrown" << endl;
+    	g_Library.m_destroyController();
+        return false;
+    }
+    return true;
+}
+bool testGetBacklight() {
+    try {
+		g_Library.m_initController();
+        try {// <editor-fold defaultstate="collapsed" desc="invalid mnitor ID test">
+            cout << "Should catch invalid monitor ID:" << endl;
+            g_Library.m_GetBacklightFunc(1);
+        } catch (char const * ex) {
+            cout << "\t" << ex << endl;
+        } // </editor-fold>
+        
+        addCorrectMonitors();
+        
+        try {// <editor-fold defaultstate="collapsed" desc="monitor not connected test">
+            cout << "Should catch monitor not connected:" << endl;
+            g_Library.m_GetBacklightFunc(1);
+        } catch (char const * ex) {
+            cout << "\t" << ex << endl;
+        } // </editor-fold>
+        
+        if (!g_Library.m_connectAll() ) {
+        	cout << "!! ONE OR MORE MONITORS DID NOT CONNECT!" << endl;
+        }
+        turnOnMonitors();
+        usleep(10000); //wait 10sec to turn on monitors
+        
+        try {// <editor-fold defaultstate="collapsed" desc="value out of range">
+			cout << "-- Getting backlight from monitors ..." << endl;
+            for (int i = 1; i <= 20; i++) {
+	            cout << "Monitor ID " << i << " replied backlight value: "
+	            	<< g_Library.m_GetBacklightFunc(i) << "." << endl;
+            }
+        } catch (char const * ex) {
+            cout << "\t" << ex << endl;
+			g_Library.m_destroyController();
+		    return false;
+        } // </editor-fold>
+        
+    	g_Library.m_destroyController();
+    } catch (char const * str) {
+        cout << "-- " << str << endl;
+		g_Library.m_destroyController();
+        return false;
+    } catch (...) {
+        cout << "-- unknown exception thrown" << endl;
+		g_Library.m_destroyController();
+        return false;
+    }
+    return true;    
+}
+bool testSetBacklight() {
+    try {
+		g_Library.m_initController();
+        try {// <editor-fold defaultstate="collapsed" desc="invalid mnitor ID test">
+            cout << "Should catch invalid monitor ID:" << endl;
+            g_Library.m_SetBacklightFunc(1, 0);
+        } catch (char const * ex) {
+            cout << "\t" << ex << endl;
+        } // </editor-fold>
+        
+        addCorrectMonitors();
+        
+        try {// <editor-fold defaultstate="collapsed" desc="monitor not connected test">
+            cout << "Should catch monitor not connected:" << endl;
+            g_Library.m_SetBacklightFunc(1, 0);
+        } catch (char const * ex) {
+            cout << "\t" << ex << endl;
+        } // </editor-fold>
+        
+        if (!g_Library.m_connectAll() ) {
+        	cout << "!! ONE OR MORE MONITORS DID NOT CONNECT!" << endl;
+        }
+        turnOnMonitors();
+        usleep(10000); //wait 10sec to turn on monitors
+        
+        try {// <editor-fold defaultstate="collapsed" desc="value out of range">
+            cout << "Should catch value is out of range:" << endl;
+            g_Library.m_SetBacklightFunc(1, 999);
+        } catch (char const * ex) {
+            cout << "\t" << ex << endl;
+        } // </editor-fold>
+        
+        loopSetParam(g_Library.m_SetBacklightFunc, 0, 100);
+        
+    	g_Library.m_destroyController();
+    } catch (char const * str) {
+        cout << "-- " << str << endl;
+		g_Library.m_destroyController();
+        return false;
+    } catch (...) {
+        cout << "-- unknown exception thrown" << endl;
+		g_Library.m_destroyController();
+        return false;
+    }
+    return true;    
+}
+
+int main() {
     cout << "%START% - LOAD LIBRARY" << endl;
     if (g_Library.loadLibrary("./controller.so")) cout << "-- OK" << endl;
-    else return ( EXIT_FAILURE );
+    else return ( EXIT_FAILURE);
     cout << "%FINISH% - LOAD LIBRARY" << endl;
-    
+
     cout << endl;
-    
-    cout << "%START% - ADD and DELETE MONITOR" << endl;
-    if (testAddNDeleteMonitors()) cout << "-- OK" << endl;
-    else return ( EXIT_FAILURE );
-    cout << "%FINISH% - ADD and DELETE MONITOR" << endl;
-    
-    return ( EXIT_SUCCESS );
+
+//    cout << "%START% - ADD and DELETE MONITOR" << endl;
+//    if (testAddNDeleteMonitors()) cout << "-- OK" << endl;
+//    else return ( EXIT_FAILURE);
+//    cout << "%FINISH% - ADD and DELETE MONITOR" << endl;
+
+//    cout << endl;
+
+    cout << "%START% - CONNECT MONITOR" << endl;
+    if (testConnectMonitors()) cout << "-- OK" << endl;
+    else return ( EXIT_FAILURE);
+    cout << "%FINISH% - CONNECT MONITOR" << endl;
+
+    cout << endl;
+
+//    cout << "%START% - IS CONNECT MONITOR" << endl;
+//    if (testIsConnected()) cout << "-- OK" << endl;
+//    else return ( EXIT_FAILURE);
+//    cout << "%FINISH% - IS CONNECT MONITOR" << endl;
+
+//    cout << endl;
+//    
+    cout << "%START% - GET BACKLIGHT" << endl;
+    if (testGetBacklight()) cout << "-- OK" << endl;
+    else return ( EXIT_FAILURE);
+    cout << "%FINISH% - GET BACKLIGHT" << endl;
+
+    cout << endl;
+
+//    cout << "%START% - SET BACKLIGHT" << endl;
+//    if (testSetBacklight()) cout << "-- OK" << endl;
+//    else return ( EXIT_FAILURE);
+//    cout << "%FINISH% - SET BACKLIGHT" << endl;
+
+    return ( EXIT_SUCCESS);
 }

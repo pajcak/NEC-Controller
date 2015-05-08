@@ -1,3 +1,17 @@
+#    File: Makefile_Faistpat
+#    Copyright (C) 2015  Patrik Faistaver
+#    
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 2 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+
 CC=g++
 CFLAGS=-c -fPIC -Wall -pedantic -Wno-long-long
 LDFLAGS=-lpthread
@@ -7,7 +21,7 @@ SOURCES=$(wildcard *.cpp)
 OBJS=$(SOURCES:.cpp=.o)
 EXEC=faistpat
 
-all: compile doc shared
+all: compile doc shared test
 
 compile: $(EXEC)
 
@@ -25,6 +39,8 @@ doc:
 
 shared: CController.o
 	$(CC) -shared -o controller.so *.o
+test:
+	g++ -Wall -pedantic tests/simple_test.cpp -ldl -o test
 
 clean:
-	rm -rf $(OBJS) $(EXEC) ./doc controller.so
+	rm -rf $(OBJS) $(EXEC) ./doc controller.so test

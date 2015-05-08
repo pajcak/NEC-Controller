@@ -1,3 +1,17 @@
+//    File: CController.cpp
+//    Copyright (C) 2015  Patrik Faistaver
+//    
+//
+//    This program is free software; you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation; either version 2 of the License, or
+//    (at your option) any later version.
+//
+//    This program is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+
 #include "headers/CController.h"
 #include "headers/MsgOutgoing.h"
 #include "headers/CMonitor.h"
@@ -14,13 +28,22 @@ void initController() {
     pthread_mutex_init(&m_monitorsMutex, NULL);
 }
 void destroyController() {
-    pthread_mutex_destroy(&m_monitorsMutex);
+    
+    pthread_mutex_lock(&m_monitorsMutex);
+	int monitorCount = m_monitors.size();
+    int identifiers[monitorCount];
+    int pos = 0;
+    
     for (std::map<int, CMonitor*>::iterator it = m_monitors.begin();
             it != m_monitors.end(); ++it)
     {
-        it->second->disconnect();
-        delete it->second; // CMonitor* is dynamicly allocated in m_monitors std::map
+        identifiers[pos++] = it->first;
     }
+    pthread_mutex_unlock(&m_monitorsMutex);
+    for (int i = 0; i < monitorCount; i++) {
+        deleteMonitor(identifiers[i]);
+    }
+    pthread_mutex_destroy(&m_monitorsMutex);
 }
 
 void addMonitor (const char * monitorAddr, int port,  int monitorID) {
