@@ -19,6 +19,9 @@
 #include <dlfcn.h>
 #include <unistd.h>
 
+//#define SLEEP_TIME 8000
+#define SLEEP_TIME 0
+
 using namespace std;
 
 // <editor-fold defaultstate="collapsed" desc="CLibLoader definition">
@@ -280,25 +283,39 @@ void turnOnMonitors() {
             g_Library.m_PowerControlFunc(i, 1);
     }
 }
-void loopSetParam(void ( *setFunc) (int, int), int from, int to) {
+bool loopSetParam(void ( *setFunction) (int, int), int from, int to, const string & functionName) {
     int id = 1;
     for (int i = from; i <= to; i++) {
     	try {
-        	setFunc(id, i);
-        } catch (char const * s) {
-        	cout << "!! loopSetParam() FUNCTION THREW =" << s << endl;
+          cout << "Parameter " << functionName << " of monitor ID " << id << " had just been set to " << i << "." << endl;
+          setFunction(id, i);
+        } catch (char const * ex) {
+        	cout << "\t" << ex << endl;
+        	return false;
         }
     	if (id == 20) id = 0;
         id++;
     }
+    return true;
 }
-
+bool loopSetGammaCorrection() {
+    int values[6] = {1, 4, 5, 6, 7, 8};
+    for (int id = 1; id <= 20; id++) {
+    	try {
+          cout << "Parameter gamma correction of monitor ID " << id << " had just been set to " << values[id % 6] << "." << endl;
+          g_Library.m_SetGammaCorrectionFunc(id, values[id % 6]);
+        } catch (char const * ex) {
+        	cout << "\t" << ex << endl;
+        	return false;
+        }
+    }
+    return true;
+}
 
 bool testAddNDeleteMonitors() {
     try {
     	g_Library.m_initController();
     	
-        g_Library.m_addMonitor("127.0.0.1", 65535, 1024);
         try {// <editor-fold defaultstate="collapsed" desc="invalid address test">
             cout << "Should catch invalid address:" << endl;
             g_Library.m_addMonitor("127.0.0", 65535, 1025);
@@ -320,7 +337,6 @@ bool testAddNDeleteMonitors() {
         } catch (char const * ex) {
             cout << "\t" << ex << endl;
         } // </editor-fold>
-        g_Library.m_deleteMonitor(1024);
         
     	g_Library.m_destroyController();
     } catch (char const * str) {
@@ -410,12 +426,12 @@ bool testIsConnected() {
     }
     return true;
 }
-bool testGetBacklight() {
+bool testGetFunctionCall( int (*getFunction)(int), const string & functionName) {
     try {
 		g_Library.m_initController();
         try {// <editor-fold defaultstate="collapsed" desc="invalid mnitor ID test">
             cout << "Should catch invalid monitor ID:" << endl;
-            g_Library.m_GetBacklightFunc(1);
+            getFunction(1);
         } catch (char const * ex) {
             cout << "\t" << ex << endl;
         } // </editor-fold>
@@ -424,7 +440,7 @@ bool testGetBacklight() {
         
         try {// <editor-fold defaultstate="collapsed" desc="monitor not connected test">
             cout << "Should catch monitor not connected:" << endl;
-            g_Library.m_GetBacklightFunc(1);
+            getFunction(1);
         } catch (char const * ex) {
             cout << "\t" << ex << endl;
         } // </editor-fold>
@@ -433,13 +449,13 @@ bool testGetBacklight() {
         	cout << "!! ONE OR MORE MONITORS DID NOT CONNECT!" << endl;
         }
         turnOnMonitors();
-        usleep(10000); //wait 10sec to turn on monitors
+        usleep(SLEEP_TIME); //wait to turn on monitors
         
         try {// <editor-fold defaultstate="collapsed" desc="value out of range">
-			cout << "-- Getting backlight from monitors ..." << endl;
+			cout << "-- Getting " << functionName << " from monitors ..." << endl;
             for (int i = 1; i <= 20; i++) {
-	            cout << "Monitor ID " << i << " replied backlight value: "
-	            	<< g_Library.m_GetBacklightFunc(i) << "." << endl;
+	            cout << "Monitor ID " << i << " replied " << functionName << " value: "
+	            	<< getFunction(i) << "." << endl;
             }
         } catch (char const * ex) {
             cout << "\t" << ex << endl;
@@ -459,12 +475,12 @@ bool testGetBacklight() {
     }
     return true;    
 }
-bool testSetBacklight() {
+bool testSetFunctionCall(void (*setFunction) (int, int), int from, int to, const string & functionName ) {
     try {
 		g_Library.m_initController();
         try {// <editor-fold defaultstate="collapsed" desc="invalid mnitor ID test">
             cout << "Should catch invalid monitor ID:" << endl;
-            g_Library.m_SetBacklightFunc(1, 0);
+            setFunction(1, 0);
         } catch (char const * ex) {
             cout << "\t" << ex << endl;
         } // </editor-fold>
@@ -473,7 +489,7 @@ bool testSetBacklight() {
         
         try {// <editor-fold defaultstate="collapsed" desc="monitor not connected test">
             cout << "Should catch monitor not connected:" << endl;
-            g_Library.m_SetBacklightFunc(1, 0);
+            setFunction(1, 0);
         } catch (char const * ex) {
             cout << "\t" << ex << endl;
         } // </editor-fold>
@@ -482,16 +498,25 @@ bool testSetBacklight() {
         	cout << "!! ONE OR MORE MONITORS DID NOT CONNECT!" << endl;
         }
         turnOnMonitors();
-        usleep(10000); //wait 10sec to turn on monitors
+        usleep(SLEEP_TIME); //wait to turn on monitors
         
         try {// <editor-fold defaultstate="collapsed" desc="value out of range">
             cout << "Should catch value is out of range:" << endl;
-            g_Library.m_SetBacklightFunc(1, 999);
+            setFunction(1, 999);
         } catch (char const * ex) {
             cout << "\t" << ex << endl;
         } // </editor-fold>
         
-        loopSetParam(g_Library.m_SetBacklightFunc, 0, 100);
+        cout << "-- Setting " << functionName << " of monitors ..." << endl;
+        bool res;
+        if (functionName == "gamma correction")
+        	res = loopSetGammaCorrection();
+       	else res = loopSetParam(setFunction, from, to, functionName);
+       	
+        if (!res) {
+	    	g_Library.m_destroyController();        
+        	return false;
+        }
         
     	g_Library.m_destroyController();
     } catch (char const * str) {
@@ -506,6 +531,155 @@ bool testSetBacklight() {
     return true;    
 }
 
+bool getParameterTest() {
+    cout << "%START% - GET BACKLIGHT" << endl;
+    if (testGetFunctionCall(g_Library.m_GetBacklightFunc, "backlight"))
+    	cout << "-- OK" << endl;
+    else return false;
+    cout << "%FINISH% - GET BACKLIGHT" << endl;
+
+    cout << endl;
+
+    cout << "%START% - GET CONTRAST" << endl;
+    if (testGetFunctionCall(g_Library.m_GetContrastFunc, "contrast"))
+    	cout << "-- OK" << endl;
+    else return false;
+    cout << "%FINISH% - GET CONTRAST" << endl;
+
+    cout << endl;
+
+    cout << "%START% - GET SHARPNESS" << endl;
+    if (testGetFunctionCall(g_Library.m_GetSharpnessFunc, "sharpness"))
+    	cout << "-- OK" << endl;
+    else return false;
+    cout << "%FINISH% - GET SHARPNESS" << endl;
+
+    cout << endl;
+
+    cout << "%START% - GET BRIGHTNESS" << endl;
+    if (testGetFunctionCall(g_Library.m_GetBrightnessFunc, "brightness"))
+    	cout << "-- OK" << endl;
+    else return false;
+    cout << "%FINISH% - GET BRIGHTNESS" << endl;
+
+    cout << endl;
+
+    cout << "%START% - GET HUE" << endl;
+    if (testGetFunctionCall(g_Library.m_GetHueFunc, "hue"))
+    	cout << "-- OK" << endl;
+    else return false;
+    cout << "%FINISH% - GET HUE" << endl;
+
+    cout << endl;
+
+    cout << "%START% - GET PALENESS" << endl;
+    if (testGetFunctionCall(g_Library.m_GetPalenessFunc, "paleness"))
+    	cout << "-- OK" << endl;
+    else return false;
+    cout << "%FINISH% - GET PALENESS" << endl;
+
+    cout << endl;
+
+//    cout << "%START% - GET COLOR TEMPERATURE" << endl;
+//    if (testGetFunctionCall(g_Library.m_GetColorTemperatureFunc, "color temperature"))
+//    	cout << "-- OK" << endl;
+//    else return false;
+//    cout << "%FINISH% - GET COLOR TEMPERATURE" << endl;
+
+//    cout << endl;
+
+    cout << "%START% - GET GAMMA CORRECTION" << endl;
+    if (testGetFunctionCall(g_Library.m_GetGammaCorrectionFunc, "gamma correction"))
+    	cout << "-- OK" << endl;
+    else return false;
+    cout << "%FINISH% - GET GAMMA CORRECTION" << endl;
+
+    cout << endl;
+
+    cout << "%START% - GET VOLUME" << endl;
+    if (testGetFunctionCall(g_Library.m_GetVolumeFunc, "volume"))
+    	cout << "-- OK" << endl;
+    else return false;
+    cout << "%FINISH% - GET VOLUME" << endl;
+
+    cout << endl;
+	return true;
+}
+bool setParameterTest() {
+    cout << "%START% - SET BACKLIGHT" << endl;
+    if (testSetFunctionCall(g_Library.m_SetBacklightFunc, 0, 100, "backlight"))
+    	cout << "-- OK" << endl;
+    else return false;
+    cout << "%FINISH% - SET BACKLIGHT" << endl;
+
+    cout << endl;
+
+    cout << "%START% - SET CONTRAST" << endl;
+    if (testSetFunctionCall(g_Library.m_SetContrastFunc, 0, 100, "contrast"))
+    	cout << "-- OK" << endl;
+    else return false;
+    cout << "%FINISH% - SET CONTRAST" << endl;
+    
+    cout << endl;    
+
+    cout << "%START% - SET SHARPNESS" << endl;
+    if (testSetFunctionCall(g_Library.m_SetSharpnessFunc, 0, 24, "sharpness"))
+    	cout << "-- OK" << endl;
+    else return false;
+    cout << "%FINISH% - SET SHARPNESS" << endl;
+
+    cout << endl;
+
+    cout << "%START% - SET BRIGHTNESS" << endl;
+    if (testSetFunctionCall(g_Library.m_SetBrightnessFunc, 0, 100, "brightness"))
+    	cout << "-- OK" << endl;
+    else return false;
+    cout << "%FINISH% - SET BRIGHTNESS" << endl;
+
+    cout << endl;
+
+    cout << "%START% - SET HUE" << endl;
+    if (testSetFunctionCall(g_Library.m_SetHueFunc, 0, 100, "hue"))
+    	cout << "-- OK" << endl;
+    else return false;
+    cout << "%FINISH% - SET HUE" << endl;
+
+    cout << endl;
+
+    cout << "%START% - SET PALENESS" << endl;
+    if (testSetFunctionCall(g_Library.m_SetPalenessFunc, 0, 100, "paleness"))
+    	cout << "-- OK" << endl;
+    else return false;
+    cout << "%FINISH% - SET PALENESS" << endl;
+
+    cout << endl;
+
+//    cout << "%START% - SET COLOR TEMPERATURE" << endl;
+//    if (testSetFunctionCall(g_Library.m_SetColorTemperatureFunc, 0, 74, "color temperature"))
+//    	cout << "-- OK" << endl;
+//    else return false;
+//    cout << "%FINISH% - SET COLOR TEMPERATURE" << endl;
+
+//    cout << endl;
+
+    cout << "%START% - SET GAMMA CORRECTION" << endl;
+    if (testSetFunctionCall(g_Library.m_SetGammaCorrectionFunc, 0, 0, "gamma correction"))
+    	cout << "-- OK" << endl;
+    else return false;
+    cout << "%FINISH% - SET GAMMA CORRECTION" << endl;
+
+    cout << endl;
+
+    cout << "%START% - SET VOLUME" << endl;
+    if (testSetFunctionCall(g_Library.m_SetVolumeFunc, 0, 100, "volume"))
+    	cout << "-- OK" << endl;
+    else return false;
+    cout << "%FINISH% - SET VOLUME" << endl;
+
+    cout << endl;
+    return true;
+}
+
 int main() {
     cout << "%START% - LOAD LIBRARY" << endl;
     if (g_Library.loadLibrary("./controller.so")) cout << "-- OK" << endl;
@@ -514,12 +688,12 @@ int main() {
 
     cout << endl;
 
-//    cout << "%START% - ADD and DELETE MONITOR" << endl;
-//    if (testAddNDeleteMonitors()) cout << "-- OK" << endl;
-//    else return ( EXIT_FAILURE);
-//    cout << "%FINISH% - ADD and DELETE MONITOR" << endl;
+    cout << "%START% - ADD and DELETE MONITOR" << endl;
+    if (testAddNDeleteMonitors()) cout << "-- OK" << endl;
+    else return ( EXIT_FAILURE);
+    cout << "%FINISH% - ADD and DELETE MONITOR" << endl;
 
-//    cout << endl;
+    cout << endl;
 
     cout << "%START% - CONNECT MONITOR" << endl;
     if (testConnectMonitors()) cout << "-- OK" << endl;
@@ -528,24 +702,15 @@ int main() {
 
     cout << endl;
 
-//    cout << "%START% - IS CONNECT MONITOR" << endl;
-//    if (testIsConnected()) cout << "-- OK" << endl;
-//    else return ( EXIT_FAILURE);
-//    cout << "%FINISH% - IS CONNECT MONITOR" << endl;
-
-//    cout << endl;
-//    
-    cout << "%START% - GET BACKLIGHT" << endl;
-    if (testGetBacklight()) cout << "-- OK" << endl;
+    cout << "%START% - IS CONNECTED MONITOR" << endl;
+    if (testIsConnected()) cout << "-- OK" << endl;
     else return ( EXIT_FAILURE);
-    cout << "%FINISH% - GET BACKLIGHT" << endl;
+    cout << "%FINISH% - IS CONNECTED MONITOR" << endl;
 
     cout << endl;
-
-//    cout << "%START% - SET BACKLIGHT" << endl;
-//    if (testSetBacklight()) cout << "-- OK" << endl;
-//    else return ( EXIT_FAILURE);
-//    cout << "%FINISH% - SET BACKLIGHT" << endl;
-
+ 
+ 	if (!getParameterTest()) return ( EXIT_FAILURE );
+ 	if (!setParameterTest()) return ( EXIT_FAILURE ); 
+   
     return ( EXIT_SUCCESS);
 }
